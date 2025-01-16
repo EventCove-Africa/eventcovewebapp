@@ -12,6 +12,80 @@ body {
   background-color: #F1F5F8;
 }
 
+/* Remove the number input arrows in Chrome, Safari, Edge, and Opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove the number input arrows in Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+
+.container {
+  @apply max-w-screen-2xl mx-auto;
+}
+
+.padding-spacing {
+  @apply md:px-16 px-8 md:py-4 py-2
+}
+
+@keyframes bounce-up {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes slide-right {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes zoom {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Custom Animation Classes */
+.animate-bounce-up {
+  animation: bounce-up 3s infinite ease-in-out;
+}
+
+.animate-slide-right {
+  animation: slide-right 4s infinite ease-in-out;
+}
+
+.animate-float {
+  animation: float 2.5s infinite ease-in-out;
+}
+
+.animate-zoom {
+  animation: zoom 3s infinite ease-in-out;
+}
+
 
 @tailwind base;
 @tailwind components;

@@ -1,13 +1,84 @@
-import logo from "./assets/icons/logo.svg";
+import { lazy, Suspense } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
+import { animationVariants } from "./utils";
+
+// Lazy imports for layouts and pages
+
+// Auth routes
+const AuthLayout = lazy(() => import("./layouts/auth-layout"));
+const Login = lazy(() => import("./pages/auth/login"));
+const SignUp = lazy(() => import("./pages/auth/signup"));
+const ForgetPassword = lazy(() => import("./pages/auth/forget-password"));
+const ResetPassword = lazy(() => import("./pages/auth/reset-password"));
+const AddBank = lazy(() => import("./pages/auth/add-bank"));
+const NotFound = lazy(() => import("./pages/not-found"));
+
+// App routes
+const DashboardLayout = lazy(() => import("./layouts/dashboard-layout"));
+const Home = lazy(() => import("./pages/app/home"));
+const Events = lazy(() => import("./pages/app/events"));
+
+const FallbackLoader = () => <div>Loading...</div>;
+
+interface PageTransitionProps {
+  children: React.ReactNode;
+  locationKey: string;
+}
+
+const PageTransition = ({ children, locationKey }: PageTransitionProps) => {
+  return (
+    <motion.div
+      key={locationKey} // Still needed for animation re-renders
+      transition={{ duration: 0.4 }}
+      variants={animationVariants}
+      initial="hidden"
+      animate="visible"
+      exit="hidden" // Optional for exit animations
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 function App() {
+  const location = useLocation();
+
   return (
-    <div className="w-full h-screen flex flex-col gap-3 justify-center items-center">
-      <a href="https://eventcove.africa" target="_blank">
-        <img src={logo} alt="logo" />
-      </a>
-      <h3 className="text-2xl text-dark_300">COMING SOON...</h3>
-    </div>
+    <main className="scroll-smooth w-full h-full">
+      <Suspense fallback={<FallbackLoader />}>
+        <Routes>
+          <Route path="/" element={<Navigate to="auth/login" />} />
+          <Route path="auth" element={<AuthLayout />}>
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<SignUp />} />
+            <Route path="add-bank" element={<AddBank />} />
+            <Route path="forget-password" element={<ForgetPassword />} />
+            <Route path="reset-password" element={<ResetPassword />} />
+          </Route>
+          <Route path="app" element={<DashboardLayout />}>
+            <Route
+              path="home"
+              element={
+                <PageTransition locationKey={location.pathname}>
+                  <Home />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="events"
+              element={
+                <PageTransition locationKey={location.pathname}>
+                  <Events />
+                </PageTransition>
+              }
+            />
+            {/* You can add more routes here with the same PageTransition wrapper */}
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
+    </main>
   );
 }
 
