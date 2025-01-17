@@ -35,7 +35,7 @@ export default function DashboardLayout() {
         </main>
 
         {/* Footer */}
-        <footer className="h-auto bg-white flex-shrink-0 px-4 py-2">
+        <footer className="h-auto bg-white flex-shrink-0 px-4 py-2 md:block hidden">
           <Footer />
         </footer>
       </div>

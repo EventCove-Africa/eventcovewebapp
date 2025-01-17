@@ -24,6 +24,31 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
+/* Style overrides for react-calendar */
+
+.react-calendar {
+  border: none !important;
+  width: 100% !important;
+}
+.react-calendar__tile--active {
+  background-color: #A30162 !important; /* Selected day background */
+  color: white !important; /* Selected day text color */
+  border-radius: 50% !important;
+}
+
+.react-calendar__tile--active:focus {
+  background-color: #A30162 !important;
+}
+
+.react-calendar__tile:hover {
+  background-color: #F0E0E9 !important; /* Optional: Hover effect */
+}
+
+.react-calendar__tile--now {
+  background-color: #A30162 !important;
+  color: white;
+  /* border-radius: 100% !important; */
+}
 
 .container {
   @apply max-w-screen-2xl mx-auto;

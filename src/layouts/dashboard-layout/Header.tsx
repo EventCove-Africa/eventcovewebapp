@@ -80,7 +80,7 @@ export default function Header() {
         aria-label="User Avatar"
       />
       <div className="flex flex-col gap-1">
-        <h4 className="text-dark_200 text-xs font-normal">Ronaldo Nazario</h4>
+        <h4 className="text-dark_200 text-xs font-normal">Event Cove</h4>
         <button
           className="text-grey_100 text-xs font-normal flex gap-2 cursor-pointer"
           onClick={handleMenuToggle}

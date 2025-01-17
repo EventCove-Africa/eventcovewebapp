@@ -42,7 +42,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
   }, []);
 
   return (
-    <div className="relative inline-block w-full" ref={dropdownRef}>
+    <div className="relative inline-block" ref={dropdownRef}>
       <button
         onClick={toggleDropdown}
         className="min-w-[130px] w-auto flex items-center justify-between shadow-md gap-1 text-xs px-4 py-2 rounded-md bg-white text-left focus:outline-none"
