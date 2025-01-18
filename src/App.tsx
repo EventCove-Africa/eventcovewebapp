@@ -50,7 +50,6 @@ function App() {
       <Suspense fallback={<FallbackLoader />}>
         <Routes>
           <Route path="/" element={<Navigate to="auth/login" />} />
-
           <Route path="auth" element={<AuthLayout />}>
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<SignUp />} />

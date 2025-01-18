@@ -127,7 +127,7 @@ export default function Home() {
             <ArrowRight size="20" color="#E26E00" />
           </span>
         </div>
-        <div className="w-full grid md:grid-cols-3 gap-3">
+        <div className="w-full grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-3">
           <EventCard />
         </div>
       </section>

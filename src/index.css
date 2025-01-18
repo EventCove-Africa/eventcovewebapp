@@ -33,7 +33,7 @@ input[type="number"] {
 .react-calendar__tile--active {
   background-color: #A30162 !important; /* Selected day background */
   color: white !important; /* Selected day text color */
-  border-radius: 50% !important;
+  margin: 0px 10px;
 }
 
 .react-calendar__tile--active:focus {
@@ -43,11 +43,12 @@ input[type="number"] {
 .react-calendar__tile:hover {
   background-color: #F0E0E9 !important; /* Optional: Hover effect */
 }
-
+.react-calendar__month-view__days__day--weekend:focus {
+  color: white !important;
+}
 .react-calendar__tile--now {
   background-color: #A30162 !important;
-  color: white;
-  /* border-radius: 100% !important; */
+  color: white !important;
 }
 
 .container {

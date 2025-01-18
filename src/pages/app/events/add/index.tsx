@@ -14,7 +14,7 @@ export default function AddEvents() {
         />
         Event vibes loading—fill out the form to get started! 🌟
       </h3>
-      <div className="w-1/3 bg-white h-[500px] rounded-xl shadow">
+      <div className="w-1/2 bg-white h-[500px] rounded-xl shadow">
 
       </div>
     </div>

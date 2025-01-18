@@ -101,7 +101,7 @@ export default function EventCard() {
       {allEvents.map((event, index: number) => (
         <article
           key={`upcoming-event-${index}`}
-          className="bg-white w-full min-h-[392px] h-auto shadow rounded-lg p-3"
+          className="bg-white w-auto min-h-[392px] h-auto shadow rounded-lg p-3"
         >
           <div className="w-full relative">
             <img

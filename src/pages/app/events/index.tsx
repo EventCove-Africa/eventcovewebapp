@@ -34,14 +34,14 @@ export default function Events() {
         </div>
       </div>
       <nav
-        className="w-full bg-white px-4 py-2 flex justify-around mt-3"
+        className="w-full bg-white px-4 py-2 flex gap-6 justify-around mt-3 overflow-auto"
         aria-label="Event navigation"
       >
         {events.map((event) => (
           <h3
             key={event.type}
             onClick={() => navigate(`/app/events?eventType=${event.type}`)}
-            className={`text-sm font-normal cursor-pointer ${
+            className={`text-sm font-normal cursor-pointer whitespace-nowrap  ${
               eventType === event.type ? "text-primary_100" : "text-grey_100"
             }`}
           >
@@ -49,7 +49,7 @@ export default function Events() {
           </h3>
         ))}
       </nav>
-      <div className="w-full grid md:grid-cols-3 gap-3 mt-4">
+      <div className="w-full grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-3 mt-4">
         <EventCard />
       </div>
     </div>
