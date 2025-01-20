@@ -2,15 +2,18 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { motion } from "framer-motion";
 import Button from "../../../components/FormComponents/Button";
+import useNavigation from "../../../hooks/useNavigation";
 import TextInputField from "../../../components/FormComponents/InputField";
 import { animationVariants } from "../../../utils";
 import ModalPopup from "../../../components/ModalPopup";
-import SignupSuccess from "../components/SignupSuccess";
+import SignupSuccess from "../../components/SignupSuccess";
 import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
+import CustomSelect from "../../../components/FormComponents/SelectInputField";
 
 export default function AddBank() {
+  const { navigate } = useNavigation();
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
- 
+
   const loginSchema = Yup.object().shape({
     account_number: Yup.string().required("Account number is required"),
     bank_name: Yup.string().required("Bank name is required"),
@@ -37,12 +40,13 @@ export default function AddBank() {
         onSubmit={(values, actions) => {
           console.log(values);
           actions.setSubmitting(false);
-          handleOpenClose()
+          handleOpenClose();
         }}
       >
         {({
           handleSubmit,
           handleChange,
+          setFieldValue,
           values,
           touched,
           errors,
@@ -50,13 +54,16 @@ export default function AddBank() {
         }) => (
           <Form onSubmit={handleSubmit} className="w-full lg:pr-16 mt-1">
             <div className="mb-3">
-              <TextInputField
-                labelName="Bank name"
+              <CustomSelect
+                label="Bank Name"
                 name="bank_name"
-                handleChange={handleChange}
-                type="text"
-                placeholder=""
-                value={values.bank_name}
+                onChange={(event) =>
+                  setFieldValue("bank_name", event?.value)
+                }
+                options={[
+                  { label: "UBA", value: "UBA" },
+                  { label: "ACCESS", value: "virtuACCESSal" },
+                ]}
                 errors={errors?.bank_name}
                 touched={touched?.bank_name}
               />
@@ -83,7 +90,11 @@ export default function AddBank() {
         )}
       </Formik>
       <ModalPopup isOpen={isOpenModal}>
-        <SignupSuccess handleOpenClose={handleOpenClose} />
+        <SignupSuccess
+          text="Congrats, you’re all set! 🎉 Time to vibe. 🚀"
+          handleOpenClose={handleOpenClose}
+          handleFunction={() => navigate("/auth/login")}
+        />
       </ModalPopup>
     </motion.main>
   );

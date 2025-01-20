@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import OTPInput from "react-otp-input";
 import close_cancel from "../../assets/icons/close-circle.svg";
 import Button from "../FormComponents/Button";
-import { useNavigate } from "react-router-dom";
+import useNavigation from "../../hooks/useNavigation";
 
 type OTPVerifyProps = {
   nextPath: string;
@@ -14,7 +14,7 @@ export default function OTPVerify({
   handleOpenClose,
   nextPath,
 }: OTPVerifyProps) {
-  const navigate = useNavigate();
+  const { navigate } = useNavigation();
   const otpSchema = Yup.object().shape({
     email_otp: Yup.string()
       .required("OTP is Required")

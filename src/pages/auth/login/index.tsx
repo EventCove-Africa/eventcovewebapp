@@ -2,16 +2,15 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { useGoogleLogin } from "@react-oauth/google";
+import useNavigation from "../../../hooks/useNavigation";
 import Button from "../../../components/FormComponents/Button";
 import TextInputField from "../../../components/FormComponents/InputField";
 import PasswordInputField from "../../../components/FormComponents/PasswordField";
 import GoogleAuth from "../../../components/GoogleAuth";
-import { useNavigate } from "react-router-dom";
 import { animationVariants } from "../../../utils";
 
 export default function Login() {
-  const navigate = useNavigate();
-
+  const { navigate } = useNavigation();
   const login = useGoogleLogin({
     onSuccess: (response) => console.log("Login Success:", response),
     onError: (error) => console.error("Login Failed:", error),
@@ -48,7 +47,7 @@ export default function Login() {
         onSubmit={(values, actions) => {
           console.log(values);
           actions.setSubmitting(false);
-          navigate('/app/home')
+          navigate("/app/home");
         }}
       >
         {({
@@ -83,7 +82,10 @@ export default function Login() {
                 touched={touched?.password}
               />
             </div>
-            <h4 onClick={() => navigate("/auth/forget-password")} className="text-xs font-normal text-secondary_300 cursor-pointer hover:underline">
+            <h4
+              onClick={() => navigate("/auth/forget-password")}
+              className="text-xs font-normal text-secondary_300 cursor-pointer hover:underline"
+            >
               Forget Password
             </h4>
             <Button

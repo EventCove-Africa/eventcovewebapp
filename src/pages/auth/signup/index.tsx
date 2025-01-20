@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { motion } from "framer-motion";
@@ -11,9 +10,10 @@ import ModalPopup from "../../../components/ModalPopup";
 import OTPVerify from "../../../components/OtpVerify";
 import toast from "react-hot-toast";
 import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
+import useNavigation from "../../../hooks/useNavigation";
 
 export default function SignUp() {
-  const navigate = useNavigate();
+  const { navigate } = useNavigation();
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
   const signupSchema = Yup.object().shape({
     full_name: Yup.string().required("Fullname is required"),

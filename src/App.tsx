@@ -19,6 +19,7 @@ const DashboardLayout = lazy(() => import("./layouts/dashboard-layout"));
 const Home = lazy(() => import("./pages/app/home"));
 const Events = lazy(() => import("./pages/app/events"));
 const AddEvents = lazy(() => import("./pages/app/events/add"));
+const EventDetails = lazy(() => import("./pages/app/events/event-details"));
 
 const FallbackLoader = () => <div>Loading...</div>;
 
@@ -82,13 +83,17 @@ function App() {
                 </PageTransition>
               }
             />
+            <Route
+              path="events/:id"
+              element={
+                <PageTransition locationKey={location.pathname}>
+                  <EventDetails />
+                </PageTransition>
+              }
+            />
           </Route>
           <Route path="*" element={<NotFound />} />
           <Route path="/unauthorized" element={<Forbidden />} />
-          <Route
-            path="/app/events"
-            element={<Navigate to="/app/events?eventType=all" />}
-          />
         </Routes>
       </Suspense>
     </main>

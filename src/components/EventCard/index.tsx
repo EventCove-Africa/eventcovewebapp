@@ -8,6 +8,7 @@ import {
 import ProgressBar from "@ramonak/react-progress-bar";
 import upcoming_event_bg from "../../assets/images/upcoming_event_bg.png";
 import { eventTypeStyles, formatToNaira } from "../../utils";
+import useNavigation from "../../hooks/useNavigation";
 
 // interface EventData {
 //     title: string;
@@ -96,12 +97,14 @@ const allEvents = [
 ];
 
 export default function EventCard() {
+  const { navigate } = useNavigation();
   return (
     <>
       {allEvents.map((event, index: number) => (
         <article
           key={`upcoming-event-${index}`}
           className="bg-white w-auto min-h-[392px] h-auto shadow rounded-lg p-3"
+          onClick={() => navigate(`/app/events/${index + 100}`)}
         >
           <div className="w-full relative">
             <img

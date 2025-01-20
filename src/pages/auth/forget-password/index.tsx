@@ -3,16 +3,16 @@ import * as Yup from "yup";
 import { motion } from "framer-motion";
 import Button from "../../../components/FormComponents/Button";
 import TextInputField from "../../../components/FormComponents/InputField";
-import { useNavigate } from "react-router-dom";
 import { animationVariants } from "../../../utils";
 import { ArrowLeft } from "iconsax-react";
 import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
 import ModalPopup from "../../../components/ModalPopup";
-import InfoModal from "../components/InfoModal";
+import InfoModal from "../../components/InfoModal";
+import useNavigation from "../../../hooks/useNavigation";
 
 export default function ForgetPassword() {
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
-  const navigate = useNavigate();
+  const { navigate } = useNavigation();
 
   const forgetPasswordSchema = Yup.object().shape({
     email: Yup.string()
@@ -40,8 +40,8 @@ export default function ForgetPassword() {
         onSubmit={(values, actions) => {
           console.log(values);
           actions.setSubmitting(false);
-          actions.resetForm()
-          handleOpenClose()
+          actions.resetForm();
+          handleOpenClose();
         }}
       >
         {({
@@ -82,7 +82,10 @@ export default function ForgetPassword() {
         )}
       </Formik>
       <ModalPopup isOpen={isOpenModal}>
-        <InfoModal handleOpenClose={handleOpenClose} />
+        <InfoModal
+          handleOpenClose={handleOpenClose}
+          text="Hop over to your email and hit the link! 🔗"
+        />
       </ModalPopup>
     </motion.main>
   );

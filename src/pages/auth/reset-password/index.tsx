@@ -6,9 +6,11 @@ import PasswordInputField from "../../../components/FormComponents/PasswordField
 import { animationVariants } from "../../../utils";
 import ModalPopup from "../../../components/ModalPopup";
 import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
-import SignupSuccess from "../components/SignupSuccess";
+import SignupSuccess from "../../components/SignupSuccess";
+import useNavigation from "../../../hooks/useNavigation";
 
 export default function ResetPassword() {
+  const { navigate } = useNavigation();
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
   const signupSchema = Yup.object().shape({
     password: Yup.string()
@@ -40,7 +42,7 @@ export default function ResetPassword() {
         onSubmit={(values, actions) => {
           console.log(values);
           actions.setSubmitting(false);
-          handleOpenClose()
+          handleOpenClose();
         }}
       >
         {({
@@ -84,7 +86,11 @@ export default function ResetPassword() {
         )}
       </Formik>
       <ModalPopup isOpen={isOpenModal}>
-        <SignupSuccess handleOpenClose={handleOpenClose} />
+        <SignupSuccess
+          handleOpenClose={handleOpenClose}
+          text="Congrats, you’re all set! 🎉 Time to vibe. 🚀"
+          handleFunction={() => navigate("/auth/login")}
+        />
       </ModalPopup>
     </motion.main>
   );
