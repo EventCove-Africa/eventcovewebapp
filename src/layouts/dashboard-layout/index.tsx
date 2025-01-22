@@ -34,7 +34,7 @@ export default function DashboardLayout() {
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-auto md:p-4 p-2 bg-gray-50">
+        <main className="flex-1 overflow-auto md:p-4 p-2 bg-gray-50 pb-20">
           <Outlet />
         </main>
 
