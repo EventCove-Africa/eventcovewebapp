@@ -23,7 +23,7 @@ export default function MobileNavigation() {
 
   return (
     <nav className="fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 md:hidden">
-      <ul className="flex justify-between items-center px-4 py-2">
+      <ul className="flex justify-between items-center p-2">
         {sidebarMenuItems.map(({ name, path, icon: Icon }) => (
           <li key={name} className="flex-1 text-center">
             <NavLink
