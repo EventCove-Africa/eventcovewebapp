@@ -42,7 +42,7 @@ export default function Events() {
           <h3
             key={event.type}
             onClick={() => navigate(`/app/events?eventType=${event.type}`)}
-            className={`md:text-sm text-xs font-normal cursor-pointer  ${
+            className={`md:text-sm text-xs font-normal cursor-pointer ${
               eventType === event.type ? "text-primary_100" : "text-grey_100"
             }`}
           >
