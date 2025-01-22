@@ -137,7 +137,7 @@ export default function EventCard() {
               {event.description}
             </p>
           </div>
-          <div className="flex lg:flex-row flex-col gap-3 lg:items-center items-start mt-2">
+          <div className="flex md:flex-row flex-col gap-3 lg:items-center items-start mt-2">
             <div className="p-3 rounded text-primary_100 font-normal text-xs flex items-center gap-1 bg-pink_100">
               <Calendar2 size="16" color="#A30162" /> {event.date}
             </div>
