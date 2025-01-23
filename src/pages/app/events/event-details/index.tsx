@@ -118,33 +118,59 @@ export default function EventDetails() {
         <div className="bg-white w-full rounded-xl h-fit p-3">
           <h3 className="text-sm font-normal text-dark_200">Tickets</h3>
           <div className="grid md:grid-cols-3 grid-cols-1 gap-3 mt-4">
-            <div className="bg-grey_500 rounded-md p-2 flex gap-2 items-center">
-              <Teacher size="20" color="#4242FD" />
-              <div className="flex flex-col gap-1">
-                <h3 className="text-grey_100 text-xs font-normal">
-                  Early bird
-                </h3>
-                <h5 className="text-dark_200 font-normal md:text-base text-sm">
-                  {formatToNaira(0)}
-                </h5>
+            <div className="bg-grey_500 rounded-md p-2 flex flex-col justify-between">
+              <div className="flex gap-2 items-center">
+                <Teacher size="20" color="#4242FD" />
+                <div className="flex flex-col gap-1">
+                  <h3 className="text-grey_100 text-xs font-normal">
+                    Early bird
+                  </h3>
+                  <h5 className="text-dark_200 font-normal md:text-base text-sm">
+                    {formatToNaira(0)}
+                  </h5>
+                </div>
+              </div>
+              <div className="self-end font-medium md:text-base text-sm text-grey_100">
+                200/
+                <span className="font-medium md:text-base text-sm text-dark_200">
+                  500
+                </span>
               </div>
             </div>
-            <div className="bg-grey_500 rounded-md p-2 flex gap-2 items-center">
-              <Briefcase size="20" color="#4242FD" />
-              <div className="flex flex-col gap-1">
-                <h3 className="text-grey_100 text-xs font-normal">Standard</h3>
-                <h5 className="text-dark_200 font-normal md:text-base text-sm">
-                  {formatToNaira(0)}
-                </h5>
+            <div className="bg-grey_500 rounded-md p-2 flex flex-col justify-between">
+              <div className="flex gap-2 items-center">
+                <Briefcase size="20" color="#4242FD" />
+                <div className="flex flex-col gap-1">
+                  <h3 className="text-grey_100 text-xs font-normal">
+                    Standard
+                  </h3>
+                  <h5 className="text-dark_200 font-normal md:text-base text-sm">
+                    {formatToNaira(0)}
+                  </h5>
+                </div>
+              </div>
+              <div className="self-end font-medium md:text-base text-sm text-grey_100">
+                200/
+                <span className="font-medium md:text-base text-sm text-dark_200">
+                  500
+                </span>
               </div>
             </div>
-            <div className="bg-grey_500 rounded-md p-2 flex gap-2 items-center">
-              <Crown1 size="20" color="#4242FD" />
-              <div className="flex flex-col gap-1">
-                <h3 className="text-grey_100 text-xs font-normal">Vip</h3>
-                <h5 className="text-dark_200 font-normal md:text-base text-sm">
-                  {formatToNaira(0)}
-                </h5>
+            <div className="bg-grey_500 rounded-md p-2 flex flex-col justify-between">
+              <div className="flex gap-2 items-center">
+                <Crown1 size="20" color="#4242FD" />
+                <div className="flex flex-col gap-1">
+                  <h3 className="text-grey_100 text-xs font-normal">Vip</h3>
+                  <h5 className="text-dark_200 font-normal md:text-base text-sm">
+                    {formatToNaira(0)}
+                  </h5>
+                </div>
+              </div>
+              <div className="self-end font-medium md:text-base text-sm text-grey_100">
+                200/
+                <span className="font-medium md:text-base text-sm text-dark_200">
+                  500
+                </span>
               </div>
             </div>
           </div>
