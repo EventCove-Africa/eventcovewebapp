@@ -1,5 +1,4 @@
 import { Form, Formik } from "formik";
-import * as Yup from "yup";
 import { motion } from "framer-motion";
 import Button from "../../../components/FormComponents/Button";
 import useNavigation from "../../../hooks/useNavigation";
@@ -9,15 +8,11 @@ import ModalPopup from "../../../components/ModalPopup";
 import SignupSuccess from "../../components/SignupSuccess";
 import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
 import CustomSelect from "../../../components/FormComponents/SelectInputField";
+import { signupAddBankSchema } from "../../../form-schemas";
 
 export default function AddBank() {
   const { navigate } = useNavigation();
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
-
-  const loginSchema = Yup.object().shape({
-    account_number: Yup.string().required("Account number is required"),
-    bank_name: Yup.string().required("Bank name is required"),
-  });
 
   return (
     <motion.main
@@ -35,7 +30,7 @@ export default function AddBank() {
           account_number: "",
           bank_name: "",
         }}
-        validationSchema={loginSchema}
+        validationSchema={signupAddBankSchema}
         enableReinitialize
         onSubmit={(values, actions) => {
           console.log(values);
@@ -57,9 +52,7 @@ export default function AddBank() {
               <CustomSelect
                 label="Bank Name"
                 name="bank_name"
-                onChange={(event) =>
-                  setFieldValue("bank_name", event?.value)
-                }
+                onChange={(event) => setFieldValue("bank_name", event?.value)}
                 options={[
                   { label: "UBA", value: "UBA" },
                   { label: "ACCESS", value: "virtuACCESSal" },
@@ -94,6 +87,7 @@ export default function AddBank() {
           text="Congrats, you’re all set! 🎉 Time to vibe. 🚀"
           handleOpenClose={handleOpenClose}
           handleFunction={() => navigate("/auth/login")}
+          buttonText="Proceed"
         />
       </ModalPopup>
     </motion.main>

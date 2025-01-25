@@ -1,5 +1,4 @@
 import { Form, Formik } from "formik";
-import * as Yup from "yup";
 import { motion } from "framer-motion";
 import Button from "../../../components/FormComponents/Button";
 import TextInputField from "../../../components/FormComponents/InputField";
@@ -9,16 +8,11 @@ import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
 import ModalPopup from "../../../components/ModalPopup";
 import InfoModal from "../../components/InfoModal";
 import useNavigation from "../../../hooks/useNavigation";
+import { forgetPasswordSchema } from "../../../form-schemas";
 
 export default function ForgetPassword() {
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
   const { navigate } = useNavigation();
-
-  const forgetPasswordSchema = Yup.object().shape({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-  });
 
   return (
     <motion.main

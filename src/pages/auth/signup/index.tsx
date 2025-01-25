@@ -1,5 +1,4 @@
 import { Form, Formik } from "formik";
-import * as Yup from "yup";
 import { motion } from "framer-motion";
 import Button from "../../../components/FormComponents/Button";
 import TextInputField from "../../../components/FormComponents/InputField";
@@ -11,23 +10,12 @@ import OTPVerify from "../../../components/OtpVerify";
 import toast from "react-hot-toast";
 import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
 import useNavigation from "../../../hooks/useNavigation";
+import { signupSchema } from "../../../form-schemas";
 
 export default function SignUp() {
   const { navigate } = useNavigation();
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
-  const signupSchema = Yup.object().shape({
-    full_name: Yup.string().required("Fullname is required"),
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    password: Yup.string()
-      .min(8, "Too Short!")
-      .max(50, "Too Long!")
-      .required("Password is required"),
-    confirm_password: Yup.string()
-      .oneOf([Yup.ref("password")], "Passwords must match")
-      .required("Confirm password is required...."),
-  });
+
   return (
     <motion.main
       variants={animationVariants}
@@ -142,7 +130,7 @@ export default function SignUp() {
       <ModalPopup isOpen={isOpenModal}>
         <OTPVerify
           handleOpenClose={handleOpenClose}
-          nextPath="/auth/add-bank"
+          nextPath="/auth/signup/add-bank"
         />
       </ModalPopup>
     </motion.main>

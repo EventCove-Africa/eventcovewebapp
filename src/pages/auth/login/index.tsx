@@ -1,5 +1,4 @@
 import { Form, Formik } from "formik";
-import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { useGoogleLogin } from "@react-oauth/google";
 import useNavigation from "../../../hooks/useNavigation";
@@ -8,22 +7,13 @@ import TextInputField from "../../../components/FormComponents/InputField";
 import PasswordInputField from "../../../components/FormComponents/PasswordField";
 import GoogleAuth from "../../../components/GoogleAuth";
 import { animationVariants } from "../../../utils";
+import { loginSchema } from "../../../form-schemas";
 
 export default function Login() {
   const { navigate } = useNavigation();
   const login = useGoogleLogin({
     onSuccess: (response) => console.log("Login Success:", response),
     onError: (error) => console.error("Login Failed:", error),
-  });
-
-  const loginSchema = Yup.object().shape({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    password: Yup.string()
-      .min(8, "Too Short!")
-      .max(50, "Too Long!")
-      .required("Password is required"),
   });
 
   return (

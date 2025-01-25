@@ -1,5 +1,4 @@
 import { Form, Formik } from "formik";
-import * as Yup from "yup";
 import { motion } from "framer-motion";
 import Button from "../../../components/FormComponents/Button";
 import PasswordInputField from "../../../components/FormComponents/PasswordField";
@@ -8,19 +7,12 @@ import ModalPopup from "../../../components/ModalPopup";
 import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
 import SignupSuccess from "../../components/SignupSuccess";
 import useNavigation from "../../../hooks/useNavigation";
+import { signupResetPasswordSchema } from "../../../form-schemas";
 
 export default function ResetPassword() {
   const { navigate } = useNavigation();
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
-  const signupSchema = Yup.object().shape({
-    password: Yup.string()
-      .min(8, "Too Short!")
-      .max(50, "Too Long!")
-      .required("Password is required"),
-    confirm_password: Yup.string()
-      .oneOf([Yup.ref("password")], "Passwords must match")
-      .required("Confirm password is required...."),
-  });
+
   return (
     <motion.main
       variants={animationVariants}
@@ -37,7 +29,7 @@ export default function ResetPassword() {
           password: "",
           confirm_password: "",
         }}
-        validationSchema={signupSchema}
+        validationSchema={signupResetPasswordSchema}
         enableReinitialize
         onSubmit={(values, actions) => {
           console.log(values);

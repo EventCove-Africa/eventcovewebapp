@@ -20,6 +20,8 @@ const Home = lazy(() => import("./pages/app/home"));
 const Events = lazy(() => import("./pages/app/events"));
 const AddEvents = lazy(() => import("./pages/app/events/add"));
 const EventDetails = lazy(() => import("./pages/app/events/event-details"));
+const Tickets = lazy(() => import("./pages/app/tickets"));
+const AddTickets = lazy(() => import("./pages/app/tickets/add"));
 
 const FallbackLoader = () => <div>Loading...</div>;
 
@@ -54,7 +56,7 @@ function App() {
           <Route path="auth" element={<AuthLayout />}>
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<SignUp />} />
-            <Route path="add-bank" element={<AddBank />} />
+            <Route path="signup/add-bank" element={<AddBank />} />
             <Route path="forget-password" element={<ForgetPassword />} />
             <Route path="reset-password" element={<ResetPassword />} />
           </Route>
@@ -88,6 +90,22 @@ function App() {
               element={
                 <PageTransition locationKey={location.pathname}>
                   <EventDetails />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="tickets"
+              element={
+                <PageTransition locationKey={location.pathname}>
+                  <Tickets />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="tickets/add"
+              element={
+                <PageTransition locationKey={location.pathname}>
+                  <AddTickets />
                 </PageTransition>
               }
             />

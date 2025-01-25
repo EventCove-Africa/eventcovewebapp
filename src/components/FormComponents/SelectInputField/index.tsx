@@ -16,6 +16,7 @@ export interface CustomSelectProps<
 > extends ReactSelectProps<OptionType, IsMulti, GroupBase<OptionType>> {
   label?: string;
   errors?: any;
+  value?: any;
   touched?: any;
   name?: string;
 }
@@ -31,10 +32,11 @@ const CustomSelect = <
   touched,
   isMulti,
   placeholder = "",
+  value,
   ...props
 }: CustomSelectProps<OptionType, IsMulti>) => {
   return (
-    <div style={{ marginBottom: "1rem" }}>
+    <div>
       {label && (
         <label className={`text-xs text-dark_200 leading-5`}>{label}</label>
       )}
@@ -42,6 +44,7 @@ const CustomSelect = <
         options={options}
         isMulti={isMulti}
         name={name}
+        value={value}
         components={{ Option: CustomOption }} // Use the custom Option component
         styles={{
           control: (baseStyles, state) => ({
