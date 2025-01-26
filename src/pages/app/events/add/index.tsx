@@ -1,6 +1,5 @@
 import { DocumentUpload } from "iconsax-react";
 import { Form, Formik } from "formik";
-import * as Yup from "yup";
 import Button from "../../../../components/FormComponents/Button";
 import TextInputField from "../../../../components/FormComponents/InputField";
 import CustomSelect from "../../../../components/FormComponents/SelectInputField";
@@ -10,30 +9,12 @@ import useOpenCloseModal from "../../../../hooks/useOpenCloseModal";
 import SignupSuccess from "../../../components/SignupSuccess";
 import DateTimePicker from "../../../../components/FormComponents/DateTimePicker";
 import DescriptionBar from "../../../../components/DescriptionBar";
+import useNavigation from "../../../../hooks/useNavigation";
+import { addEventSchema } from "../../../../form-schemas";
 
 export default function AddEvents() {
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
-
-  const addEventSchema = Yup.object().shape({
-    event_image: Yup.mixed().required("Image is required"),
-    event_name: Yup.string().required("Name is required"),
-    venue_type: Yup.string().required("Venue type is required"),
-    location: Yup.string().required("Location is required"),
-    start_date_time: Yup.date()
-      .min(new Date(), "Date cannot be in the past")
-      .required("Start date and time is required"),
-    end_date_time: Yup.date()
-      .min(new Date(), "Date cannot be in the past")
-      .required("End date and time is required"),
-    event_privacy: Yup.string().required("Event privacy is required"),
-    event_type: Yup.string().required("Event type is required"),
-    event_description: Yup.string().required("Event description is required"),
-    organizer_phone_number: Yup.string()
-      .matches(/^\d+$/, "Phone number must contain only digits") // Ensures only digits
-      .min(11, "Phone number must be at least 10 digits") // Adjust as needed
-      .max(15, "Phone number cannot exceed 15 digits") // Adjust as needed
-      .required("Phone number is required"), // Required field
-  });
+  const { navigate } = useNavigation();
 
   return (
     <div className="w-full h-full">
@@ -259,7 +240,7 @@ export default function AddEvents() {
           text="Woohoo! You just created an event! 🎊✨"
           buttonText="Proceed to create ticket"
           handleOpenClose={handleOpenClose}
-          handleFunction={{}}
+          handleFunction={() => navigate("/app/tickets/add")}
         />
       </ModalPopup>
     </div>

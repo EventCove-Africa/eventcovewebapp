@@ -6,7 +6,7 @@ import Button from "../../components/FormComponents/Button";
 export default function SignupSuccess({
   handleOpenClose,
   text,
-  buttonText = "Proceed",
+  buttonText,
   handleFunction,
 }: any) {
   return (
@@ -29,15 +29,17 @@ export default function SignupSuccess({
       <h4 className="text-dark_200 text-base font-normal text-center my-4">
         {text}
       </h4>
-      <Button
-        title={buttonText}
-        className="w-full h-[40px] text-center border border-dark_200"
-        type="button"
-        onClick={() => {
-          handleOpenClose();
-          if (handleFunction()) handleFunction();
-        }}
-      />
+      {buttonText && (
+        <Button
+          title={buttonText}
+          className="w-full h-[40px] text-center border border-dark_200"
+          type="button"
+          onClick={() => {
+            handleOpenClose();
+            if (handleFunction()) handleFunction();
+          }}
+        />
+      )}
     </div>
   );
 }

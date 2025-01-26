@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import OTPInput from "react-otp-input";
@@ -6,7 +7,7 @@ import Button from "../FormComponents/Button";
 import useNavigation from "../../hooks/useNavigation";
 
 type OTPVerifyProps = {
-  nextPath: string;
+  nextPath?: string;
   handleOpenClose: () => void;
 };
 
@@ -43,7 +44,7 @@ export default function OTPVerify({
         onSubmit={(values, actions) => {
           console.log(values);
           actions.setSubmitting(false);
-          navigate(nextPath);
+          nextPath && navigate(nextPath);
         }}
       >
         {({
