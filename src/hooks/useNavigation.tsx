@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 
-type NavigateTo = string | -1;
+type NavigateTo = string;
 
 const useNavigation = () => {
   const navigate = useNavigate();
@@ -8,11 +8,7 @@ const useNavigation = () => {
 
   const customNavigate = (to: NavigateTo, state?: object) => {
     // Add any custom logic here (e.g., logging, analytics)
-    if (to === -1) {
-      navigate(-1); // Go back one page
-    } else {
-      navigate(to, { state }); // Navigate to the specified route
-    }
+    navigate(to, { state }); // Navigate to the specified route
   };
 
   return {
