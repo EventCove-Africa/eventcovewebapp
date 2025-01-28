@@ -15,7 +15,7 @@ interface MenuItemProps {
   onClick: () => void;
 }
 
-const MenuItem: React.FC<MenuItemProps> = ({ icon, label, onClick }) => {
+export const MenuItem: React.FC<MenuItemProps> = ({ icon, label, onClick }) => {
   return (
     <li
       className="py-2 px-4 text-sm cursor-pointer hover:bg-gray-100 flex gap-3 items-center"
@@ -95,7 +95,11 @@ export default function Header() {
         {isMenuOpen && (
           <div
             ref={menuRef} // Assigning menuRef to the menu div
-            className={`absolute bg-white shadow-lg p-2 rounded-md mt-10 w-48 sm:w-56 z-50 right-0 transition-all duration-300 ease-in transform ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}
+            className={`absolute bg-white shadow-lg p-2 rounded-md mt-10 w-48 sm:w-56 z-50 right-0 transition-all duration-300 ease-in transform ${
+              isMenuOpen
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-2"
+            }`}
             role="menu"
             aria-labelledby="user-menu"
           >
@@ -103,7 +107,7 @@ export default function Header() {
               <MenuItem
                 icon={<Profile size="18" color="#767779" />}
                 label="Profile"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => navigate("/tickets-validation")}
               />
               <MenuItem
                 icon={<Setting2 size="18" color="#767779" />}
@@ -122,5 +126,3 @@ export default function Header() {
     </div>
   );
 }
-
-

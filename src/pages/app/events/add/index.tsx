@@ -1,4 +1,5 @@
-import { DocumentUpload } from "iconsax-react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Add, CloseCircle, DocumentUpload } from "iconsax-react";
 import { Form, Formik } from "formik";
 import Button from "../../../../components/FormComponents/Button";
 import TextInputField from "../../../../components/FormComponents/InputField";
@@ -19,222 +20,300 @@ export default function AddEvents() {
   return (
     <div className="w-full h-full">
       <DescriptionBar text=" Event vibes loading—fill out the form to get started! 🌟" />
-      <div className="lg:w-2/5 w-full p-3 bg-white min-h-[500px] h-auto rounded-xl shadow">
-        <Formik
-          validationSchema={addEventSchema}
-          initialValues={{
-            event_image: null,
-            event_name: "",
-            venue_type: "",
-            location: "",
-            start_date_time: null,
-            end_date_time: null,
-            event_privacy: "",
-            event_type: "",
-            event_description: "",
-            organizer_phone_number: "",
-          }}
-          enableReinitialize
-          onSubmit={(values, actions) => {
-            console.log(values);
-            actions.setSubmitting(false);
-            actions.resetForm();
-            handleOpenClose();
-          }}
-        >
-          {({
-            handleSubmit,
-            handleChange,
-            setFieldValue,
-            values,
-            touched,
-            errors,
-            isSubmitting,
-          }) => (
-            <Form onSubmit={handleSubmit} className="w-full">
-              <div className="mb-2 w-full">
-                <label
-                  htmlFor="event_image"
-                  className="text-xs text-dark_200 leading-5 mb-2"
-                >
-                  Event Image
-                  <input
-                    type="file"
-                    name="event_image"
-                    id="event_image"
-                    accept=".jpg, .png, jpeg"
-                    className="h-[52px] w-full outline-none px-4"
-                    onChange={(e) =>
-                      setFieldValue("event_image", e.target.files?.[0])
-                    }
-                  />
-                  {values?.event_image ? (
-                    <div className="cursor-pointer w-full h-[190px] relative">
-                      <img
-                        alt="upload"
-                        src={window.URL.createObjectURL(values?.event_image)}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="bg-white text-dark_200 text-xs font-normal px-3 py-2 rounded-full flex justify-center items-center gap-3 absolute -bottom-2 left-0">
-                        <DocumentUpload size="20" color="#0E0416" /> Change
-                        Image
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="w-full h-[140px] bg-grey_500 border border-border_color rounded-lg cursor-pointer flex flex-col gap-1 justify-center items-center px-6">
-                      <DocumentUpload size="32" color="#0E0416" />
-                      <h3 className="text-grey_100 text-xs leading-4 font-normal text-center">
-                        Drag or drop image
-                      </h3>
-                      <h3 className="text-dark_200 text-xs leading-4 font-normal text-center">
-                        Recommended dimension: 930px x 1163px
-                      </h3>
-                      <h3 className="text-dark_200 text-xs leading-4 font-normal text-center">
-                        Max file size: 1mb
-                      </h3>
-                    </div>
-                  )}
-                </label>
-                {errors.event_image && touched.event_image ? (
-                  <div className="text-xs text-red_100">
-                    {errors.event_image}
-                  </div>
-                ) : null}
-              </div>
-              <div className="mb-2">
-                <TextInputField
-                  labelName="Event Name"
-                  name="event_name"
-                  handleChange={handleChange}
-                  type="text"
-                  placeholder=""
-                  value={values.event_name}
-                  errors={errors?.event_name}
-                  touched={touched?.event_name}
-                />
-              </div>
-              <div className="mb-2">
-                <CustomSelect
-                  label="Event Venue Type"
-                  name="venue_type"
-                  onChange={(event) =>
-                    setFieldValue("venue_type", event?.value)
-                  }
-                  options={[
-                    { label: "Physical", value: "physical" },
-                    { label: "Virtual", value: "virtual" },
-                  ]}
-                  errors={errors?.venue_type}
-                  touched={touched?.venue_type}
-                />
-              </div>
-              <div className="mb-2">
-                <TextInputField
-                  labelName="Location (Address or Virtual Link)"
-                  name="location"
-                  handleChange={handleChange}
-                  type="text"
-                  placeholder=""
-                  value={values.location}
-                  errors={errors?.location}
-                  touched={touched?.location}
-                />
-              </div>
-              <div className="w-full flex gap-3 md:flex-row flex-col">
-                <div className="mb-2 w-full">
-                  <DateTimePicker
-                    labelName="Start Date & Time"
-                    name="start_date_time"
-                    value={values.start_date_time}
-                    onChange={(date) => setFieldValue("start_date_time", date)}
-                    showTime={true}
-                    minDate={new Date()}
-                    errors={errors?.start_date_time}
-                    touched={touched?.start_date_time}
-                  />
-                </div>
-                <div className="mb-2 w-full">
-                  <DateTimePicker
-                    labelName="End Date & Time"
-                    name="end_date_time"
-                    value={values?.end_date_time}
-                    onChange={(date) => setFieldValue("end_date_time", date)}
-                    showTime={true}
-                    minDate={new Date()}
-                    errors={errors?.end_date_time}
-                    touched={touched?.end_date_time}
-                  />
-                </div>
-              </div>
+      <Formik
+        validationSchema={addEventSchema}
+        initialValues={{
+          event_image: null,
+          event_name: "",
+          email: "",
+          email_list: [],
+          venue_type: "",
+          location: "",
+          start_date_time: null,
+          end_date_time: null,
+          event_privacy: "",
+          event_type: "",
+          event_description: "",
+          organizer_phone_number: "",
+        }}
+        enableReinitialize
+        onSubmit={(values, actions) => {
+          console.log(values);
+          actions.setSubmitting(false);
+          actions.resetForm();
+          handleOpenClose();
+        }}
+      >
+        {({
+          handleSubmit,
+          handleChange,
+          setFieldValue,
+          values,
+          touched,
+          errors,
+          isSubmitting,
+        }) => {
+          const removeItemFromAllValues = (idToRemove: number) => {
+            const updatedValues = values.email_list.filter(
+              (item: any) => item.id !== idToRemove
+            );
+            setFieldValue("email_list", updatedValues);
+          };
 
-              <div className="w-full flex gap-3 md:flex-row flex-col">
+          const addEmailToList = () => {
+            if (values?.email == "") return;
+            const nextId =
+              values.email_list.length > 0
+                ? Math.max(
+                    ...values.email_list.map((item: any) => item.id ?? 0)
+                  ) + 1
+                : 1;
+            setFieldValue("email_list", [
+              ...values.email_list,
+              { id: nextId, email: values.email }, // Add numeric id
+            ]);
+            setFieldValue("email", "");
+          };
+
+          return (
+            <Form
+              onSubmit={handleSubmit}
+              className="w-full flex lg:flex-row flex-col md:gap-6 gap-3"
+            >
+              <div className="w-full p-3 bg-white min-h-[500px] h-auto rounded-xl shadow">
                 <div className="mb-2 w-full">
-                  <CustomSelect
-                    label="Event Privacy"
-                    name="event_privacy"
-                    onChange={(event) =>
-                      setFieldValue("event_privacy", event?.value)
-                    }
-                    options={[
-                      { label: "Public", value: "public" },
-                      { label: "Private", value: "private" },
-                    ]}
-                    errors={errors?.event_privacy}
-                    touched={touched?.event_privacy}
+                  <label
+                    htmlFor="event_image"
+                    className="text-xs text-dark_200 leading-5 mb-2"
+                  >
+                    Event Image
+                    <input
+                      type="file"
+                      name="event_image"
+                      id="event_image"
+                      accept=".jpg, .png, jpeg"
+                      className="h-[52px] w-full outline-none px-4"
+                      onChange={(e) =>
+                        setFieldValue("event_image", e.target.files?.[0])
+                      }
+                    />
+                    {values?.event_image ? (
+                      <div className="cursor-pointer w-full h-[190px] relative">
+                        <img
+                          alt="upload"
+                          src={window.URL.createObjectURL(values?.event_image)}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="bg-white text-dark_200 text-xs font-normal px-3 py-2 rounded-full flex justify-center items-center gap-3 absolute -bottom-2 left-0">
+                          <DocumentUpload size="20" color="#0E0416" /> Change
+                          Image
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="w-full h-[140px] bg-grey_500 border border-border_color rounded-lg cursor-pointer flex flex-col gap-1 justify-center items-center px-6">
+                        <DocumentUpload size="32" color="#0E0416" />
+                        <h3 className="text-grey_100 text-xs leading-4 font-normal text-center">
+                          Drag or drop image
+                        </h3>
+                        <h3 className="text-dark_200 text-xs leading-4 font-normal text-center">
+                          Recommended dimension: 930px x 1163px
+                        </h3>
+                        <h3 className="text-dark_200 text-xs leading-4 font-normal text-center">
+                          Max file size: 1mb
+                        </h3>
+                      </div>
+                    )}
+                  </label>
+                  {errors.event_image && touched.event_image ? (
+                    <div className="text-xs text-red_100">
+                      {errors.event_image}
+                    </div>
+                  ) : null}
+                </div>
+                <div className="mb-2">
+                  <TextInputField
+                    labelName="Event Name"
+                    name="event_name"
+                    handleChange={handleChange}
+                    type="text"
+                    placeholder=""
+                    value={values.event_name}
+                    errors={errors?.event_name}
+                    touched={touched?.event_name}
                   />
                 </div>
-                <div className="mb-2 w-full">
+                <div className="mb-2">
                   <CustomSelect
-                    label="Event Type"
-                    name="event_type"
+                    label="Event Venue Type"
+                    name="venue_type"
                     onChange={(event) =>
-                      setFieldValue("event_type", event?.value)
+                      setFieldValue("venue_type", event?.value)
                     }
                     options={[
-                      { label: "Paid", value: "paid" },
-                      { label: "Free", value: "free" },
+                      { label: "Physical", value: "physical" },
+                      { label: "Virtual", value: "virtual" },
                     ]}
-                    errors={errors?.event_type}
-                    touched={touched?.event_type}
+                    errors={errors?.venue_type}
+                    touched={touched?.venue_type}
+                  />
+                </div>
+                <div className="mb-2">
+                  <TextInputField
+                    labelName="Location (Address or Virtual Link)"
+                    name="location"
+                    handleChange={handleChange}
+                    type="text"
+                    placeholder=""
+                    value={values.location}
+                    errors={errors?.location}
+                    touched={touched?.location}
+                  />
+                </div>
+                <div className="w-full flex gap-3 md:flex-row flex-col">
+                  <div className="mb-2 w-full">
+                    <DateTimePicker
+                      labelName="Start Date & Time"
+                      name="start_date_time"
+                      value={values.start_date_time}
+                      onChange={(date) =>
+                        setFieldValue("start_date_time", date)
+                      }
+                      showTime={true}
+                      minDate={new Date()}
+                      errors={errors?.start_date_time}
+                      touched={touched?.start_date_time}
+                    />
+                  </div>
+                  <div className="mb-2 w-full">
+                    <DateTimePicker
+                      labelName="End Date & Time"
+                      name="end_date_time"
+                      value={values?.end_date_time}
+                      onChange={(date) => setFieldValue("end_date_time", date)}
+                      showTime={true}
+                      minDate={new Date()}
+                      errors={errors?.end_date_time}
+                      touched={touched?.end_date_time}
+                    />
+                  </div>
+                </div>
+                <div className="w-full flex gap-3 md:flex-row flex-col">
+                  <div className="mb-2 w-full">
+                    <CustomSelect
+                      label="Event Privacy"
+                      name="event_privacy"
+                      onChange={(event) =>
+                        setFieldValue("event_privacy", event?.value)
+                      }
+                      options={[
+                        { label: "Public", value: "public" },
+                        { label: "Private", value: "private" },
+                      ]}
+                      errors={errors?.event_privacy}
+                      touched={touched?.event_privacy}
+                    />
+                  </div>
+                  <div className="mb-2 w-full">
+                    <CustomSelect
+                      label="Event Type"
+                      name="event_type"
+                      onChange={(event) =>
+                        setFieldValue("event_type", event?.value)
+                      }
+                      options={[
+                        { label: "Paid", value: "paid" },
+                        { label: "Free", value: "free" },
+                      ]}
+                      errors={errors?.event_type}
+                      touched={touched?.event_type}
+                    />
+                  </div>
+                </div>
+                <div className="mb-2">
+                  <TextAreaField
+                    labelName="Event Details"
+                    name="event_description"
+                    handleChange={handleChange}
+                    type="text"
+                    placeholder=""
+                    value={values.event_description}
+                    errors={errors?.event_description}
+                    touched={touched?.event_description}
+                  />
+                </div>
+                <div className="mb-2">
+                  <TextInputField
+                    labelName="Organizer Phone Number"
+                    name="organizer_phone_number"
+                    handleChange={handleChange}
+                    type="text"
+                    placeholder=""
+                    value={values.organizer_phone_number}
+                    errors={errors?.organizer_phone_number}
+                    touched={touched?.organizer_phone_number}
+                  />
+                </div>
+                <div className="md:w-[30%] w-full">
+                  <Button
+                    title="Create Event"
+                    className="w-full h-[40px] text-center my-6 border border-dark_200"
+                    type="submit"
+                    isLoading={isSubmitting}
                   />
                 </div>
               </div>
-              <div className="mb-2">
-                <TextAreaField
-                  labelName="Event Details"
-                  name="event_description"
-                  handleChange={handleChange}
-                  type="text"
-                  placeholder=""
-                  value={values.event_description}
-                  errors={errors?.event_description}
-                  touched={touched?.event_description}
-                />
-              </div>
-              <div className="mb-2">
-                <TextInputField
-                  labelName="Organizer Phone Number"
-                  name="organizer_phone_number"
-                  handleChange={handleChange}
-                  type="text"
-                  placeholder=""
-                  value={values.organizer_phone_number}
-                  errors={errors?.organizer_phone_number}
-                  touched={touched?.organizer_phone_number}
-                />
-              </div>
-              <div className="md:w-[30%] w-full">
-                <Button
-                  title="Create Event"
-                  className="w-full h-[40px] text-center my-6 border border-dark_200"
-                  type="submit"
-                  isLoading={isSubmitting}
-                />
+              <div className="w-full p-3 bg-white min-h-[100px] h-fit rounded-xl shadow">
+                <h4 className="text-dark_200 font-bold md:text-base text-sm">
+                  Add team members to this event{" "}
+                  <span className="text-grey_100">(optional)</span>
+                </h4>
+                <div className="mb-3">
+                  <TextInputField
+                    labelName="Email"
+                    name="email"
+                    handleChange={handleChange}
+                    type="text"
+                    placeholder=""
+                    value={values.email}
+                    errors={errors?.email}
+                    touched={touched?.email}
+                  />
+                </div>
+                <div className="flex gap-3 items-center flex-wrap">
+                  {values?.email_list?.map((d: any) => {
+                    return (
+                      <div
+                        key={d?.id}
+                        className="px-3 py-2 text-grey_100 border border-pink_200 bg-pink_100 rounded-md flex gap-4 items-center justify-between text-xs"
+                      >
+                        {d.email}
+                        <CloseCircle
+                          size="13"
+                          color="#767779"
+                          variant="Bold"
+                          className="cursor-pointer"
+                          onClick={() => removeItemFromAllValues(d?.id)}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="mt-4 w-full flex justify-end">
+                  <button
+                    type="button"
+                    className="bg-primary_300 px-3 py-2 flex gap-2 text-primary_100 text-xs rounded-md"
+                    onClick={addEmailToList}
+                  >
+                    <Add size="16" color="#A30162" />
+                    Add More
+                  </button>
+                </div>
               </div>
             </Form>
-          )}
-        </Formik>
-      </div>
+          );
+        }}
+      </Formik>
+
       <ModalPopup isOpen={isOpenModal}>
         <SignupSuccess
           text="Woohoo! You just created an event! 🎊✨"
