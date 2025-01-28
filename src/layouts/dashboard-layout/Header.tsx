@@ -95,7 +95,7 @@ export default function Header() {
         {isMenuOpen && (
           <div
             ref={menuRef} // Assigning menuRef to the menu div
-            className={`absolute bg-white shadow-lg p-2 rounded-md mt-10 w-48 sm:w-56 z-10 right-0 transition-all duration-300 ease-in transform ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}
+            className={`absolute bg-white shadow-lg p-2 rounded-md mt-10 w-48 sm:w-56 z-50 right-0 transition-all duration-300 ease-in transform ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}
             role="menu"
             aria-labelledby="user-menu"
           >

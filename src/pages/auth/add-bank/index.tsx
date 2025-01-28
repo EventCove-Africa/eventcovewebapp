@@ -72,9 +72,14 @@ export default function AddBank() {
                 errors={errors?.account_number}
                 touched={touched?.account_number}
               />
+              {values.account_number?.length === 10 && (
+                <span className="text-secondary_300 flex justify-end text-xs font-normal">
+                  Ronaldo Namzario
+                </span>
+              )}
             </div>
             <Button
-              title="proceed"
+              title="Proceed"
               className="w-full h-[40px] text-center my-6 border border-dark_200"
               type="submit"
               isLoading={isSubmitting}

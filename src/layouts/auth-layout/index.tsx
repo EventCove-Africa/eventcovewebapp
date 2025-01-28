@@ -1,16 +1,16 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import logo from "../../assets/icons/logo.svg";
 import authBg from "../../assets/images/auth-bg.png";
 import branding from "../../assets/icons/branding.svg";
 import event from "../../assets/icons/event.svg";
 import ticket from "../../assets/icons/ticket.svg";
 import payment from "../../assets/icons/payment.svg";
 import AuthTooltip from "../../components/AuthTooltip";
+import logo from "../../assets/icons/logo.svg";
 
 export default function AuthLayout() {
   // Detect screen size
-  const navigate = useNavigate();
   const isMobile = window.matchMedia("(max-width: 768px)").matches;
+  const navigate = useNavigate()
 
   return (
     <div className="flex flex-col w-full h-screen">
@@ -25,7 +25,6 @@ export default function AuthLayout() {
           onClick={() => navigate("/auth/login")}
         />
       </header>
-
       {/* Main Content */}
       <main className="flex-1 overflow-hidden px-6 py-4">
         <div className="flex h-full bg-white p-4 rounded-xl shadow-lg">
