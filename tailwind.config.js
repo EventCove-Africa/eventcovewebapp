@@ -36,6 +36,7 @@ export default {
         green_200: "#4CAF50",
         green_300: '#D7EFD8',
         pink_100: "#FAF5F8",
+        pink_200: "#9C5B88",
         yellow_100: "#FFF8EF",
         yellow_200: "#C77700",
         purple_100: "#962DFF",

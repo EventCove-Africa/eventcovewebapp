@@ -10,7 +10,7 @@ export default function TicketIdEntry({ handleOpenClose }: any) {
       <Formik
         initialValues={{
           ticked_id: "",
-          reference_number: "",
+          // reference_number: "",
         }}
         validationSchema={ticketValidationSchema}
         enableReinitialize
@@ -42,7 +42,7 @@ export default function TicketIdEntry({ handleOpenClose }: any) {
                 touched={touched?.ticked_id}
               />
             </div>
-            <div className="mb-1">
+            {/* <div className="mb-1">
               <TextInputField
                 labelName="Reference Number"
                 name="reference_number"
@@ -53,7 +53,7 @@ export default function TicketIdEntry({ handleOpenClose }: any) {
                 errors={errors?.reference_number}
                 touched={touched?.reference_number}
               />
-            </div>
+            </div> */}
             <div>
               <Button
                 title="Proceed"
