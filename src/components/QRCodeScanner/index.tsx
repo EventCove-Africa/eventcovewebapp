@@ -12,8 +12,8 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
   onError,
 }) => {
   const [isScanning, setIsScanning] = useState(false);
-  // const [cameras, setCameras] = useState<{ id: string; label: string }[]>([]);
-  // const [selectedCamera, setSelectedCamera] = useState<string | null>(null);
+  const [cameras, setCameras] = useState<{ id: string; label: string }[]>([]);
+  const [selectedCamera, setSelectedCamera] = useState<string | null>(null);
   const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
   const scannerContainerId = "custom-qr-scanner";
 
@@ -22,8 +22,8 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
     Html5Qrcode.getCameras()
       .then((devices) => {
         if (devices && devices.length > 0) {
-          // setCameras(devices);
-          // setSelectedCamera(devices[0].id); // Set the first camera as default
+          setCameras(devices);
+          setSelectedCamera(devices[0].id); // Set the first camera as default
           console.log("Cameras initialized:", devices);
         } else {
           console.error("No cameras found");
@@ -96,17 +96,17 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
     }
   };
 
-  // const handleCameraChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   setSelectedCamera(event.target.value);
-  //   if (isScanning) {
-  //     stopScanning();
-  //     setTimeout(startScanning, 500); // Restart scanning with the new camera
-  //   }
-  // };
+  const handleCameraChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCamera(event.target.value);
+    if (isScanning) {
+      stopScanning();
+      setTimeout(startScanning, 500); // Restart scanning with the new camera
+    }
+  };
 
   return (
     <div className="w-full flex justify-center flex-col items-center">
-      {/* <div className="mb-4">
+      <div className="mb-4">
         <select
           id="camera-select"
           value={selectedCamera || ""}
@@ -115,11 +115,11 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
         >
           {cameras.map((camera) => (
             <option key={camera.id} value={camera.id}>
-              {camera.label}
+              {camera.label || camera.id}
             </option>
           ))}
         </select>
-      </div> */}
+      </div>
       {!isScanning ? (
         <div
           onClick={startScanning}

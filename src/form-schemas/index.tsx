@@ -126,5 +126,5 @@ export const withdrawalsSchema = Yup.object().shape({
 
 export const ticketValidationSchema = Yup.object().shape({
   ticked_id: Yup.mixed().required("Ticket is required"),
-  reference_number: Yup.string().required("Reference is required"),
+  // reference_number: Yup.string().required("Reference is required"),
 });
