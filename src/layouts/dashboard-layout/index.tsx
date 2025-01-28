@@ -16,8 +16,8 @@ export default function DashboardLayout() {
     <div className="flex w-full h-screen min-h-screen overflow-hidden">
       {/* Sidebar */}
       <aside
-        className={`bg-white md:flex-shrink-0 px-1 transition-all duration-300 md:block hidden ${
-          isSidebarCollapsed ? "w-[60px]" : "w-[150px]"
+        className={`bg-white md:flex-shrink-0 px-1 transition-all duration-300 lg:block hidden ${
+          isSidebarCollapsed ? "w-[3.75rem]" : "w-[11rem]"
         }`}
       >
         <Sidebar
@@ -34,12 +34,12 @@ export default function DashboardLayout() {
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-auto md:p-4 p-2 bg-gray-50 pb-20">
+        <main className="flex-1 overflow-auto md:p-4 p-2 bg-gray-50 pb-20 md:pb-24 lg:pb-6">
           <Outlet />
         </main>
 
         {/* Footer */}
-        <footer className="h-auto bg-white flex-shrink-0 px-4 py-2 md:block hidden">
+        <footer className="h-auto bg-white flex-shrink-0 px-4 py-2 lg:block hidden">
           <Footer />
         </footer>
 

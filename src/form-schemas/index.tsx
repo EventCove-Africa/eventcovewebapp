@@ -20,6 +20,11 @@ export const signupAddBankSchema = Yup.object().shape({
   bank_name: Yup.string().required("Bank name is required"),
 });
 
+export const addBvnNinSchema = Yup.object().shape({
+  bvn: Yup.string().required("Bvn is required"),
+  nin: Yup.string().required("Nin is required"),
+});
+
 export const signupSchema = Yup.object().shape({
   full_name: Yup.string().required("Fullname is required"),
   email: Yup.string()
@@ -44,11 +49,21 @@ export const signupResetPasswordSchema = Yup.object().shape({
     .required("Confirm password is required...."),
 });
 
+export const createPinSchema = Yup.object().shape({
+  pin: Yup.string()
+    .min(4, "Too Short!")
+    .max(4, "PIN must be 4 digits!")
+    .required("PIN is required"),
+  confirm_pin: Yup.string()
+    .oneOf([Yup.ref("pin")], "PIN must match")
+    .required("Confirm PIN is required...."),
+});
+
 export const forgetPasswordSchema = Yup.object().shape({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-  });
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+});
 
 export const addTicketSchema = Yup.object().shape({
   ticket_category: Yup.mixed().required("Category is required"),
@@ -99,4 +114,17 @@ export const addEventSchema = Yup.object().shape({
     .min(11, "Phone number must be at least 10 digits") // Adjust as needed
     .max(15, "Phone number cannot exceed 15 digits") // Adjust as needed
     .required("Phone number is required"), // Required field
+});
+
+export const withdrawalsSchema = Yup.object().shape({
+  amount: Yup.mixed().required("Amount is required"),
+  transaction_pin: Yup.string()
+    .min(4, "Too Short!")
+    .max(4, "PIN must be 4 digits!")
+    .required("PIN is required"),
+});
+
+export const ticketValidationSchema = Yup.object().shape({
+  ticked_id: Yup.mixed().required("Ticket is required"),
+  reference_number: Yup.string().required("Reference is required"),
 });

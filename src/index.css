@@ -1,15 +1,32 @@
-@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 
-* {
+/* * {
   padding: 0px;
   margin: 0px;
   box-sizing: border-box;
   font-size: 100%;
   font-family: 'Public Sans', sans-serif;
+} */
+
+html {
+  box-sizing: border-box;
+  font-size: 16px; /* Explicit base font size */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background-color: #F1F5F8;
+  background-color: #f1f5f8;
+  font-family: 'Public Sans', sans-serif;
+  font-size: 1rem; /* Relative to the root size */
+  line-height: 1.5;
+  margin: 0;
 }
 
 /* Remove the number input arrows in Chrome, Safari, Edge, and Opera */
@@ -31,23 +48,23 @@ input[type="number"] {
   width: 100% !important;
 }
 .react-calendar__tile--active {
-  background-color: #A30162 !important; /* Selected day background */
+  background-color: #a30162 !important; /* Selected day background */
   color: white !important; /* Selected day text color */
   margin: 0px 10px;
 }
 
 .react-calendar__tile--active:focus {
-  background-color: #A30162 !important;
+  background-color: #a30162 !important;
 }
 
 .react-calendar__tile:hover {
-  background-color: #F0E0E9 !important; /* Optional: Hover effect */
+  background-color: #f0e0e9 !important; /* Optional: Hover effect */
 }
 .react-calendar__month-view__days__day--weekend:focus {
   color: white !important;
 }
 .react-calendar__tile--now {
-  background-color: #A30162 !important;
+  background-color: #a30162 !important;
   color: white !important;
 }
 
@@ -60,11 +77,12 @@ input[type="file"] {
 }
 
 .padding-spacing {
-  @apply md:px-16 px-8 md:py-4 py-2
+  @apply md:px-16 px-8 md:py-4 py-2;
 }
 
 @keyframes bounce-up {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -73,7 +91,8 @@ input[type="file"] {
 }
 
 @keyframes slide-right {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0);
   }
   50% {
@@ -82,7 +101,8 @@ input[type="file"] {
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -91,7 +111,8 @@ input[type="file"] {
 }
 
 @keyframes zoom {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -115,7 +136,6 @@ input[type="file"] {
 .animate-zoom {
   animation: zoom 3s infinite ease-in-out;
 }
-
 
 @tailwind base;
 @tailwind components;

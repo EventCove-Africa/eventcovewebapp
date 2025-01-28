@@ -139,7 +139,7 @@ export default function AddTickets() {
                       </div>
                       {values.ticket_details && (
                         <div className="w-full">
-                          <h3 className="text-grey_100 font-normal text-xs ">
+                          <h3 className="text-grey_100 font-normal text-xs mb-2">
                             Yo bestie! Let’s get this party started! 🎉 Pick
                             your vibe for example: 💎 VIP, 🎟️ Standard, ⏰ Early
                             Bird.

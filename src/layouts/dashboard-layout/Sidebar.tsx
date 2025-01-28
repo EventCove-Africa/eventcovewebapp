@@ -45,19 +45,20 @@ export default function Sidebar({ isCollapsed, toggleSidebar }: SidebarProps) {
                     <Icon
                       size="20"
                       className={`transition-colors duration-200 ml-3 ${
-                        isActive ? "text-primary_100" : "text-grey_100 hover:text-primary_100"
+                        isActive
+                          ? "text-primary_100"
+                          : "text-grey_100 hover:text-primary_100"
                       }`}
                     />
                     {/* Tooltip */}
                     {isCollapsed && (
-                      <div
-                        className="absolute left-[2.5rem] top-1/2 -translate-y-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 pointer-events-none"
-                        style={{ whiteSpace: "nowrap" }}
-                      >
+                      <div className="absolute whitespace-nowrap left-[2.5rem] top-1/2 -translate-y-1/2 bg-dark_200 text-white text-xs py-1 px-2 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 pointer-events-none">
                         {name}
                       </div>
                     )}
-                    {!isCollapsed && <span className="text-sm font-medium">{name}</span>}
+                    {!isCollapsed && (
+                      <span className="text-sm font-medium">{name}</span>
+                    )}
                   </div>
                 )}
               </NavLink>

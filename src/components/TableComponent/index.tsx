@@ -7,6 +7,7 @@ import {
   TableState,
   TableInstance,
 } from "react-table";
+import SearchInput from "../FormComponents/SearchInput";
 
 type TableProps<T extends object> = {
   columns: Column<T>[];
@@ -47,17 +48,13 @@ const TableComponent = <T extends object>({ columns, data }: TableProps<T>) => {
     setPageSize: (size: number) => void;
     state: { pageIndex: number };
   };
-
   return (
     <>
       <div className="mt-5">
-        <div className="bg-white rounded-tl-xl rounded-tr-xl p-3">
-          <input
-            type="text"
+        <div className="w-full p-3 bg-white rounded-tl-xl rounded-tr-xl">
+          <SearchInput
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by event name"
-            className="bg-background_100 cursor-text rounded-md px-3 py-2 md:w-[255px] w-full placeholder:text-xs placeholder:text-dark_200 outline-none focus:outline-none"
           />
         </div>
         <div className="overflow-x-auto mt-4">

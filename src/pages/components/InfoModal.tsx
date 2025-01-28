@@ -14,9 +14,9 @@ export default function InfoModal({ handleOpenClose, text }: any) {
         />
       </div>
       <div className="flex justify-center">
-        <img src={info} alt="info" className="cursor-pointer" />
+        <img src={info} alt="info" className="w-[70px] h-[70px]" />
       </div>
-      <h4 className="text-dark_200 text-base font-normal text-center my-4">
+      <h4 className="text-dark_200 text-sm font-normal text-center my-4">
         {text}
       </h4>
     </div>

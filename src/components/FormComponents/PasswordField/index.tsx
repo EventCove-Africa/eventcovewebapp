@@ -28,7 +28,7 @@ export default function PasswordInputField({
       {labelName && (
         <label
           htmlFor={inputId}
-          className={`text-sm leading-4 text-dark_200 font-normal ${labelClassName}`}
+          className={`text-xs leading-4 text-dark_200 font-normal ${labelClassName}`}
         >
           {labelName}
         </label>

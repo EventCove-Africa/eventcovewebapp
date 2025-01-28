@@ -60,3 +60,11 @@ export function formatDateTime(dateTime: any): string {
   // Format the date and time into the desired format
   return `${day}/${month}/${year} | ${hours}${amPm}`;
 }
+
+export function convertToAsterisks(value: number | string): string {
+  // Convert the value to a string to determine its length
+  const strValue = value.toString();
+  const asterisksValue = `₦ ${'*'.repeat(strValue.length)}`
+  // Return a string of asterisks with the same length as the input
+  return asterisksValue;
+}

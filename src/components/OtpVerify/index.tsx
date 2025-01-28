@@ -34,7 +34,7 @@ export default function OTPVerify({
       </div>
       <div className="flex justify-center items-center flex-col text-dark_200 text-sm font-normal">
         Please enter the OTP that was sent to
-        <span className="text-primary_100">eventcove@gmail.com </span>
+        <span className="text-primary_100"> R9***@gmail.com </span>
       </div>
       <Formik
         initialValues={{

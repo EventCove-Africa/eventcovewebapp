@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Column } from "react-table";
-import Button from "../../../components/FormComponents/Button";
 import TableComponent from "../../../components/TableComponent";
 import useNavigation from "../../../hooks/useNavigation";
 import axios from "axios";
@@ -20,8 +19,9 @@ export default function Tickets() {
   const { navigate } = useNavigation();
 
   const renderActions = (row: Event) => {
+    console.log(row.id);
     const handleEdit = () => {
-      console.log(`Edit clicked for Event ID: ${row.id}`);
+      navigate(`/app/tickets/add`);
     };
 
     return (
@@ -56,7 +56,7 @@ export default function Tickets() {
       seat_name: "A1",
       total_capacity: 200,
       actions: "View",
-      id: "",
+      id: "1",
     },
     {
       event_name: "Get Ready for an Unforgettable House Party! ",
@@ -65,7 +65,7 @@ export default function Tickets() {
       seat_name: "B2",
       total_capacity: 500,
       actions: "Edit",
-      id: "",
+      id: "2",
     },
     {
       event_name: "Get Ready for an Unforgettable House Party! ",
@@ -74,7 +74,7 @@ export default function Tickets() {
       seat_name: "B2",
       total_capacity: 500,
       actions: "Edit",
-      id: "",
+      id: "3",
     },
     {
       event_name: "Get Ready for an Unforgettable House Party! ",
@@ -83,7 +83,7 @@ export default function Tickets() {
       seat_name: "B2",
       total_capacity: 500,
       actions: "Edit",
-      id: "",
+      id: "4",
     },
     {
       event_name: "Get Ready for an Unforgettable House Party! ",
@@ -92,7 +92,7 @@ export default function Tickets() {
       seat_name: "B2",
       total_capacity: 500,
       actions: "Edit",
-      id: "",
+      id: "5",
     },
     {
       event_name: "Get Ready for an Unforgettable House Party! ",
@@ -101,7 +101,7 @@ export default function Tickets() {
       seat_name: "B2",
       total_capacity: 500,
       actions: "Edit",
-      id: "",
+      id: "6",
     },
     {
       event_name: "Get Ready for an Unforgettable House Party! ",
@@ -110,7 +110,7 @@ export default function Tickets() {
       seat_name: "B2",
       total_capacity: 500,
       actions: "Edit",
-      id: "",
+      id: "7",
     },
     {
       event_name: "Get Ready for an Unforgettable House Party! ",
@@ -119,7 +119,7 @@ export default function Tickets() {
       seat_name: "B2",
       total_capacity: 500,
       actions: "Edit",
-      id: "",
+      id: "8",
     },
   ]);
 
@@ -139,15 +139,6 @@ export default function Tickets() {
         <h3 className="text-dark_200 text-base font-normal">
           Here’s the ticket lineup, bestie
         </h3>
-        <div>
-          <Button
-            backgroundColor="bg-primary_300"
-            textColor="text-primary_100"
-            title="Create Ticket"
-            type="button"
-            onClick={() => navigate("/app/tickets/add")}
-          />
-        </div>
       </div>
       <TableComponent columns={columns} data={data} onSearch={handleSearch} />
     </div>

@@ -23,7 +23,7 @@ export default function SignupSuccess({
         <img
           src={checked_suceess}
           alt="checked_suceess"
-          className="cursor-pointer"
+          className="w-[70px] h-[70px]"
         />
       </div>
       <h4 className="text-dark_200 text-base font-normal text-center my-4">

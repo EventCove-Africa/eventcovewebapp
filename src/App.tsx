@@ -22,6 +22,11 @@ const AddEvents = lazy(() => import("./pages/app/events/add"));
 const EventDetails = lazy(() => import("./pages/app/events/event-details"));
 const Tickets = lazy(() => import("./pages/app/tickets"));
 const AddTickets = lazy(() => import("./pages/app/tickets/add"));
+const Wallet = lazy(() => import("./pages/app/wallet"));
+const AddWallet = lazy(() => import("./pages/app/wallet/add"));
+
+// Tickets validation
+const TicketsValidation = lazy(() => import("./pages/tickets-validation"));
 
 const FallbackLoader = () => <div>Loading...</div>;
 
@@ -30,7 +35,10 @@ interface PageTransitionProps {
   locationKey: string;
 }
 
-const PageTransition = ({ children, locationKey }: PageTransitionProps) => {
+export const PageTransition = ({
+  children,
+  locationKey,
+}: PageTransitionProps) => {
   return (
     <motion.div
       key={locationKey} // Still needed for animation re-renders
@@ -109,9 +117,34 @@ function App() {
                 </PageTransition>
               }
             />
+            {/* <Route
+              path="tickets/:id"
+              element={
+                <PageTransition locationKey={location.pathname}>
+                  <AddTickets />
+                </PageTransition>
+              }
+            /> */}
+            <Route
+              path="wallet"
+              element={
+                <PageTransition locationKey={location.pathname}>
+                  <Wallet />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="wallet/add"
+              element={
+                <PageTransition locationKey={location.pathname}>
+                  <AddWallet />
+                </PageTransition>
+              }
+            />
           </Route>
           <Route path="*" element={<NotFound />} />
           <Route path="/unauthorized" element={<Forbidden />} />
+          <Route path="/tickets-validation" element={<TicketsValidation />} />
         </Routes>
       </Suspense>
     </main>
