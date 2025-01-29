@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
 import { StopCircle } from "iconsax-react";
@@ -21,35 +22,41 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
     // Fetch available cameras
     Html5Qrcode.getCameras()
       .then((devices) => {
-        if (devices && devices.length > 0) {
+        if (devices?.length > 0) {
           setCameras(devices);
-          setSelectedCamera(devices[0].id); // Set the first camera as default
-          console.log("Cameras initialized:", devices);
+
+          // Prefer the back camera if available
+          const backCamera = devices?.find((device) =>
+            device?.label?.toLowerCase()?.includes("back")
+          );
+
+          setSelectedCamera(backCamera ? backCamera?.id : devices?.[0]?.id);
+          // console.log("Cameras initialized:", devices);
         } else {
-          console.error("No cameras found");
+          // console.error("No cameras found");
           if (onError) onError("No cameras found");
         }
       })
       .catch((err) => {
-        console.error("Error fetching cameras:", err);
+        // console.error("Error fetching cameras:", err);
         if (onError) onError("Error fetching cameras: " + err?.message);
       });
 
-    // Cleanup when component unmounts
     return () => {
-      if (html5QrCodeRef.current) {
-        html5QrCodeRef.current.stop().catch((err) => {
-          console.error("Failed to stop scanner:", err);
-        });
-        html5QrCodeRef.current = null;
-      }
+      stopScanning();
     };
   }, [onError]);
 
   const startScanning = () => {
+    if (!selectedCamera) {
+      // console.error("No camera selected");
+      if (onError) onError("No camera selected");
+      return;
+    }
+
     if (!html5QrCodeRef.current) {
       html5QrCodeRef.current = new Html5Qrcode(scannerContainerId, {
-        formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE], // Ensure the formats are supported
+        formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
         verbose: false,
       });
     }
@@ -57,9 +64,7 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
     setTimeout(() => {
       html5QrCodeRef
         ?.current!.start(
-          {
-            facingMode: { exact: "environment" }, // Specify back camera
-          },
+          selectedCamera, // Use selected camera ID instead of facingMode
           {
             fps: 10,
             qrbox: { width: 250, height: 250 },
@@ -78,7 +83,7 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
         )
         .then(() => setIsScanning(true))
         .catch((err) => {
-          console.error("Failed to start scanning:", err);
+          // console.error("Failed to start scanning:", err);
           if (onError) onError(err.message);
         });
     }, 500);
@@ -86,11 +91,11 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
 
   const stopScanning = () => {
     if (html5QrCodeRef.current) {
-      html5QrCodeRef.current
+      html5QrCodeRef?.current
         ?.stop()
         ?.then(() => setIsScanning(false))
         ?.catch((err) => {
-          console.error("Failed to stop scanning:", err);
+          // console.error("Failed to stop scanning:", err);
           if (onError) onError(err?.message);
         });
     }
@@ -111,7 +116,7 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
           id="camera-select"
           value={selectedCamera || ""}
           onChange={handleCameraChange}
-          className="p-2 border rounded"
+          className="p-2 border rounded outline-none"
         >
           {cameras.map((camera) => (
             <option key={camera.id} value={camera.id}>
@@ -120,23 +125,34 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
           ))}
         </select>
       </div>
-      {!isScanning ? (
-        <div
-          onClick={startScanning}
-          className="cursor-pointer border border-primary_100 animate-pulse rounded-full h-[50px] w-[50px] p-4 flex justify-center items-center"
-        >
-          <div className="bg-primary_100 rounded-full px-4 py-4" />
-        </div>
-      ) : (
-        <StopCircle
-          size="32"
-          className="text-primary_100 cursor-pointer"
-          onClick={stopScanning}
-        />
-      )}
+
       <div className="bg-grey_900 w-[250px] h-[250px] mb-8 mt-4">
         <div id={scannerContainerId} />
       </div>
+      {!isScanning ? (
+        <div className="flex flex-col w-full justify-center items-center gap-1">
+          <div
+            onClick={startScanning}
+            className="cursor-pointer border border-primary_100 animate-pulse rounded-full h-[50px] w-[50px] p-4 flex justify-center items-center"
+          >
+            <div className="bg-primary_100 rounded-full px-4 py-4" />
+          </div>
+          <h6 className="text-dark_200 font- md:text-sm text-xs">
+            click to start scanning
+          </h6>
+        </div>
+      ) : (
+        <div className="flex flex-col w-full justify-center items-center gap-1">
+          <StopCircle
+            size="48"
+            className="text-primary_100 cursor-pointer"
+            onClick={stopScanning}
+          />
+          <h6 className="text-dark_200 font- md:text-sm text-xs">
+            click to stop scanning
+          </h6>
+        </div>
+      )}
     </div>
   );
 };
