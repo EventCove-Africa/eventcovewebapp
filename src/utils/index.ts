@@ -1,3 +1,5 @@
+import { toast } from "react-hot-toast";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const openNewTabWithUrl = (url: string) => {
   window.open(url, "_blank", "noopener,noreferrer");
@@ -64,7 +66,31 @@ export function formatDateTime(dateTime: any): string {
 export function convertToAsterisks(value: number | string): string {
   // Convert the value to a string to determine its length
   const strValue = value.toString();
-  const asterisksValue = `₦ ${'*'.repeat(strValue.length)}`
+  const asterisksValue = `₦ ${"*".repeat(strValue.length)}`;
   // Return a string of asterisks with the same length as the input
   return asterisksValue;
 }
+
+export const isValidOptionalDetails = (
+  details: Record<string, any>
+): boolean => {
+  const requiredFields = [
+    "seat_name",
+    "price",
+    "capacity",
+    "sales_end_date_time",
+  ];
+
+  for (const field of requiredFields) {
+    if (
+      details[field] === "" ||
+      details[field] === null ||
+      details[field] === undefined
+    ) {
+      toast.error(`${field.replace(/_/g, " ")} is required`);
+      return false;
+    }
+  }
+
+  return true;
+};

@@ -25,6 +25,7 @@ export default function AddEvents() {
         initialValues={{
           event_image: null,
           event_name: "",
+          category: "",
           email: "",
           email_list: [],
           venue_type: "",
@@ -142,7 +143,8 @@ export default function AddEvents() {
                     touched={touched?.event_name}
                   />
                 </div>
-                <div className="mb-2">
+                <div className="w-full flex gap-3 md:flex-row flex-col">
+                <div className="mb-2 w-full">
                   <CustomSelect
                     label="Event Venue Type"
                     name="venue_type"
@@ -156,6 +158,23 @@ export default function AddEvents() {
                     errors={errors?.venue_type}
                     touched={touched?.venue_type}
                   />
+                </div>
+                <div className="mb-2 w-full">
+                  <CustomSelect
+                    label="Category"
+                    name="category"
+                    onChange={(event) =>
+                      setFieldValue("category", event?.value)
+                    }
+                    options={[
+                      { label: "Party", value: "party" },
+                      { label: "Comedy", value: "comedy" },
+                    ]}
+                    errors={errors?.venue_type}
+                    touched={touched?.venue_type}
+                  />
+                </div>
+
                 </div>
                 <div className="mb-2">
                   <TextInputField

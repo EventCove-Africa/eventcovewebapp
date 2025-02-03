@@ -99,6 +99,7 @@ export const addEventSchema = Yup.object().shape({
   event_image: Yup.mixed().required("Image is required"),
   event_name: Yup.string().required("Name is required"),
   venue_type: Yup.string().required("Venue type is required"),
+  category: Yup.string().required("Category is required"),
   location: Yup.string().required("Location is required"),
   start_date_time: Yup.date()
     .min(new Date(), "Date cannot be in the past")

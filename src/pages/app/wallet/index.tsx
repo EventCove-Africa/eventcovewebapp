@@ -14,7 +14,7 @@ import Withdrawals from "./Withdrawals";
 export default function Wallet() {
   const { navigate } = useNavigation();
   // const [hasTransactionHistory] = useState(true);
-  const [hasAmount] = useState(true);
+  const [hasAmount] = useState(false);
   const { isOpenModal, handleOpenClose } = useOpenCloseModals();
   const [showAmount, setShowAmount] = useState(false);
   const handleSwitch = () => setShowAmount(!showAmount);
