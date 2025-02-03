@@ -9,7 +9,7 @@ import CustomSelect from "../../../../components/FormComponents/SelectInputField
 import Button from "../../../../components/FormComponents/Button";
 import TextInputField from "../../../../components/FormComponents/InputField";
 import DateTimePicker from "../../../../components/FormComponents/DateTimePicker";
-import { formatDateTime, handleNumberInput } from "../../../../utils";
+import { formatDateTime, handleNumberInput, isValidOptionalDetails } from "../../../../utils";
 import { addTicketSchema } from "../../../../form-schemas";
 
 export default function AddTickets() {
@@ -58,30 +58,28 @@ export default function AddTickets() {
                 capacity: values?.capacity,
                 purchase_limit: values?.purchase_limit,
                 ticket_perks: values?.ticket_perks,
-                sales_end_date_time: formatDateTime(
-                  values?.sales_end_date_time
-                ),
+                sales_end_date_time: formatDateTime(values?.sales_end_date_time),
               };
-              if (Object.values(optionalDetails).some((val) => val)) {
+            
+              if (isValidOptionalDetails(values)) {
                 // Calculate the next numeric ID
                 const nextId =
                   values.all_values.length > 0
-                    ? Math.max(
-                        ...values.all_values.map((item: any) => item.id ?? 0)
-                      ) + 1
+                    ? Math.max(...values.all_values.map((item: any) => item.id ?? 0)) + 1
                     : 1;
-
+            
                 setFieldValue("all_values", [
                   ...values.all_values,
                   { id: nextId, ...optionalDetails }, // Add numeric id
                 ]);
-
+            
                 // Reset fields
                 Object.keys(optionalDetails).forEach((key) =>
                   setFieldValue(key, key === "sales_end_date_time" ? null : "")
                 );
               }
             };
+            
 
             const removeItemFromAllValues = (idToRemove: number) => {
               const updatedValues = values.all_values.filter(
@@ -294,7 +292,7 @@ export default function AddTickets() {
                               Ticket Perk
                             </h3>
                             <h3 className="text-dark_200 text-sm font-normal">
-                              {list?.ticket_perks ?? "N/A"}
+                              {list?.ticket_perks || "N/A"}
                             </h3>
                           </div>
                           <div className="w-full flex flex-col gap-1 border-b border-border_color py-2">
@@ -302,7 +300,7 @@ export default function AddTickets() {
                               Purchase limit
                             </h3>
                             <h3 className="text-dark_200 text-sm font-normal">
-                              {list?.purchase_limit ?? "N/A"}
+                              {list?.purchase_limit || "N/A"}
                             </h3>
                           </div>
                           <div className="w-full flex flex-col gap-1 border-b border-border_color py-2">
@@ -310,7 +308,7 @@ export default function AddTickets() {
                               Sale End Date & Time
                             </h3>
                             <h3 className="text-dark_200 text-sm font-normal">
-                              {list?.sales_end_date_time ?? "N/A"}
+                              {list?.sales_end_date_time || "N/A"}
                             </h3>
                           </div>
                         </div>
