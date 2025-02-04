@@ -43,7 +43,7 @@ export default function BvnNinEntry({ handleChangeStep }: BvnNinEntryProps) {
                   labelName="Bank Verification Number (BVN)"
                   name="bvn"
                   handleChange={handleChange}
-                  type="text"
+                  type="tel"
                   placeholder=""
                   value={values.bvn}
                   errors={errors?.bvn}
@@ -55,7 +55,7 @@ export default function BvnNinEntry({ handleChangeStep }: BvnNinEntryProps) {
                   labelName="National Identification Number (NIN)"
                   name="nin"
                   handleChange={handleChange}
-                  type="text"
+                  type="tel"
                   placeholder=""
                   value={values.nin}
                   errors={errors?.nin}
