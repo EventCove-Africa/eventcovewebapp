@@ -265,7 +265,7 @@ export default function AddEvents() {
                     labelName="Organizer Phone Number"
                     name="organizer_phone_number"
                     handleChange={handleChange}
-                    type="text"
+                    type="tel"
                     placeholder=""
                     value={values.organizer_phone_number}
                     errors={errors?.organizer_phone_number}

@@ -62,7 +62,7 @@ export default function Withdrawals({ handleOpenClose }: any) {
                 labelName="Account Number"
                 name="account_number"
                 handleChange={handleChange}
-                type="text"
+                type="tel"
                 placeholder=""
                 value={"1234567890"}
                 readOnly
@@ -78,7 +78,7 @@ export default function Withdrawals({ handleOpenClose }: any) {
                 handleChange={(e: any) =>
                   setFieldValue("amount", handleNumberInput(e.target.value))
                 }
-                type="text"
+                type="tel"
                 placeholder=""
                 value={values.amount}
                 errors={errors?.amount}
@@ -90,6 +90,7 @@ export default function Withdrawals({ handleOpenClose }: any) {
               <PasswordInputField
                 labelName="Transaction PIN"
                 name="transaction_pin"
+                type="tel"
                 handleChange={handleChange}
                 placeholder="**********"
                 value={values.transaction_pin}

@@ -53,6 +53,7 @@ export interface PasswordInputFieldProps {
   className?: string;
   name: string;
   placeholder?: string;
+  type?: string;
   labelClassName?: string;
   value: string;
   errors?: any;

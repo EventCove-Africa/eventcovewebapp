@@ -56,6 +56,7 @@ export default function TransactionPin({
                   <PasswordInputField
                     labelName="Enter PIN"
                     name="pin"
+                    type="tel"
                     handleChange={handleChange}
                     placeholder="****"
                     value={values.pin}
@@ -67,6 +68,7 @@ export default function TransactionPin({
                   <PasswordInputField
                     labelName="Enter PIN"
                     name="confirm_pin"
+                    type="tel"
                     handleChange={handleChange}
                     placeholder="****"
                     value={values.confirm_pin}

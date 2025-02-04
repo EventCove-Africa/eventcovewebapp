@@ -66,15 +66,15 @@ export default function AddBank() {
                 labelName="Account Number"
                 name="account_number"
                 handleChange={handleChange}
-                type="text"
+                type="tel"
                 placeholder=""
                 value={values.account_number}
                 errors={errors?.account_number}
                 touched={touched?.account_number}
               />
-              {values.account_number?.length === 10 && (
+              {values.account_number?.length === 10 && values.bank_name && (
                 <span className="text-secondary_300 flex justify-end text-xs font-normal">
-                  Ronaldo Namzario
+                 Eventcove Africa
                 </span>
               )}
             </div>

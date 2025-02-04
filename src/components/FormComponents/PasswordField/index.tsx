@@ -12,6 +12,7 @@ export default function PasswordInputField({
   value = "",
   errors = "",
   touched = false,
+  type = 'text',
   ...rest
 }: PasswordInputFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -35,7 +36,7 @@ export default function PasswordInputField({
       )}
       <div className="relative w-full">
         <input
-          type={showPassword ? "text" : "password"}
+          type={showPassword ? type : "password"}
           name={inputId}
           id={inputId}
           className={`block w-full h-[44px] text-dark_200 text-sm px-2 border border-border_color rounded-lg outline-none ${className}`}
