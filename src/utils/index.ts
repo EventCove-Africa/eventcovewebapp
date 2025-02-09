@@ -72,15 +72,9 @@ export function convertToAsterisks(value: number | string): string {
 }
 
 export const isValidOptionalDetails = (
-  details: Record<string, any>
+  details: Record<string, any>,
+  requiredFields: any
 ): boolean => {
-  const requiredFields = [
-    "seat_name",
-    "price",
-    "capacity",
-    "sales_end_date_time",
-  ];
-
   for (const field of requiredFields) {
     if (
       details[field] === "" ||
@@ -91,6 +85,5 @@ export const isValidOptionalDetails = (
       return false;
     }
   }
-
   return true;
 };
