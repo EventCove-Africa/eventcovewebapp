@@ -4,9 +4,18 @@ import React, { useState } from "react";
 type CopyToClipboardProps = {
   text: string; // The text to be copied to the clipboard
   onCopy?: () => void; // Optional callback triggered after copying
+  size?: string;
+  color?: string;
+  variant?: "Bold" | "Linear" | "Outline" | "Broken" | "Bulk" | "TwoTone";
 };
 
-const CopyToClipboard: React.FC<CopyToClipboardProps> = ({ text, onCopy }) => {
+const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
+  text,
+  size = "16",
+  variant = "Bold",
+  color = "text-dark_200",
+  onCopy,
+}) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -34,12 +43,12 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({ text, onCopy }) => {
   return (
     <>
       {copied ? (
-        <h3 className="text-dark_200 text-xs font-normal">Copied!</h3>
+        <h3 className={`${color} text-xs font-normal`}>Copied!</h3>
       ) : (
         <Copy
-          size="16"
-          className="text-dark_200 cursor-pointer"
-          variant="Bold"
+          size={size}
+          className={`${color} cursor-pointer`}
+          variant={variant}
           onClick={handleCopy}
         />
       )}

@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Form, Formik } from "formik";
 import { Add, ArrowUp2, Trash } from "iconsax-react";
@@ -9,7 +10,11 @@ import CustomSelect from "../../../../components/FormComponents/SelectInputField
 import Button from "../../../../components/FormComponents/Button";
 import TextInputField from "../../../../components/FormComponents/InputField";
 import DateTimePicker from "../../../../components/FormComponents/DateTimePicker";
-import { formatDateTime, handleNumberInput, isValidOptionalDetails } from "../../../../utils";
+import {
+  formatDateTime,
+  handleNumberInput,
+  isValidOptionalDetails,
+} from "../../../../utils";
 import { addTicketSchema } from "../../../../form-schemas";
 
 export default function AddTickets() {
@@ -24,7 +29,7 @@ export default function AddTickets() {
           validationSchema={addTicketSchema}
           initialValues={{
             ticket_category: "",
-            event_type: "",
+            ticket_type: "",
             seat_name: "",
             price: "",
             capacity: "",
@@ -52,34 +57,40 @@ export default function AddTickets() {
             isSubmitting,
           }) => {
             const resetOptionalValues = () => {
+              let requiredFields = ["seat_name", "sales_end_date_time"];
+              if (values?.ticket_type === "paid") {
+                requiredFields.push("price");
+              }
               const optionalDetails = {
                 seat_name: values?.seat_name,
                 price: values?.price,
                 capacity: values?.capacity,
                 purchase_limit: values?.purchase_limit,
                 ticket_perks: values?.ticket_perks,
-                sales_end_date_time: formatDateTime(values?.sales_end_date_time),
+                sales_end_date_time: formatDateTime(
+                  values?.sales_end_date_time
+                ),
               };
-            
-              if (isValidOptionalDetails(values)) {
+              if (isValidOptionalDetails(values, requiredFields)) {
                 // Calculate the next numeric ID
                 const nextId =
                   values.all_values.length > 0
-                    ? Math.max(...values.all_values.map((item: any) => item.id ?? 0)) + 1
+                    ? Math.max(
+                        ...values.all_values.map((item: any) => item.id ?? 0)
+                      ) + 1
                     : 1;
-            
+
                 setFieldValue("all_values", [
                   ...values.all_values,
                   { id: nextId, ...optionalDetails }, // Add numeric id
                 ]);
-            
+
                 // Reset fields
                 Object.keys(optionalDetails).forEach((key) =>
                   setFieldValue(key, key === "sales_end_date_time" ? null : "")
                 );
               }
             };
-            
 
             const removeItemFromAllValues = (idToRemove: number) => {
               const updatedValues = values.all_values.filter(
@@ -108,18 +119,18 @@ export default function AddTickets() {
                         touched={touched?.ticket_category}
                       />
                       <CustomSelect
-                        label="Event Type"
-                        name="event_type"
+                        label="Ticket Type"
+                        name="ticket_type"
                         onChange={(event) =>
-                          setFieldValue("event_type", event?.value)
+                          setFieldValue("ticket_type", event?.value)
                         }
                         options={[
                           { label: "Paid", value: "paid" },
                           { label: "Free", value: "free" },
                         ]}
-                        // value={values?.event_type}
-                        errors={errors?.event_type}
-                        touched={touched?.event_type}
+                        // value={values?.ticket_type}
+                        errors={errors?.ticket_type}
+                        touched={touched?.ticket_type}
                       />
                       <div
                         onClick={() =>
@@ -173,7 +184,7 @@ export default function AddTickets() {
                           </div>
                           <div className="mb-2">
                             <TextInputField
-                              labelName="Capacity"
+                              labelName="Capacity (optional)"
                               name="capacity"
                               handleChange={(e: any) =>
                                 setFieldValue(
@@ -276,7 +287,7 @@ export default function AddTickets() {
                               Price
                             </h3>
                             <h3 className="text-dark_200 text-sm font-normal">
-                              {list?.price ?? "N/A"}
+                              {list?.price || "N/A"}
                             </h3>
                           </div>
                           <div className="w-full flex flex-col gap-1 border-b border-border_color py-2">
@@ -284,7 +295,7 @@ export default function AddTickets() {
                               Capacity
                             </h3>
                             <h3 className="text-dark_200 text-sm font-normal">
-                              {list?.capacity ?? "N/A"}
+                              {list?.capacity || "N/A"}
                             </h3>
                           </div>
                           <div className="w-full flex flex-col gap-1 border-b border-border_color py-2">

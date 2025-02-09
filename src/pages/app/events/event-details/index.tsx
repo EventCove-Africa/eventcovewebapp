@@ -13,6 +13,7 @@ import {
   User,
 } from "iconsax-react";
 import Button from "../../../../components/FormComponents/Button";
+import CopyToClipboard from "../../../../components/CopyToClipboard";
 
 export default function EventDetails() {
   return (
@@ -112,6 +113,19 @@ export default function EventDetails() {
               We’re turning up the vibes and making this a night to remember!
               Join us for an epic house party filled with good music, great
               company, and plenty of fun. Here’s everything you need to know:
+            </div>
+          </div>
+          <div className="mt-2">
+            <h3 className="text-grey_100 font-normal text-xs">
+              Share the event link with others!
+            </h3>
+            <div className="h-auto rounded-lg bg-primary_300 p-3 flex justify-between border border-dotted border-grey_100 text-primary_100 mt-2 font-normal text-sm">
+              https://eventcove.africa
+              <CopyToClipboard
+                text="https://eventcove.africa"
+                size="20"
+                color="text-primary_100"
+              />
             </div>
           </div>
         </div>

@@ -33,7 +33,6 @@ export default function AddEvents() {
           start_date_time: null,
           end_date_time: null,
           event_privacy: "",
-          event_type: "",
           event_description: "",
           organizer_phone_number: "",
         }}
@@ -144,37 +143,36 @@ export default function AddEvents() {
                   />
                 </div>
                 <div className="w-full flex gap-3 md:flex-row flex-col">
-                <div className="mb-2 w-full">
-                  <CustomSelect
-                    label="Event Venue Type"
-                    name="venue_type"
-                    onChange={(event) =>
-                      setFieldValue("venue_type", event?.value)
-                    }
-                    options={[
-                      { label: "Physical", value: "physical" },
-                      { label: "Virtual", value: "virtual" },
-                    ]}
-                    errors={errors?.venue_type}
-                    touched={touched?.venue_type}
-                  />
-                </div>
-                <div className="mb-2 w-full">
-                  <CustomSelect
-                    label="Category"
-                    name="category"
-                    onChange={(event) =>
-                      setFieldValue("category", event?.value)
-                    }
-                    options={[
-                      { label: "Party", value: "party" },
-                      { label: "Comedy", value: "comedy" },
-                    ]}
-                    errors={errors?.venue_type}
-                    touched={touched?.venue_type}
-                  />
-                </div>
-
+                  <div className="mb-2 w-full">
+                    <CustomSelect
+                      label="Event Venue Type"
+                      name="venue_type"
+                      onChange={(event) =>
+                        setFieldValue("venue_type", event?.value)
+                      }
+                      options={[
+                        { label: "Physical", value: "physical" },
+                        { label: "Virtual", value: "virtual" },
+                      ]}
+                      errors={errors?.venue_type}
+                      touched={touched?.venue_type}
+                    />
+                  </div>
+                  <div className="mb-2 w-full">
+                    <CustomSelect
+                      label="Category"
+                      name="category"
+                      onChange={(event) =>
+                        setFieldValue("category", event?.value)
+                      }
+                      options={[
+                        { label: "Party", value: "party" },
+                        { label: "Comedy", value: "comedy" },
+                      ]}
+                      errors={errors?.venue_type}
+                      touched={touched?.venue_type}
+                    />
+                  </div>
                 </div>
                 <div className="mb-2">
                   <TextInputField
@@ -216,37 +214,20 @@ export default function AddEvents() {
                     />
                   </div>
                 </div>
-                <div className="w-full flex gap-3 md:flex-row flex-col">
-                  <div className="mb-2 w-full">
-                    <CustomSelect
-                      label="Event Privacy"
-                      name="event_privacy"
-                      onChange={(event) =>
-                        setFieldValue("event_privacy", event?.value)
-                      }
-                      options={[
-                        { label: "Public", value: "public" },
-                        { label: "Private", value: "private" },
-                      ]}
-                      errors={errors?.event_privacy}
-                      touched={touched?.event_privacy}
-                    />
-                  </div>
-                  <div className="mb-2 w-full">
-                    <CustomSelect
-                      label="Event Type"
-                      name="event_type"
-                      onChange={(event) =>
-                        setFieldValue("event_type", event?.value)
-                      }
-                      options={[
-                        { label: "Paid", value: "paid" },
-                        { label: "Free", value: "free" },
-                      ]}
-                      errors={errors?.event_type}
-                      touched={touched?.event_type}
-                    />
-                  </div>
+                <div className="mb-2 w-full">
+                  <CustomSelect
+                    label="Event Privacy"
+                    name="event_privacy"
+                    onChange={(event) =>
+                      setFieldValue("event_privacy", event?.value)
+                    }
+                    options={[
+                      { label: "Public", value: "public" },
+                      { label: "Private", value: "private" },
+                    ]}
+                    errors={errors?.event_privacy}
+                    touched={touched?.event_privacy}
+                  />
                 </div>
                 <div className="mb-2">
                   <TextAreaField

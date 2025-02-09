@@ -67,23 +67,19 @@ export const forgetPasswordSchema = Yup.object().shape({
 
 export const addTicketSchema = Yup.object().shape({
   ticket_category: Yup.mixed().required("Category is required"),
-  event_type: Yup.string().required("Event type is required"),
+  ticket_type: Yup.string().required("Ticket type is required"),
   ticket_details: Yup.boolean(), // Must be defined as a boolean
   seat_name: Yup.string().when("ticket_details", (ticketDetails, schema) =>
     checkBoolean(ticketDetails)
       ? schema.required("Seat name is required")
       : schema.notRequired()
   ),
-  price: Yup.string().when("ticket_details", (ticketDetails, schema) =>
-    checkBoolean(ticketDetails)
-      ? schema.required("Price is required")
-      : schema.notRequired()
-  ),
-  capacity: Yup.string().when("ticket_details", (ticketDetails, schema) =>
-    checkBoolean(ticketDetails)
-      ? schema.required("Capacity is required")
-      : schema.notRequired()
-  ),
+  price: Yup.string().when("ticket_type", ([ticketType], schema) => {
+    if (ticketType !== "free") {
+      return schema.required("Price is required");
+    }
+    return schema.notRequired();
+  }),
   sales_end_date_time: Yup.date().when(
     "ticket_details",
     (ticketDetails, schema) =>
@@ -92,6 +88,7 @@ export const addTicketSchema = Yup.object().shape({
         : schema.notRequired()
   ),
   ticket_perks: Yup.string().nullable(), // Optional field
+  capacity: Yup.string().nullable(), // Optional field
   purchase_limit: Yup.string().nullable(),
 });
 
@@ -108,7 +105,6 @@ export const addEventSchema = Yup.object().shape({
     .min(new Date(), "Date cannot be in the past")
     .required("End date and time is required"),
   event_privacy: Yup.string().required("Event privacy is required"),
-  event_type: Yup.string().required("Event type is required"),
   event_description: Yup.string().required("Event description is required"),
   organizer_phone_number: Yup.string()
     .matches(/^\d+$/, "Phone number must contain only digits") // Ensures only digits
