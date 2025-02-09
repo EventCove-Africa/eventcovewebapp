@@ -5,6 +5,7 @@ import {
   Briefcase,
   Calendar2,
   Crown1,
+  Export,
   Money4,
   Notepad2,
   Teacher,
@@ -14,11 +15,25 @@ import {
 } from "iconsax-react";
 import Button from "../../../../components/FormComponents/Button";
 import CopyToClipboard from "../../../../components/CopyToClipboard";
+import toast from "react-hot-toast";
 
 export default function EventDetails() {
   return (
     <div className="w-full h-full">
-      <DescriptionBar text="Get the full picture of your event 🌟" />
+      <div className="w-full flex md:flex-row flex-col justify-between mb-3">
+        <DescriptionBar text="Get the full picture of your event 🌟" />
+        <button
+          type="button"
+          className="px-3 py-2 bg-primary_300 text-primary_100 rounded-md flex items-center justify-center self-end gap-1 text-sm"
+          aria-label="Export details"
+          onClick={() => {
+            toast.success("COMING SOON...", { duration: 3000 });
+          }}
+        >
+          <Export size={20} className="text-primary_100" />
+          <span>Export details</span>
+        </button>
+      </div>
       <div className="w-full flex lg:flex-row flex-col gap-4">
         <div className="bg-white w-full h-full rounded-xl p-3">
           <div className="w-full relative">
