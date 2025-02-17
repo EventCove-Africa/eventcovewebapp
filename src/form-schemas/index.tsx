@@ -26,7 +26,8 @@ export const addBvnNinSchema = Yup.object().shape({
 });
 
 export const signupSchema = Yup.object().shape({
-  full_name: Yup.string().required("Fullname is required"),
+  last_name: Yup.string().required("Lastname is required"),
+  first_name: Yup.string().required("Firstname is required"),
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
