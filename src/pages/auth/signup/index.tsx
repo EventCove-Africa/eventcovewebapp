@@ -29,7 +29,8 @@ export default function SignUp() {
       </h3>
       <Formik
         initialValues={{
-          full_name: "",
+          first_name: "",
+          last_name: "",
           email: "",
           password: "",
           confirm_password: "",
@@ -53,14 +54,26 @@ export default function SignUp() {
           <Form onSubmit={handleSubmit} className="w-full lg:pr-16 mt-1">
             <div className="mb-3">
               <TextInputField
-                labelName="Full Name"
-                name="full_name"
+                labelName="First Name"
+                name="first_name"
                 handleChange={handleChange}
                 type="text"
                 placeholder=""
-                value={values.full_name}
-                errors={errors?.full_name}
-                touched={touched?.full_name}
+                value={values.first_name}
+                errors={errors?.first_name}
+                touched={touched?.first_name}
+              />
+            </div>
+            <div className="mb-3">
+              <TextInputField
+                labelName="Last Name"
+                name="last_name"
+                handleChange={handleChange}
+                type="text"
+                placeholder=""
+                value={values.last_name}
+                errors={errors?.last_name}
+                touched={touched?.last_name}
               />
             </div>
             <div className="mb-3">
