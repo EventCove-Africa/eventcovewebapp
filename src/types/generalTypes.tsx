@@ -117,15 +117,17 @@ export interface useUserProps {
 
 export type OTPVerifyProps = {
   nextPath?: string;
+  transactionType: any;
   handleOpenClose: () => void;
   email?: string | null;
   showCancelButton?: boolean;
+  allowResendOTPOnRender?: boolean;
 };
 
 export type AddBankWalletProps = {
   bankName: any;
   accountNumber: string;
   nin?: string;
-  bvn?: string
-  walletId?: string
+  bvn?: string;
+  walletId?: string;
 };

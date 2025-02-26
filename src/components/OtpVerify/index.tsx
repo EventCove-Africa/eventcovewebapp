@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Form, Formik, FormikHelpers } from "formik";
@@ -10,7 +11,7 @@ import { api } from "../../services/api";
 import { appUrls } from "../../services/urls";
 import { _handleThrowErrorMessage, setAuthCookies } from "../../utils";
 import toast from "react-hot-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { OTPVerifyProps, useUserProps } from "../../types";
 import { useUser } from "../../context/UserDetailsProvider.tsx";
 
@@ -22,7 +23,9 @@ export default function OTPVerify({
   handleOpenClose,
   nextPath,
   email,
+  transactionType,
   showCancelButton = true,
+  allowResendOTPOnRender = false,
 }: OTPVerifyProps) {
   const { userDetails } = useUser() as useUserProps;
   const [isResending, setIsResending] = useState(false);
@@ -37,6 +40,7 @@ export default function OTPVerify({
   const handleResendOTP = async () => {
     const payload = {
       email: email || userDetails?.email,
+      transactionType,
     };
     setIsResending(true);
     try {
@@ -63,10 +67,13 @@ export default function OTPVerify({
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
         const { access_token, token_type } = res?.data?.data ?? null;
-        if (access_token) {
-          setAuthCookies(access_token, token_type);
-          nextPath && navigate(nextPath);
+        if (!["create-pin"].includes(transactionType)) {
+          if (access_token) {
+            setAuthCookies(access_token, token_type);
+          }
         }
+        toast.success("OTP verified successfully");
+        nextPath && navigate(nextPath);
       }
     } catch (error: any) {
       const err_message = _handleThrowErrorMessage(error?.data?.message);
@@ -75,6 +82,19 @@ export default function OTPVerify({
       actions.setSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    let mounted = false;
+    (async () => {
+      mounted = true;
+      if (mounted && allowResendOTPOnRender) {
+        handleResendOTP();
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [allowResendOTPOnRender]);
 
   return (
     <div className="h-auto bg-white md:w-[458px] w-full rounded-xl p-3">
@@ -91,7 +111,6 @@ export default function OTPVerify({
       <div className="flex justify-center items-center flex-col text-dark_200 text-sm font-normal">
         Please enter the OTP that was sent to
         <span className="text-primary_100">
-          {" "}
           {email || userDetails?.email || "N/A"}{" "}
         </span>
       </div>
@@ -104,6 +123,7 @@ export default function OTPVerify({
           const payload = {
             email: email || userDetails?.email,
             otp: values.otp,
+            transactionType,
           };
           handleVerifyOTP(payload, actions);
         }}

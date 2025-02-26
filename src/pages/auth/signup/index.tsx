@@ -168,6 +168,7 @@ export default function SignUp() {
       <ModalPopup isOpen={isOpenModal}>
         <OTPVerify
           handleOpenClose={handleOpenClose}
+          transactionType="create-account"
           nextPath="/auth/signup/add-bank"
           email={email || verifyOTPEmailFromLogin}
           showCancelButton={false}

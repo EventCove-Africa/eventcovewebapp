@@ -35,8 +35,8 @@ export default function ResetPassword() {
       const res = await api.post(appUrls.RESET_PASSWORD_URL, payload);
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
-        const message = res?.data?.data ?? null;
-        setSuccessText(message);
+        // const message = res?.data?.data ?? null;
+        setSuccessText("Password Reset Successful");
         handleOpenClose();
         actions.resetForm();
       }
@@ -118,6 +118,7 @@ export default function ResetPassword() {
         <SignupSuccess
           handleOpenClose={handleOpenClose}
           showCancel={false}
+          buttonText="Proceed"
           text={`${successText} 🚀`}
           handleFunction={() => navigate("/auth/login")}
         />

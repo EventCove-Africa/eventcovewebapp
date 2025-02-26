@@ -48,6 +48,7 @@ const ModalPopup: React.FC<ModalPopupProps> = ({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="w-full flex justify-center items-center"
           >
             {children}
           </motion.div>

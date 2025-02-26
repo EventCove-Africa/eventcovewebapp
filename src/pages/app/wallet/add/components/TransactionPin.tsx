@@ -1,23 +1,49 @@
-import { Form, Formik } from "formik";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Form, Formik, FormikHelpers } from "formik";
 import { motion } from "framer-motion";
 import DescriptionBar from "../../../../../components/DescriptionBar";
 import { createPinSchema } from "../../../../../form-schemas";
 import Button from "../../../../../components/FormComponents/Button";
 import PasswordInputField from "../../../../../components/FormComponents/PasswordField";
-import { animationVariants } from "../../../../../utils";
+import {
+  _handleThrowErrorMessage,
+  animationVariants,
+} from "../../../../../utils";
+import toast from "react-hot-toast";
+import { api } from "../../../../../services/api";
+import { appUrls } from "../../../../../services/urls";
 
 type TransactionPinProps = {
-  handleChangeStep: (
-    nextPath: "bvn_nin" | "transaction_pin",
-    data: object
-  ) => void;
-  handleOpenClose: (status?: boolean) => void;
+  handleOpenClose: () => void;
+};
+type AddPinProps = {
+  pin: string;
 };
 
 export default function TransactionPin({
-  handleChangeStep,
   handleOpenClose,
 }: TransactionPinProps) {
+  const handleCreatePin = async (
+    payload: AddPinProps,
+    actions: FormikHelpers<any>
+  ) => {
+    try {
+      const res = await api.post(appUrls.WALLET_URL + "/pin", payload);
+      const status_code = [200, 201].includes(res?.status);
+      if (status_code) {
+        const message = res?.data?.data ?? null;
+        toast.success(message);
+        actions.resetForm();
+        handleOpenClose();
+      }
+    } catch (error: any) {
+      const err_message = _handleThrowErrorMessage(error?.data?.message);
+      toast.error(err_message);
+    } finally {
+      actions.setSubmitting(false);
+    }
+  };
+
   return (
     <motion.div
       transition={{ duration: 0.4 }}
@@ -37,10 +63,10 @@ export default function TransactionPin({
             }}
             enableReinitialize
             onSubmit={(values, actions) => {
-              actions.setSubmitting(false);
-              actions.resetForm();
-              handleChangeStep("transaction_pin", values);
-              handleOpenClose();
+              const payload = {
+                pin: values?.pin,
+              };
+              handleCreatePin(payload, actions);
             }}
           >
             {({
@@ -66,7 +92,7 @@ export default function TransactionPin({
                 </div>
                 <div className="mb-1">
                   <PasswordInputField
-                    labelName="Enter PIN"
+                    labelName="Confirm PIN"
                     name="confirm_pin"
                     type="tel"
                     handleChange={handleChange}

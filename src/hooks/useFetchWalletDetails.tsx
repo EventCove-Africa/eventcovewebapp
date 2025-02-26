@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { appUrls } from "../services/urls";
 
 const useFetchWalletDetails = () => {
-  const [walletDetails, setWalletDetails] = useState<any>();
+  const [walletDetails, setWalletDetails] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [hasAmount, setHasAmount] = useState(false);
 
