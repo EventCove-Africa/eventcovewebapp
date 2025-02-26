@@ -52,8 +52,8 @@ export const signupResetPasswordSchema = Yup.object().shape({
 
 export const createPinSchema = Yup.object().shape({
   pin: Yup.string()
-    .min(4, "Too Short!")
-    .max(4, "PIN must be 4 digits!")
+    .min(6, "Too Short!")
+    .max(6, "PIN must be 4 digits!")
     .required("PIN is required"),
   confirm_pin: Yup.string()
     .oneOf([Yup.ref("pin")], "PIN must match")

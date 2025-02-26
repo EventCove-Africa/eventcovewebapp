@@ -20,9 +20,11 @@ export default function Wallet() {
   const [isAmountVisible, setIsAmountVisible] = useState(false);
   const { walletDetails, loading } = useFetchWalletDetails();
   const toggleAmountVisibility = () => setIsAmountVisible(!isAmountVisible);
-  const handleCheckIfNinBvnIsSet = () => {
-    if (walletDetails?.nin?.trim() === "" || walletDetails?.bvn?.trim() === "")
-      return false;
+
+  const handleCheckIfNinBvnPINIsSet = () => {
+    const { nin, bvn, pinAdded } = walletDetails;
+    if (!walletDetails) return;
+    if (!nin || !bvn || !pinAdded) return false;
     return true;
   };
 
@@ -72,13 +74,17 @@ export default function Wallet() {
                   backgroundColor="bg-primary_300"
                   textColor="text-primary_100"
                   title={
-                    handleCheckIfNinBvnIsSet() ? "Withdrawal" : "Set Up Wallet"
+                    handleCheckIfNinBvnPINIsSet()
+                      ? "Withdrawal"
+                      : "Set Up Wallet"
                   }
                   type="button"
                   onClick={() =>
-                    handleCheckIfNinBvnIsSet()
+                    handleCheckIfNinBvnPINIsSet()
                       ? handleOpenClose("withdrawals")
-                      : navigate("/app/wallet/update")
+                      : navigate("/app/wallet/update", {
+                          state: walletDetails,
+                        })
                   }
                 />
               </div>
@@ -126,7 +132,7 @@ export default function Wallet() {
         {/* Bank Setup Section */}
         <div className="flex flex-col gap-4 lg:w-2/3 w-full">
           {!loading ? (
-            <>{!handleCheckIfNinBvnIsSet() && <SetUpWalletList />}</>
+            <>{!handleCheckIfNinBvnPINIsSet() && <SetUpWalletList />}</>
           ) : (
             <Skeleton className="w-full min-h-[124px] rounded-md" />
           )}
