@@ -7,7 +7,9 @@ import Button from "../../../components/FormComponents/Button";
 import PasswordInputField from "../../../components/FormComponents/PasswordField";
 import { handleNumberInput } from "../../../utils";
 
-export default function Withdrawals({ handleOpenClose }: any) {
+export default function Withdrawals({ handleOpenClose, walletDetails }: any) {
+  const validationSchema = withdrawalsSchema(walletDetails.balance);
+  
   return (
     <div className="bg-white h-auto w-full md:w-[350px] rounded-xl p-3">
       <div className="flex justify-between items-center">
@@ -27,8 +29,10 @@ export default function Withdrawals({ handleOpenClose }: any) {
         initialValues={{
           transaction_pin: "",
           amount: "",
+          bankName: walletDetails?.bankName || "",
+          accountNumber: walletDetails?.accountNumber || "",
         }}
-        validationSchema={withdrawalsSchema}
+        validationSchema={validationSchema}
         enableReinitialize
         onSubmit={(values, actions) => {
           console.log(values);
@@ -48,27 +52,25 @@ export default function Withdrawals({ handleOpenClose }: any) {
           <Form onSubmit={handleSubmit} className="w-full mt-1">
             <div className="mb-3">
               <TextInputField
-                labelName="Amount"
-                name="amount"
+                labelName="Bank name"
+                name="bankName"
                 handleChange={handleChange}
                 type="text"
-                placeholder=""
-                value={"UBA"}
+                value={values?.bankName}
                 readOnly
               />
             </div>
             <div className="mb-1">
               <TextInputField
                 labelName="Account Number"
-                name="account_number"
+                name="accountNumber"
                 handleChange={handleChange}
                 type="tel"
-                placeholder=""
-                value={"1234567890"}
+                value={values?.accountNumber}
                 readOnly
               />
               <span className="text-secondary_300 flex justify-end text-xs font-normal">
-                Ronaldo Namzario
+                EventCove Africa
               </span>
             </div>
             <div className="mb-3">
@@ -79,7 +81,6 @@ export default function Withdrawals({ handleOpenClose }: any) {
                   setFieldValue("amount", handleNumberInput(e.target.value))
                 }
                 type="tel"
-                placeholder=""
                 value={values.amount}
                 errors={errors?.amount}
                 touched={touched?.amount}

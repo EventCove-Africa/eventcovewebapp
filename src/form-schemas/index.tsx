@@ -16,8 +16,8 @@ export const loginSchema = Yup.object().shape({
 });
 
 export const signupAddBankSchema = Yup.object().shape({
-  account_number: Yup.string().required("Account number is required"),
-  bank_name: Yup.string().required("Bank name is required"),
+  accountNumber: Yup.string().required("Account number is required"),
+  bankName: Yup.mixed().required("Bank name is required"),
 });
 
 export const addBvnNinSchema = Yup.object().shape({
@@ -26,8 +26,8 @@ export const addBvnNinSchema = Yup.object().shape({
 });
 
 export const signupSchema = Yup.object().shape({
-  last_name: Yup.string().required("Lastname is required"),
-  first_name: Yup.string().required("Firstname is required"),
+  lastName: Yup.string().required("Lastname is required"),
+  firstName: Yup.string().required("Firstname is required"),
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
@@ -35,7 +35,7 @@ export const signupSchema = Yup.object().shape({
     .min(8, "Too Short!")
     .max(50, "Too Long!")
     .required("Password is required"),
-  confirm_password: Yup.string()
+  confirmPassword: Yup.string()
     .oneOf([Yup.ref("password")], "Passwords must match")
     .required("Confirm password is required...."),
 });
@@ -97,6 +97,12 @@ export const addEventSchema = Yup.object().shape({
   event_image: Yup.mixed().required("Image is required"),
   event_name: Yup.string().required("Name is required"),
   venue_type: Yup.string().required("Venue type is required"),
+  states: Yup.string().when("venue_type", ([venueType], schema) => {
+    if (venueType === "Physical") {
+      return schema.required("State is required");
+    }
+    return schema.notRequired();
+  }),
   category: Yup.string().required("Category is required"),
   location: Yup.string().required("Location is required"),
   start_date_time: Yup.date()
@@ -114,13 +120,33 @@ export const addEventSchema = Yup.object().shape({
     .required("Phone number is required"), // Required field
 });
 
-export const withdrawalsSchema = Yup.object().shape({
-  amount: Yup.mixed().required("Amount is required"),
-  transaction_pin: Yup.string()
-    .min(4, "Too Short!")
-    .max(4, "PIN must be 4 digits!")
-    .required("PIN is required"),
-});
+export const withdrawalsSchema = (maxValue: number) =>
+  Yup.object().shape({
+    amount: Yup.string()
+      .required("Amount is required")
+      .test(
+        "is-valid-number",
+        "Invalid amount format",
+        (value) => value !== undefined && /^[0-9,]+$/.test(value)
+      )
+      .test(
+        "is-not-zero",
+        "Amount cannot be zero",
+        (value) =>
+          value !== undefined && parseInt(value.replace(/,/g, ""), 10) > 0
+      )
+      .test(
+        "max-value",
+        `Amount cannot exceed ${maxValue.toLocaleString()}`,
+        (value) =>
+          value !== undefined &&
+          parseInt(value.replace(/,/g, ""), 10) <= maxValue
+      ),
+    transaction_pin: Yup.string()
+      .min(4, "Too Short!")
+      .max(4, "PIN must be 4 digits!")
+      .required("PIN is required"),
+  });
 
 export const ticketValidationSchema = Yup.object().shape({
   ticked_id: Yup.mixed().required("Ticket is required"),

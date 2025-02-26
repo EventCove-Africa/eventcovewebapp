@@ -12,10 +12,14 @@ import DateTimePicker from "../../../../components/FormComponents/DateTimePicker
 import DescriptionBar from "../../../../components/DescriptionBar";
 import useNavigation from "../../../../hooks/useNavigation";
 import { addEventSchema } from "../../../../form-schemas";
+import useEventHook from "../../../../hooks/useEventHook";
+import useLocationHook from "../../../../hooks/useLocationsHook";
 
 export default function AddEvents() {
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
   const { navigate } = useNavigation();
+  const { categories } = useEventHook();
+  const { states } = useLocationHook();
 
   return (
     <div className="w-full h-full">
@@ -26,6 +30,7 @@ export default function AddEvents() {
           event_image: null,
           event_name: "",
           category: "",
+          states: "",
           email: "",
           email_list: [],
           venue_type: "",
@@ -151,8 +156,9 @@ export default function AddEvents() {
                         setFieldValue("venue_type", event?.value)
                       }
                       options={[
-                        { label: "Physical", value: "physical" },
-                        { label: "Virtual", value: "virtual" },
+                        { label: "Physical", value: "Physical" },
+                        { label: "Virtual", value: "Virtual" },
+                        { label: "Hybrid", value: "Hybrid" },
                       ]}
                       errors={errors?.venue_type}
                       touched={touched?.venue_type}
@@ -165,15 +171,26 @@ export default function AddEvents() {
                       onChange={(event) =>
                         setFieldValue("category", event?.value)
                       }
-                      options={[
-                        { label: "Party", value: "party" },
-                        { label: "Comedy", value: "comedy" },
-                      ]}
+                      options={categories}
                       errors={errors?.venue_type}
                       touched={touched?.venue_type}
                     />
                   </div>
                 </div>
+                {values?.venue_type === "Physical" && (
+                  <div className="mb-2 w-full">
+                    <CustomSelect
+                      label="States"
+                      name="states"
+                      onChange={(event) =>
+                        setFieldValue("states", event?.value)
+                      }
+                      options={states}
+                      errors={errors?.states}
+                      touched={touched?.states}
+                    />
+                  </div>
+                )}
                 <div className="mb-2">
                   <TextInputField
                     labelName="Location (Address or Virtual Link)"
@@ -222,8 +239,8 @@ export default function AddEvents() {
                       setFieldValue("event_privacy", event?.value)
                     }
                     options={[
-                      { label: "Public", value: "public" },
-                      { label: "Private", value: "private" },
+                      { label: "Public", value: "Public" },
+                      { label: "Private", value: "Private" },
                     ]}
                     errors={errors?.event_privacy}
                     touched={touched?.event_privacy}
@@ -320,6 +337,7 @@ export default function AddEvents() {
           buttonText="Proceed to create ticket"
           handleOpenClose={handleOpenClose}
           handleFunction={() => navigate("/app/tickets/add")}
+          showCancel={false}
         />
       </ModalPopup>
     </div>

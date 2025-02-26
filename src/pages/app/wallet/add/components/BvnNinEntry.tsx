@@ -1,17 +1,44 @@
-import { Form, Formik } from "formik";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Form, Formik, FormikHelpers } from "formik";
 import DescriptionBar from "../../../../../components/DescriptionBar";
 import { addBvnNinSchema } from "../../../../../form-schemas";
 import Button from "../../../../../components/FormComponents/Button";
 import TextInputField from "../../../../../components/FormComponents/InputField";
+import toast from "react-hot-toast";
+import { _handleThrowErrorMessage } from "../../../../../utils";
+import { appUrls } from "../../../../../services/urls";
+import { api } from "../../../../../services/api";
+import { AddBankWalletProps } from "../../../../../types";
 
 type BvnNinEntryProps = {
-  handleChangeStep: (
-    nextPath: "bvn_nin" | "transaction_pin",
-    data: object
-  ) => void;
+  handleChangeStep: (nextPath: "bvn_nin" | "transaction_pin") => void;
+  walletDetails: any;
 };
 
-export default function BvnNinEntry({ handleChangeStep }: BvnNinEntryProps) {
+export default function BvnNinEntry({
+  handleChangeStep,
+  walletDetails,
+}: BvnNinEntryProps) {
+  const handleUpdateBankWallet = async (
+    payload: AddBankWalletProps,
+    actions: FormikHelpers<any>
+  ) => {
+    try {
+      const res = await api.post(appUrls.WALLET_URL + "/update", payload);
+      const status_code = [200, 201].includes(res?.status);
+      if (status_code) {
+        const message = res?.data?.data ?? null;
+        toast.success(message);
+        handleChangeStep("transaction_pin");
+        actions.resetForm();
+      }
+    } catch (error: any) {
+      const err_message = _handleThrowErrorMessage(error?.data?.message);
+      toast.error(err_message);
+    } finally {
+      actions.setSubmitting(false);
+    }
+  };
   return (
     <div className="w-full h-full">
       <DescriptionBar text="We promise it’s safe—just keeping things legit! 🔒✨" />
@@ -24,9 +51,15 @@ export default function BvnNinEntry({ handleChangeStep }: BvnNinEntryProps) {
           }}
           enableReinitialize
           onSubmit={(values, actions) => {
-            actions.setSubmitting(false);
-            actions.resetForm();
-            handleChangeStep("transaction_pin", values);
+            const payload = {
+              bvn: values?.bvn,
+              nin: values?.nin,
+              walletId: walletDetails?.walletId,
+              bankName: walletDetails?.bankName,
+              accountNumber: walletDetails?.accountNumber,
+            };
+
+            handleUpdateBankWallet(payload, actions);
           }}
         >
           {({

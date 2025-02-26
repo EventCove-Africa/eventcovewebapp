@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import authBg from "../../assets/images/auth-bg.png";
 import branding from "../../assets/icons/branding.svg";
 import event from "../../assets/icons/event.svg";
@@ -10,7 +10,6 @@ import logo from "../../assets/icons/logo.svg";
 export default function AuthLayout() {
   // Detect screen size
   const isMobile = window.matchMedia("(max-width: 768px)").matches;
-  const navigate = useNavigate()
 
   return (
     <div className="flex flex-col w-full h-screen">
@@ -22,7 +21,6 @@ export default function AuthLayout() {
           className="h-8 cursor-pointer"
           loading="lazy"
           aria-hidden="true"
-          onClick={() => navigate("/auth/login")}
         />
       </header>
       {/* Main Content */}

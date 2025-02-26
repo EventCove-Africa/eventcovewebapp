@@ -4,9 +4,11 @@ import TransactionPin from "./components/TransactionPin";
 import ModalPopup from "../../../../components/ModalPopup";
 import OTPVerify from "../../../../components/OtpVerify";
 import useOpenCloseModal from "../../../../hooks/useOpenCloseModal";
+import useFetchWalletDetails from "../../../../hooks/useFetchWalletDetails";
 
 export default function AddWallet() {
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
+  const { walletDetails } = useFetchWalletDetails();
   const [curStep, setCurStep] = useState<"bvn_nin" | "transaction_pin">(
     "bvn_nin"
   );
@@ -18,7 +20,7 @@ export default function AddWallet() {
   const renderCurrentStep = () => {
     switch (curStep) {
       case "bvn_nin":
-        return <BvnNinEntry handleChangeStep={handleChangeStep} />;
+        return <BvnNinEntry walletDetails={walletDetails} handleChangeStep={handleChangeStep} />;
       case "transaction_pin":
         return (
           <TransactionPin
@@ -31,11 +33,15 @@ export default function AddWallet() {
     }
   };
 
+
   return (
     <main className="h-full w-full" role="main" aria-label="Add Wallet">
       {renderCurrentStep()}
       <ModalPopup isOpen={isOpenModal}>
-        <OTPVerify handleOpenClose={handleOpenClose} nextPath="/app/wallet" />
+        <OTPVerify
+          handleOpenClose={handleOpenClose}
+          nextPath="/app/wallet"
+        />
       </ModalPopup>
     </main>
   );

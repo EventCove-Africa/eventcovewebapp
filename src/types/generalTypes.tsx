@@ -1,8 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FormEvent } from "react";
+import { FormikHelpers } from "formik";
+import { FormEvent, ReactNode } from "react";
 
 export interface apiUrlsType {
   LOGIN_URL: string;
+  CREATE_ORGANIZER_ACCOUNT_URL: string;
+  GET_USER_DETAILS_URL: string;
+  OTP_URL: string;
+  GET_BANK_LIST_URL: string;
+  WALLET_URL: string;
+  FORGET_PASSWORD_URL: string;
+  RESET_PASSWORD_URL: string;
+  EVENT_URL: string;
+  LOCATIONS_URL: string;
 }
 
 export interface ButtonProps {
@@ -60,3 +70,62 @@ export interface PasswordInputFieldProps {
   touched?: any;
   rest?: any;
 }
+
+export type UserDetailsProviderProps = {
+  children: ReactNode;
+};
+
+export type LoginData = {
+  email: string;
+  password: string;
+  eventId?: string;
+};
+
+export type SignUpData = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+};
+
+export type LoginProps = {
+  payload: LoginData;
+  actions: FormikHelpers<LoginData>;
+  from: string;
+};
+
+export type userDetailsProps = {
+  fullName: string;
+  email: string;
+  id: string;
+};
+
+export type SignupProps = {
+  payload: SignUpData;
+  actions: FormikHelpers<SignUpData>;
+  handleOpenClose?: () => void;
+};
+
+export interface useUserProps {
+  login: (props: LoginProps) => void;
+  signup: (props: SignupProps) => void;
+  handleGetUserDetails: () => any;
+  loadingDetails: boolean;
+  userDetails: userDetailsProps;
+  logout: () => void;
+}
+
+export type OTPVerifyProps = {
+  nextPath?: string;
+  handleOpenClose: () => void;
+  email?: string | null;
+  showCancelButton?: boolean;
+};
+
+export type AddBankWalletProps = {
+  bankName: any;
+  accountNumber: string;
+  nin?: string;
+  bvn?: string
+  walletId?: string
+};

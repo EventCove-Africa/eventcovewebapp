@@ -1,50 +1,111 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import OTPInput from "react-otp-input";
 import close_cancel from "../../assets/icons/close-circle.svg";
 import Button from "../FormComponents/Button";
 import useNavigation from "../../hooks/useNavigation";
+import { api } from "../../services/api";
+import { appUrls } from "../../services/urls";
+import { _handleThrowErrorMessage, setAuthCookies } from "../../utils";
+import toast from "react-hot-toast";
+import { useState } from "react";
+import { OTPVerifyProps, useUserProps } from "../../types";
+import { useUser } from "../../context/UserDetailsProvider.tsx";
 
-type OTPVerifyProps = {
-  nextPath?: string;
-  handleOpenClose: () => void;
+type VerifyOTPProps = {
+  otp: string;
 };
 
 export default function OTPVerify({
   handleOpenClose,
   nextPath,
+  email,
+  showCancelButton = true,
 }: OTPVerifyProps) {
+  const { userDetails } = useUser() as useUserProps;
+  const [isResending, setIsResending] = useState(false);
   const { navigate } = useNavigation();
   const otpSchema = Yup.object().shape({
-    email_otp: Yup.string()
+    otp: Yup.string()
       .required("OTP is Required")
       .min(6, "Must be exactly 6 digits")
       .max(6, "Must be exactly 6 digits"),
   });
+
+  const handleResendOTP = async () => {
+    const payload = {
+      email: email || userDetails?.email,
+    };
+    setIsResending(true);
+    try {
+      const res = await api.post(appUrls.OTP_URL, payload);
+      const status_code = [200, 201].includes(res?.status);
+      if (status_code) {
+        const message = res?.data?.data;
+        toast.success(message);
+      }
+    } catch (error: any) {
+      const err_message = _handleThrowErrorMessage(error?.data?.message);
+      toast.error(err_message);
+    } finally {
+      setIsResending(false);
+    }
+  };
+
+  const handleVerifyOTP = async (
+    payload: VerifyOTPProps,
+    actions: FormikHelpers<VerifyOTPProps>
+  ) => {
+    try {
+      const res = await api.post(appUrls.OTP_URL + "/verify", payload);
+      const status_code = [200, 201].includes(res?.status);
+      if (status_code) {
+        const { access_token, token_type } = res?.data?.data ?? null;
+        if (access_token) {
+          setAuthCookies(access_token, token_type);
+          nextPath && navigate(nextPath);
+        }
+      }
+    } catch (error: any) {
+      const err_message = _handleThrowErrorMessage(error?.data?.message);
+      toast.error(err_message);
+    } finally {
+      actions.setSubmitting(false);
+    }
+  };
+
   return (
     <div className="h-auto bg-white md:w-[458px] w-full rounded-xl p-3">
-      <div className="flex justify-end">
-        <img
-          onClick={handleOpenClose}
-          src={close_cancel}
-          alt="close_cancel"
-          className="cursor-pointer"
-        />
-      </div>
+      {showCancelButton && (
+        <div className="flex justify-end">
+          <img
+            onClick={handleOpenClose}
+            src={close_cancel}
+            alt="close_cancel"
+            className="cursor-pointer"
+          />
+        </div>
+      )}
       <div className="flex justify-center items-center flex-col text-dark_200 text-sm font-normal">
         Please enter the OTP that was sent to
-        <span className="text-primary_100"> R9***@gmail.com </span>
+        <span className="text-primary_100">
+          {" "}
+          {email || userDetails?.email || "N/A"}{" "}
+        </span>
       </div>
       <Formik
         initialValues={{
-          email_otp: "",
+          otp: "",
         }}
         validationSchema={otpSchema}
         onSubmit={(values, actions) => {
-          console.log(values);
-          actions.setSubmitting(false);
-          nextPath && navigate(nextPath);
+          const payload = {
+            email: email || userDetails?.email,
+            otp: values.otp,
+          };
+          handleVerifyOTP(payload, actions);
         }}
       >
         {({
@@ -58,8 +119,8 @@ export default function OTPVerify({
           <Form onSubmit={handleSubmit} className="w-full mt-3">
             <div className="mb-4">
               <OTPInput
-                value={values?.email_otp}
-                onChange={(value: string) => setFieldValue("email_otp", value)}
+                value={values?.otp}
+                onChange={(value: string) => setFieldValue("otp", value)}
                 numInputs={6}
                 renderInput={(props) => <input {...props} />}
                 containerStyle={{
@@ -79,8 +140,8 @@ export default function OTPVerify({
                   fontWeight: "400",
                 }}
               />
-              {errors.email_otp && touched.email_otp ? (
-                <div className="text-xs text-red-500">{errors.email_otp}</div>
+              {errors.otp && touched.otp ? (
+                <div className="text-xs text-red-500">{errors.otp}</div>
               ) : null}
             </div>
             <Button
@@ -91,8 +152,17 @@ export default function OTPVerify({
             />
             <h3 className="text-dark_200 text-sm font-normal text-center my-3">
               Didn't receive a code ?{" "}
-              <span className="text-primary_100 ml-1 cursor-pointer hover:underline">
-                Resend
+              <span
+                role="button"
+                aria-disabled={isResending}
+                onClick={!isResending ? handleResendOTP : undefined}
+                className={`ml-1 transition-colors ${
+                  isResending
+                    ? "text-gray-400 cursor-default"
+                    : "text-primary_100 cursor-pointer hover:underline hover:text-primary_80"
+                }`}
+              >
+                {isResending ? "Resending..." : "Resend"}
               </span>
             </h3>
           </Form>

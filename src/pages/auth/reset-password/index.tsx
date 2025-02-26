@@ -1,17 +1,52 @@
-import { Form, Formik } from "formik";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Form, Formik, FormikHelpers } from "formik";
 import { motion } from "framer-motion";
 import Button from "../../../components/FormComponents/Button";
 import PasswordInputField from "../../../components/FormComponents/PasswordField";
-import { animationVariants } from "../../../utils";
+import { _handleThrowErrorMessage, animationVariants } from "../../../utils";
 import ModalPopup from "../../../components/ModalPopup";
 import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
 import SignupSuccess from "../../components/SignupSuccess";
 import useNavigation from "../../../hooks/useNavigation";
 import { signupResetPasswordSchema } from "../../../form-schemas";
+import useQueryParams from "../../../hooks/useQueryParams";
+import { appUrls } from "../../../services/urls";
+import { api } from "../../../services/api";
+import { useState } from "react";
+import toast from "react-hot-toast";
+
+type ResetPasswordProps = {
+  code: string | null;
+  password: string;
+};
 
 export default function ResetPassword() {
   const { navigate } = useNavigation();
+  const [successText, setSuccessText] = useState("");
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
+  const getParam = useQueryParams();
+  const code = getParam("code");
+
+  const handleResetPassword = async (
+    payload: ResetPasswordProps,
+    actions: FormikHelpers<any>
+  ) => {
+    try {
+      const res = await api.post(appUrls.RESET_PASSWORD_URL, payload);
+      const status_code = [200, 201].includes(res?.status);
+      if (status_code) {
+        const message = res?.data?.data ?? null;
+        setSuccessText(message);
+        handleOpenClose();
+        actions.resetForm();
+      }
+    } catch (error: any) {
+      const err_message = _handleThrowErrorMessage(error?.data?.message);
+      toast.error(err_message);
+    } finally {
+      actions.setSubmitting(false);
+    }
+  };
 
   return (
     <motion.main
@@ -32,9 +67,11 @@ export default function ResetPassword() {
         validationSchema={signupResetPasswordSchema}
         enableReinitialize
         onSubmit={(values, actions) => {
-          console.log(values);
-          actions.setSubmitting(false);
-          handleOpenClose();
+          const payload = {
+            password: values?.password,
+            code,
+          };
+          handleResetPassword(payload, actions);
         }}
       >
         {({
@@ -80,7 +117,8 @@ export default function ResetPassword() {
       <ModalPopup isOpen={isOpenModal}>
         <SignupSuccess
           handleOpenClose={handleOpenClose}
-          text="Congrats, you’re all set! 🎉 Time to vibe. 🚀"
+          showCancel={false}
+          text={`${successText} 🚀`}
           handleFunction={() => navigate("/auth/login")}
         />
       </ModalPopup>

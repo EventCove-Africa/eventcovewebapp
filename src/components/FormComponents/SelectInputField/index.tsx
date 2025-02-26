@@ -4,7 +4,7 @@ import CustomOption from "./CustomOption";
 
 // Define the type for options
 export type Option = {
-  value: string | number;
+  value: any;
   label: string;
   icon?: string; // Optional icon for each option
 };
