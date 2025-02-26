@@ -1,18 +1,49 @@
-import { Form, Formik } from "formik";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Form, Formik, FormikHelpers } from "formik";
 import { motion } from "framer-motion";
 import Button from "../../../components/FormComponents/Button";
 import TextInputField from "../../../components/FormComponents/InputField";
-import { animationVariants } from "../../../utils";
+import { _handleThrowErrorMessage, animationVariants } from "../../../utils";
 import { ArrowLeft } from "iconsax-react";
 import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
 import ModalPopup from "../../../components/ModalPopup";
 import InfoModal from "../../components/InfoModal";
 import useNavigation from "../../../hooks/useNavigation";
 import { forgetPasswordSchema } from "../../../form-schemas";
+import toast from "react-hot-toast";
+import { appUrls } from "../../../services/urls";
+import { api } from "../../../services/api";
+import { useState } from "react";
+
+type ForgetPasswordProps = {
+  email: string;
+};
 
 export default function ForgetPassword() {
-  const { isOpenModal, handleOpenClose } = useOpenCloseModal();
   const { navigate } = useNavigation();
+  const { isOpenModal, handleOpenClose } = useOpenCloseModal();
+    const [successText, setSuccessText] = useState("");
+
+  const handleForgetPassword = async (
+    payload: ForgetPasswordProps,
+    actions: FormikHelpers<ForgetPasswordProps>
+  ) => {
+    try {
+      const res = await api.post(appUrls.FORGET_PASSWORD_URL, payload);
+      const status_code = [200, 201].includes(res?.status);
+      if (status_code) {
+        const message = res?.data?.data ?? null;
+        setSuccessText(message);
+        handleOpenClose();
+        actions.resetForm();
+      }
+    } catch (error: any) {
+      const err_message = _handleThrowErrorMessage(error?.data?.message);
+      toast.error(err_message);
+    } finally {
+      actions.setSubmitting(false);
+    }
+  };
 
   return (
     <motion.main
@@ -32,10 +63,7 @@ export default function ForgetPassword() {
         validationSchema={forgetPasswordSchema}
         enableReinitialize
         onSubmit={(values, actions) => {
-          console.log(values);
-          actions.setSubmitting(false);
-          actions.resetForm();
-          handleOpenClose();
+          handleForgetPassword(values, actions);
         }}
       >
         {({
@@ -78,7 +106,7 @@ export default function ForgetPassword() {
       <ModalPopup isOpen={isOpenModal}>
         <InfoModal
           handleOpenClose={handleOpenClose}
-          text="Hop over to your email and hit the link! 🔗"
+          text={`${successText} 🔗`}
         />
       </ModalPopup>
     </motion.main>

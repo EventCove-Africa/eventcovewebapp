@@ -8,17 +8,20 @@ export default function SignupSuccess({
   text,
   buttonText,
   handleFunction,
+  showCancel = true,
 }: any) {
   return (
     <div className="bg-white h-auto w-full md:w-[350px] rounded-xl p-3">
-      <div className="flex justify-end">
-        <img
-          onClick={handleOpenClose}
-          src={close_cancel}
-          alt="close_cancel"
-          className="cursor-pointer"
-        />
-      </div>
+      {showCancel && (
+        <div className="flex justify-end">
+          <img
+            onClick={handleOpenClose}
+            src={close_cancel}
+            alt="close_cancel"
+            className="cursor-pointer"
+          />
+        </div>
+      )}
       <div className="flex justify-center">
         <img
           src={checked_suceess}

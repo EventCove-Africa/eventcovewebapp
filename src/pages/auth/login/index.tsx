@@ -1,4 +1,4 @@
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { motion } from "framer-motion";
 import { useGoogleLogin } from "@react-oauth/google";
 import useNavigation from "../../../hooks/useNavigation";
@@ -8,10 +8,17 @@ import PasswordInputField from "../../../components/FormComponents/PasswordField
 import GoogleAuth from "../../../components/GoogleAuth";
 import { animationVariants } from "../../../utils";
 import { loginSchema } from "../../../form-schemas";
+// import { useLocation } from "react-router-dom";
+import { useUser } from "../../../context/UserDetailsProvider.tsx";
+import { LoginData, useUserProps } from "../../../types/generalTypes.tsx";
 
 export default function Login() {
   const { navigate } = useNavigation();
-  const login = useGoogleLogin({
+  // const location = useLocation();
+  // const from = location.state?.from?.pathname || "/app/home";
+  const { login } = useUser() as useUserProps;
+
+  const loginGoogle = useGoogleLogin({
     onSuccess: (response) => console.log("Login Success:", response),
     onError: (error) => console.error("Login Failed:", error),
   });
@@ -31,13 +38,16 @@ export default function Login() {
         initialValues={{
           email: "",
           password: "",
+          eventId: "",
         }}
         validationSchema={loginSchema}
         enableReinitialize
         onSubmit={(values, actions) => {
-          console.log(values);
-          actions.setSubmitting(false);
-          navigate("/app/home");
+          login({
+            payload: values,
+            actions: actions as FormikHelpers<LoginData>,
+            from: "/app/home",
+          });
         }}
       >
         {({
@@ -84,7 +94,10 @@ export default function Login() {
               type="submit"
               isLoading={isSubmitting}
             />
-            <GoogleAuth text="Sign In with Google" handleFunction={login} />
+            <GoogleAuth
+              text="Sign In with Google"
+              handleFunction={loginGoogle}
+            />
             <h4 className="text-sm font-semibold text-grey_100">
               Don’t have an account?{" "}
               <span

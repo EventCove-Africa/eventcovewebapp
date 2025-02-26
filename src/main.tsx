@@ -5,14 +5,22 @@ import { Toaster } from "react-hot-toast";
 import App from "./App.tsx";
 import "./index.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { UserDetailsProvider } from "./context/UserDetailsProvider.tsx.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
-        <App />
+        <UserDetailsProvider>
+          <App />
+        </UserDetailsProvider>
       </GoogleOAuthProvider>
-      <Toaster />
+      <Toaster
+        toastOptions={{
+          duration: 4000,
+          className: "z-50",
+        }}
+      />
     </BrowserRouter>
   </StrictMode>
 );

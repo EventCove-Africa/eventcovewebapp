@@ -1,37 +1,20 @@
 import { useState } from "react";
 import SearchInput from "../../../components/FormComponents/SearchInput";
 import { CardReceive, CardSend } from "iconsax-react";
-import { formatToNaira } from "../../../utils";
+import { formatToNaira, isArrayEmpty } from "../../../utils";
 import Pagination from "../../../components/Pagination";
 
 export default function TransactionHistory() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeType, setActiveType] = useState("all");
-
+  const [transactions] = useState([]);
   const links = [
     { name: "All", key: "all" },
     { name: "Credit", key: "credit" },
     { name: "Debit", key: "debit" },
   ];
 
-  const transactions = [
-    {
-      id: 1,
-      type: "credit",
-      description: "Wallet credited via been credited",
-      date: "12/4/2022 7:00pm",
-      amount: 20000,
-      icon: <CardReceive size="20" className="text-green_200" />,
-    },
-    {
-      id: 2,
-      type: "debit",
-      description: "You have been debited",
-      date: "12/4/2022 7:00pm",
-      amount: 10000,
-      icon: <CardSend size="20" className="text-red_100" />,
-    },
-  ];
+  // "12/4/2022 7:00pm",
 
   const handlePageChange = (page: number) => {
     console.log("Page changed to:", page);
@@ -65,20 +48,27 @@ export default function TransactionHistory() {
       </div>
 
       <div className="w-full flex flex-col gap-3 mt-4">
-        {transactions.map(({ id, description, date, amount, icon }) => (
+        {transactions.map(({ id, description, date, amount, type }) => (
           <div
             key={id}
             className="bg-grey_500 w-full flex justify-between items-center p-3 rounded"
           >
             <div className="flex gap-3 items-center">
               <div className="bg-white h-[47px] w-[47px] flex items-center justify-center rounded-full">
-                {icon}
+                {type === "credit" && (
+                  <CardReceive size="20" className="text-green_200" />
+                )}
+                {type === "debit" && (
+                  <CardSend size="20" className="text-red_100" />
+                )}
               </div>
               <div className="flex flex-col gap-1">
                 <h4 className="text-dark_500 font-normal text-xs md:text-sm">
                   {description}
                 </h4>
-                <h4 className="text-grey_700 font-normal text-xs md:text-sm">{date}</h4>
+                <h4 className="text-grey_700 font-normal text-xs md:text-sm">
+                  {date}
+                </h4>
               </div>
             </div>
             <h4 className="text-dark_200 text-xs md:text-sm font-normal">
@@ -86,11 +76,17 @@ export default function TransactionHistory() {
             </h4>
           </div>
         ))}
+        {isArrayEmpty(transactions) && (
+          <h1 className="text-dark_200 md:text-base text-sm font-normal text-center mt-4">
+            NO DATA AVAILABLE
+          </h1>
+        )}
       </div>
-
-      <div className="w-full flex justify-center items-center mt-3">
-        <Pagination totalPages={10} onPageChange={handlePageChange} />
-      </div>
+      {!isArrayEmpty(transactions) && (
+        <div className="w-full flex justify-center items-center mt-3">
+          <Pagination totalPages={10} onPageChange={handlePageChange} />
+        </div>
+      )}
     </article>
   );
 }

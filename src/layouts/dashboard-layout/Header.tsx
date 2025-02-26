@@ -3,11 +3,12 @@ import {
   ArrowDown2,
   Logout,
   NotificationBing,
-  Profile,
-  Setting2,
   User,
+  Wallet,
 } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
+import { useUserProps } from "../../types";
+import { useUser } from "../../context/UserDetailsProvider.tsx";
 
 interface MenuItemProps {
   icon: React.ReactNode;
@@ -27,6 +28,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({ icon, label, onClick }) => {
 };
 
 export default function Header() {
+  const { logout, userDetails } = useUser() as useUserProps;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -59,7 +61,7 @@ export default function Header() {
 
   const handleLogout = () => {
     setIsMenuOpen(false);
-    navigate("/auth/login");
+    logout();
   };
 
   return (
@@ -80,7 +82,7 @@ export default function Header() {
         aria-label="User Avatar"
       />
       <div className="flex flex-col gap-1">
-        <h4 className="text-dark_200 text-xs font-normal">Event Cove</h4>
+        <h4 className="text-dark_200 text-xs font-normal">{userDetails?.fullName}</h4>
         <button
           className="text-grey_100 text-xs font-normal flex gap-2 cursor-pointer"
           onClick={handleMenuToggle}
@@ -89,7 +91,7 @@ export default function Header() {
           aria-label="Toggle user menu"
           ref={buttonRef} // Assigning buttonRef to the button
         >
-          <span>Event Coordinator</span>
+          <span>{userDetails?.email}</span>
           <ArrowDown2 size="16" color="#767779" />
         </button>
         {isMenuOpen && (
@@ -104,15 +106,15 @@ export default function Header() {
             aria-labelledby="user-menu"
           >
             <ul>
-              <MenuItem
+              {/* <MenuItem
                 icon={<Profile size="18" color="#767779" />}
                 label="Profile"
                 onClick={() => navigate("/tickets-validation")}
-              />
+              /> */}
               <MenuItem
-                icon={<Setting2 size="18" color="#767779" />}
-                label="Settings"
-                onClick={() => setIsMenuOpen(false)}
+                icon={<Wallet size="18" color="#767779" />}
+                label="Wallet"
+                onClick={() => navigate("/app/wallet")}
               />
               <MenuItem
                 icon={<Logout size="18" color="#767779" />}

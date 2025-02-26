@@ -1,18 +1,47 @@
-import { Form, Formik } from "formik";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Form, Formik, FormikHelpers } from "formik";
 import { motion } from "framer-motion";
 import Button from "../../../components/FormComponents/Button";
 import useNavigation from "../../../hooks/useNavigation";
 import TextInputField from "../../../components/FormComponents/InputField";
-import { animationVariants } from "../../../utils";
+import { _handleThrowErrorMessage, animationVariants } from "../../../utils";
 import ModalPopup from "../../../components/ModalPopup";
 import SignupSuccess from "../../components/SignupSuccess";
 import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
 import CustomSelect from "../../../components/FormComponents/SelectInputField";
 import { signupAddBankSchema } from "../../../form-schemas";
+import useFetchBanks from "../../../hooks/useFetchBanks";
+import toast from "react-hot-toast";
+import { appUrls } from "../../../services/urls";
+import { api } from "../../../services/api";
+import { useState } from "react";
+import { AddBankWalletProps } from "../../../types";
 
 export default function AddBank() {
   const { navigate } = useNavigation();
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
+  const [successText, setSuccessText] = useState("");
+  const { banks, loading } = useFetchBanks();
+
+  const handleCreateBankWallet = async (
+    payload: AddBankWalletProps,
+    actions: FormikHelpers<AddBankWalletProps>
+  ) => {
+    try {
+      const res = await api.post(appUrls.WALLET_URL, payload);
+      const status_code = [200, 201].includes(res?.status);
+      if (status_code) {
+        const message = res?.data?.data ?? null;
+        setSuccessText(message);
+        handleOpenClose();
+      }
+    } catch (error: any) {
+      const err_message = _handleThrowErrorMessage(error?.data?.message);
+      toast.error(err_message);
+    } finally {
+      actions.setSubmitting(false);
+    }
+  };
 
   return (
     <motion.main
@@ -27,15 +56,17 @@ export default function AddBank() {
       </h3>
       <Formik
         initialValues={{
-          account_number: "",
-          bank_name: "",
+          bankName: "",
+          accountNumber: "",
         }}
         validationSchema={signupAddBankSchema}
         enableReinitialize
         onSubmit={(values, actions) => {
-          console.log(values);
-          actions.setSubmitting(false);
-          handleOpenClose();
+          const payload = {
+            bankName: values?.bankName,
+            accountNumber: values?.accountNumber,
+          };
+          handleCreateBankWallet(payload, actions);
         }}
       >
         {({
@@ -51,32 +82,32 @@ export default function AddBank() {
             <div className="mb-3">
               <CustomSelect
                 label="Bank Name"
-                name="bank_name"
-                onChange={(event) => setFieldValue("bank_name", event?.value)}
-                options={[
-                  { label: "UBA", value: "UBA" },
-                  { label: "ACCESS", value: "virtuACCESSal" },
-                ]}
-                errors={errors?.bank_name}
-                touched={touched?.bank_name}
+                name="bankName"
+                isLoading={loading}
+                onChange={(event) =>
+                  setFieldValue("bankName", event?.value.name)
+                }
+                options={banks}
+                errors={errors?.bankName}
+                touched={touched?.bankName}
               />
             </div>
             <div className="mb-3">
               <TextInputField
                 labelName="Account Number"
-                name="account_number"
+                name="accountNumber"
                 handleChange={handleChange}
                 type="tel"
                 placeholder=""
-                value={values.account_number}
-                errors={errors?.account_number}
-                touched={touched?.account_number}
+                value={values.accountNumber}
+                errors={errors?.accountNumber}
+                touched={touched?.accountNumber}
               />
-              {values.account_number?.length === 10 && values.bank_name && (
+              {/* {values.accountNumber?.length === 10 && values.accountNumber && (
                 <span className="text-secondary_300 flex justify-end text-xs font-normal">
-                 Eventcove Africa
+                  Eventcove Africa
                 </span>
-              )}
+              )} */}
             </div>
             <Button
               title="Proceed"
@@ -89,9 +120,9 @@ export default function AddBank() {
       </Formik>
       <ModalPopup isOpen={isOpenModal}>
         <SignupSuccess
-          text="Congrats, you’re all set! 🎉 Time to vibe. 🚀"
+          text={`${successText} 🚀`}
           handleOpenClose={handleOpenClose}
-          handleFunction={() => navigate("/auth/login")}
+          handleFunction={() => navigate("/app/home")}
           buttonText="Proceed"
         />
       </ModalPopup>

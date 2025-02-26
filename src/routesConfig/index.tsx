@@ -1,0 +1,280 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { lazy, useEffect, useState } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import Cookies from "js-cookie";
+import { motion } from "framer-motion";
+import { animationVariants, isObjectEmpty } from "../utils";
+import { useUser } from "../context/UserDetailsProvider.tsx";
+import { useUserProps } from "../types/generalTypes.tsx";
+import { FallbackLoader } from "../App.tsx";
+
+// Constants
+export const APP_ROUTES = {
+  ROOT: "/",
+  AUTH: "/auth",
+  LOGIN: "/auth/login",
+  SIGNUP: "/auth/signup",
+  ADD_BANK: "/auth/signup/add-bank",
+  FORGET_PW: "/auth/forget-password",
+  RESET_PW: "/auth/reset-password",
+  APP: "/app",
+  HOME: "/app/home",
+  EVENTS: "/app/events",
+  ADD_EVENTS: "/app/events/add",
+  EVENT_DETAILS: "/app/events/:id",
+  TICKETS: "/app/tickets",
+  ADD_TICKETS: "/app/tickets/add",
+  WALLET: "/app/wallet",
+  ADD_WALLET: "/app/wallet/update",
+  TICKETS_VALIDATION: "/tickets-validation",
+  NOT_FOUND: "*",
+  UNAUTHORIZED: "/unauthorized",
+};
+
+// Enhanced lazy loading with displayName
+const lazyLoad = <T extends React.ComponentType<any>>(
+  loader: () => Promise<{ default: T }>,
+  name?: string
+) => {
+  const Component = lazy(loader);
+  if (name) (Component as any).displayName = name;
+  return Component;
+};
+
+// Layouts
+export const AuthLayout = lazyLoad(
+  () => import("../layouts/auth-layout"),
+  "AuthLayout"
+);
+export const DashboardLayout = lazyLoad(
+  () => import("../layouts/dashboard-layout"),
+  "DashboardLayout"
+);
+
+// Auth Pages
+export const Login = lazyLoad(() => import("../pages/auth/login"), "Login");
+export const SignUp = lazyLoad(() => import("../pages/auth/signup"), "SignUp");
+export const ForgetPassword = lazyLoad(
+  () => import("../pages/auth/forget-password"),
+  "ForgetPassword"
+);
+export const ResetPassword = lazyLoad(
+  () => import("../pages/auth/reset-password"),
+  "ResetPassword"
+);
+export const AddBank = lazyLoad(
+  () => import("../pages/auth/add-bank"),
+  "AddBank"
+);
+
+// App Pages
+export const Home = lazyLoad(() => import("../pages/app/home"), "Home");
+export const Events = lazyLoad(() => import("../pages/app/events"), "Events");
+export const AddEvents = lazyLoad(
+  () => import("../pages/app/events/add"),
+  "AddEvents"
+);
+export const EventDetails = lazyLoad(
+  () => import("../pages/app/events/event-details"),
+  "EventDetails"
+);
+export const Tickets = lazyLoad(
+  () => import("../pages/app/tickets"),
+  "Tickets"
+);
+export const AddTickets = lazyLoad(
+  () => import("../pages/app/tickets/add"),
+  "AddTickets"
+);
+export const Wallet = lazyLoad(() => import("../pages/app/wallet"), "Wallet");
+export const AddWallet = lazyLoad(
+  () => import("../pages/app/wallet/add"),
+  "AddWallet"
+);
+
+// Other Pages
+export const NotFound = lazyLoad(
+  () => import("../pages/not-found"),
+  "NotFound"
+);
+export const Forbidden = lazyLoad(
+  () => import("../pages/forbidden"),
+  "Forbidden"
+);
+export const TicketsValidation = lazyLoad(
+  () => import("../pages/tickets-validation"),
+  "TicketsValidation"
+);
+
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const { loadingDetails, handleGetUserDetails, userDetails } =
+    useUser() as useUserProps;
+  const token = Cookies.get("token");
+  const location = useLocation();
+
+  useEffect(() => {
+    let mounted = true;
+    if (token && mounted) {
+      handleGetUserDetails().finally(() => setIsInitialLoad(false));
+    } else {
+      setIsInitialLoad(false); // No token, no need to load
+    }
+    return () => {
+      mounted = false;
+    };
+  }, [token]);
+
+  if (isInitialLoad || loadingDetails) return <FallbackLoader />;
+  const isAuthenticated = token && !isObjectEmpty(userDetails);
+  return isAuthenticated ? (
+    <>{children}</>
+  ) : (
+    <Navigate to={APP_ROUTES.LOGIN} state={{ from: location }} replace />
+  );
+};
+
+const PublicRoute = ({ children }: { children: React.ReactNode }) => {
+  const token = Cookies.get("token");
+  const location = useLocation();
+  const excludePath = ["/auth/signup/add-bank"].includes(location.pathname);
+  const ProtectedAuthRoutes = !excludePath && token;
+  return ProtectedAuthRoutes ? (
+    <Navigate to={APP_ROUTES.HOME} state={{ from: location }} replace />
+  ) : (
+    <>{children}</>
+  );
+};
+
+const AnimatedRoute = ({ children }: { children: React.ReactNode }) => {
+  const location = useLocation();
+  return (
+    <motion.div
+      key={location.pathname}
+      transition={{ duration: 0.4 }}
+      variants={animationVariants}
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+export const routeConfig = [
+  {
+    path: APP_ROUTES.ROOT,
+    element: <Navigate to={APP_ROUTES.LOGIN} />,
+  },
+  {
+    path: APP_ROUTES.AUTH,
+    element: (
+      <PublicRoute>
+        <AuthLayout />
+      </PublicRoute>
+    ),
+    children: [
+      { path: APP_ROUTES.LOGIN, element: <Login /> },
+      { path: APP_ROUTES.SIGNUP, element: <SignUp /> },
+      { path: APP_ROUTES.ADD_BANK, element: <AddBank /> },
+      {
+        path: APP_ROUTES.FORGET_PW,
+        element: <ForgetPassword />,
+      },
+      {
+        path: APP_ROUTES.RESET_PW,
+        element: <ResetPassword />,
+      },
+    ],
+  },
+  {
+    path: APP_ROUTES.APP,
+    element: (
+      <ProtectedRoute>
+        <DashboardLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: APP_ROUTES.HOME,
+        element: (
+          <AnimatedRoute>
+            <Home />
+          </AnimatedRoute>
+        ),
+      },
+      {
+        path: APP_ROUTES.EVENTS,
+        element: (
+          <AnimatedRoute>
+            <Events />
+          </AnimatedRoute>
+        ),
+      },
+      {
+        path: APP_ROUTES.ADD_EVENTS,
+        element: (
+          <AnimatedRoute>
+            <AddEvents />
+          </AnimatedRoute>
+        ),
+      },
+      {
+        path: APP_ROUTES.EVENT_DETAILS,
+        element: (
+          <AnimatedRoute>
+            <EventDetails />
+          </AnimatedRoute>
+        ),
+      },
+      {
+        path: APP_ROUTES.TICKETS,
+        element: (
+          <AnimatedRoute>
+            <Tickets />
+          </AnimatedRoute>
+        ),
+      },
+      {
+        path: APP_ROUTES.ADD_TICKETS,
+        element: (
+          <AnimatedRoute>
+            <AddTickets />
+          </AnimatedRoute>
+        ),
+      },
+      {
+        path: APP_ROUTES.WALLET,
+        element: (
+          <AnimatedRoute>
+            <Wallet />
+          </AnimatedRoute>
+        ),
+      },
+      {
+        path: APP_ROUTES.ADD_WALLET,
+        element: (
+          <AnimatedRoute>
+            <AddWallet />
+          </AnimatedRoute>
+        ),
+      },
+    ],
+  },
+  {
+    path: APP_ROUTES.TICKETS_VALIDATION,
+    element: <TicketsValidation />,
+  },
+  {
+    path: APP_ROUTES.UNAUTHORIZED,
+    element: <Forbidden />,
+  },
+  {
+    path: APP_ROUTES.NOT_FOUND,
+    element: <NotFound />,
+  },
+];

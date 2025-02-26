@@ -1,4 +1,5 @@
-import { Form, Formik } from "formik";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Form, Formik, FormikHelpers } from "formik";
 import { motion } from "framer-motion";
 import Button from "../../../components/FormComponents/Button";
 import TextInputField from "../../../components/FormComponents/InputField";
@@ -11,17 +12,38 @@ import toast from "react-hot-toast";
 import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
 import useNavigation from "../../../hooks/useNavigation";
 import { signupSchema } from "../../../form-schemas";
+import { useUser } from "../../../context/UserDetailsProvider.tsx";
+import { SignUpData, useUserProps } from "../../../types/generalTypes.tsx";
+import { useEffect, useState } from "react";
+import useQueryParams from "../../../hooks/useQueryParams.tsx";
 
 export default function SignUp() {
   const { navigate } = useNavigation();
+  const getParam = useQueryParams();
+  const verifyOTPEmailFromLogin = getParam("verifyOTP");
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
+  const [email, setEmail] = useState("");
+  const { signup } = useUser() as useUserProps;
+
+  useEffect(() => {
+    let mounted = false;
+    (async () => {
+      mounted = true;
+      if (mounted && verifyOTPEmailFromLogin) {
+        handleOpenClose();
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [verifyOTPEmailFromLogin]);
 
   return (
     <motion.main
       variants={animationVariants}
       initial="hidden"
       animate="visible"
-      exit="hidden" // Optional for exit animations
+      exit="hidden"
       className="w-full h-full"
     >
       <h3 className="text-dark_200 font-bold lg:text-3xl text-xl">
@@ -29,18 +51,21 @@ export default function SignUp() {
       </h3>
       <Formik
         initialValues={{
-          first_name: "",
-          last_name: "",
+          firstName: "",
+          lastName: "",
           email: "",
           password: "",
-          confirm_password: "",
+          confirmPassword: "",
         }}
         validationSchema={signupSchema}
         enableReinitialize
         onSubmit={(values, actions) => {
-          console.log(values);
-          actions.setSubmitting(false);
-          handleOpenClose();
+          signup({
+            payload: values,
+            handleOpenClose,
+            actions: actions as FormikHelpers<SignUpData>,
+          });
+          setEmail(values?.email);
         }}
       >
         {({
@@ -55,25 +80,25 @@ export default function SignUp() {
             <div className="mb-3">
               <TextInputField
                 labelName="First Name"
-                name="first_name"
+                name="firstName"
                 handleChange={handleChange}
                 type="text"
                 placeholder=""
-                value={values.first_name}
-                errors={errors?.first_name}
-                touched={touched?.first_name}
+                value={values.firstName}
+                errors={errors?.firstName}
+                touched={touched?.firstName}
               />
             </div>
             <div className="mb-3">
               <TextInputField
                 labelName="Last Name"
-                name="last_name"
+                name="lastName"
                 handleChange={handleChange}
                 type="text"
                 placeholder=""
-                value={values.last_name}
-                errors={errors?.last_name}
-                touched={touched?.last_name}
+                value={values.lastName}
+                errors={errors?.lastName}
+                touched={touched?.lastName}
               />
             </div>
             <div className="mb-3">
@@ -102,12 +127,12 @@ export default function SignUp() {
             <div className="mb-1">
               <PasswordInputField
                 labelName="Confirm Password"
-                name="confirm_password"
+                name="confirmPassword"
                 handleChange={handleChange}
                 placeholder="**********"
-                value={values.confirm_password}
-                errors={errors?.confirm_password}
-                touched={touched?.confirm_password}
+                value={values.confirmPassword}
+                errors={errors?.confirmPassword}
+                touched={touched?.confirmPassword}
               />
             </div>
             <Button
@@ -144,6 +169,8 @@ export default function SignUp() {
         <OTPVerify
           handleOpenClose={handleOpenClose}
           nextPath="/auth/signup/add-bank"
+          email={email || verifyOTPEmailFromLogin}
+          showCancelButton={false}
         />
       </ModalPopup>
     </motion.main>

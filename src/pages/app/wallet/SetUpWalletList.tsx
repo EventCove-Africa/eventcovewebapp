@@ -1,4 +1,4 @@
-import { Framer, PasswordCheck, Personalcard, UserTag } from "iconsax-react";
+import { Framer, Personalcard, UserTag } from "iconsax-react";
 
 type WalletInfoProps = {
   icon: JSX.Element;
@@ -36,10 +36,10 @@ export default function SetUpWalletList() {
             icon={<Framer size="16" className="text-primary_100" />}
             label="Transaction PIN"
           />
-          <WalletInfo
+          {/* <WalletInfo
             icon={<PasswordCheck size="16" className="text-primary_100" />}
             label="One Time password"
-          />
+          /> */}
         </div>
       </article>
     </>

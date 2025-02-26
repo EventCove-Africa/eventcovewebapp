@@ -1,150 +1,52 @@
-import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Suspense } from "react";
+import { Route, Routes } from "react-router-dom";
 import { motion } from "framer-motion";
-import { animationVariants } from "./utils";
+import { routeConfig } from "./routesConfig";
+import logo from "./assets/icons/logo.svg";
 
-// Lazy imports for layouts and pages
-// Auth routes
-const AuthLayout = lazy(() => import("./layouts/auth-layout"));
-const Login = lazy(() => import("./pages/auth/login"));
-const SignUp = lazy(() => import("./pages/auth/signup"));
-const ForgetPassword = lazy(() => import("./pages/auth/forget-password"));
-const ResetPassword = lazy(() => import("./pages/auth/reset-password"));
-const AddBank = lazy(() => import("./pages/auth/add-bank"));
-const NotFound = lazy(() => import("./pages/not-found"));
-const Forbidden = lazy(() => import("./pages/forbidden"));
-
-// App routes
-const DashboardLayout = lazy(() => import("./layouts/dashboard-layout"));
-const Home = lazy(() => import("./pages/app/home"));
-const Events = lazy(() => import("./pages/app/events"));
-const AddEvents = lazy(() => import("./pages/app/events/add"));
-const EventDetails = lazy(() => import("./pages/app/events/event-details"));
-const Tickets = lazy(() => import("./pages/app/tickets"));
-const AddTickets = lazy(() => import("./pages/app/tickets/add"));
-const Wallet = lazy(() => import("./pages/app/wallet"));
-const AddWallet = lazy(() => import("./pages/app/wallet/add"));
-
-// Tickets validation
-const TicketsValidation = lazy(() => import("./pages/tickets-validation"));
-
-const FallbackLoader = () => <div>Loading...</div>;
-
-interface PageTransitionProps {
-  children: React.ReactNode;
-  locationKey: string;
-}
-
-export const PageTransition = ({
-  children,
-  locationKey,
-}: PageTransitionProps) => {
-  return (
+export const FallbackLoader = () => (
+  <div className="flex justify-center items-center h-screen">
     <motion.div
-      key={locationKey} // Still needed for animation re-renders
-      transition={{ duration: 0.4 }}
-      variants={animationVariants}
-      initial="hidden"
-      animate="visible"
-      exit="hidden" // Optional for exit animations
+      className="loader"
+      initial={{ opacity: 0.5, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{
+        duration: 1.2,
+        repeat: Infinity,
+        repeatType: "reverse",
+      }}
     >
-      {children}
+      <img
+        src={logo}
+        alt="EventCove Logo"
+        className="h-8 cursor-pointer"
+        loading="lazy"
+        aria-hidden="true"
+      />
     </motion.div>
-  );
-};
+  </div>
+);
 
 function App() {
-  const location = useLocation();
-
   return (
     <main className="scroll-smooth w-full h-full">
       <Suspense fallback={<FallbackLoader />}>
         <Routes>
-          <Route path="/" element={<Navigate to="auth/login" />} />
-          <Route path="auth" element={<AuthLayout />}>
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<SignUp />} />
-            <Route path="signup/add-bank" element={<AddBank />} />
-            <Route path="forget-password" element={<ForgetPassword />} />
-            <Route path="reset-password" element={<ResetPassword />} />
-          </Route>
-          <Route path="app" element={<DashboardLayout />}>
-            <Route
-              path="home"
-              element={
-                <PageTransition locationKey={location.pathname}>
-                  <Home />
-                </PageTransition>
-              }
-            />
-            <Route
-              path="events"
-              element={
-                <PageTransition locationKey={location.pathname}>
-                  <Events />
-                </PageTransition>
-              }
-            />
-            <Route
-              path="events/add"
-              element={
-                <PageTransition locationKey={location.pathname}>
-                  <AddEvents />
-                </PageTransition>
-              }
-            />
-            <Route
-              path="events/:id"
-              element={
-                <PageTransition locationKey={location.pathname}>
-                  <EventDetails />
-                </PageTransition>
-              }
-            />
-            <Route
-              path="tickets"
-              element={
-                <PageTransition locationKey={location.pathname}>
-                  <Tickets />
-                </PageTransition>
-              }
-            />
-            <Route
-              path="tickets/add"
-              element={
-                <PageTransition locationKey={location.pathname}>
-                  <AddTickets />
-                </PageTransition>
-              }
-            />
-            {/* <Route
-              path="tickets/:id"
-              element={
-                <PageTransition locationKey={location.pathname}>
-                  <AddTickets />
-                </PageTransition>
-              }
-            /> */}
-            <Route
-              path="wallet"
-              element={
-                <PageTransition locationKey={location.pathname}>
-                  <Wallet />
-                </PageTransition>
-              }
-            />
-            <Route
-              path="wallet/add"
-              element={
-                <PageTransition locationKey={location.pathname}>
-                  <AddWallet />
-                </PageTransition>
-              }
-            />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-          <Route path="/unauthorized" element={<Forbidden />} />
-          <Route path="/tickets-validation" element={<TicketsValidation />} />
+          {routeConfig.map((route) => {
+            return (
+              <Route key={route.path} path={route.path} element={route.element}>
+                {route.children?.map((child) => {
+                  return (
+                    <Route
+                      key={child.path}
+                      path={child.path}
+                      element={child.element}
+                    />
+                  );
+                })}
+              </Route>
+            );
+          })}
         </Routes>
       </Suspense>
     </main>

@@ -8,12 +8,14 @@ interface ModalPopupProps {
   isOpen: boolean;
   closeModal?: () => void;
   children: React.ReactNode;
+  itemPosition?: string;
 }
 
 const ModalPopup: React.FC<ModalPopupProps> = ({
   children,
   isOpen,
   closeModal,
+  itemPosition = 'center'
 }) => {
   const [isExiting, setIsExiting] = useState(false);
 
@@ -35,7 +37,7 @@ const ModalPopup: React.FC<ModalPopupProps> = ({
           exit={{ opacity: 0, scale: 0.9 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
           onAnimationComplete={handleAnimationComplete}
-          className="fixed inset-0 bg-MODAL_BACKGROUND flex items-center justify-center z-[9999] p-4"
+          className={`fixed inset-0 bg-MODAL_BACKGROUND flex items-${itemPosition} justify-center z-40 p-4`}
           style={{
             backdropFilter: "blur(2px)",
           }}
@@ -46,7 +48,6 @@ const ModalPopup: React.FC<ModalPopupProps> = ({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="w-full flex justify-center"
           >
             {children}
           </motion.div>

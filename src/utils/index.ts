@@ -1,6 +1,8 @@
-import { toast } from "react-hot-toast";
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { toast } from "react-hot-toast";
+import Cookies from "js-cookie";
+import { userDetailsProps } from "../types";
+
 export const openNewTabWithUrl = (url: string) => {
   window.open(url, "_blank", "noopener,noreferrer");
 };
@@ -87,3 +89,36 @@ export const isValidOptionalDetails = (
   }
   return true;
 };
+
+export function _handleClearCookiesAndSession() {
+  Cookies.remove("token");
+  Cookies.remove("token_type");
+  sessionStorage.clear();
+}
+
+export function _handleThrowErrorMessage(message: string) {
+  const err = message || "Something went wrong, please try again later";
+  return err;
+}
+
+export function setAuthCookies(access_token: string, token_type: string) {
+  Cookies.set("token", access_token, {
+    expires: 3, // Expires in 3 days
+    secure: true, // Only send over HTTPS
+    sameSite: "strict", // Protection against CSRF
+  });
+  Cookies.set("token_type", token_type);
+}
+
+export const validateUserDetails = (user: userDetailsProps): boolean => {
+  const { fullName, email, id } = user;
+  // Check required fields are not empty, null, or undefined
+  if (!fullName?.trim() || !email?.trim() || !id?.trim()) return false;
+  return true;
+};
+
+export const isObjectEmpty = (obj: Record<string, unknown>): boolean => {
+  return Object.keys(obj).length === 0;
+};
+
+export const isArrayEmpty = (arr: any[]): boolean => arr.length === 0;

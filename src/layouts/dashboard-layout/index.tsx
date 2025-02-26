@@ -4,6 +4,7 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Footer from "./Footer";
 import MobileNavigation from "./MobileNavigation";
+import LogoutOnInactivity from "../../components/LogoutOnInactivity";
 
 export default function DashboardLayout() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -46,6 +47,8 @@ export default function DashboardLayout() {
         {/* Mobile Navigation */}
         <MobileNavigation />
       </div>
+
+      <LogoutOnInactivity />
     </div>
   );
 }
