@@ -24,9 +24,10 @@ const Forbidden: React.FC = () => {
 
         {/* Button with animation */}
         <button
-          onClick={logout}
+          onClick={() => logout()}
           className="px-6 py-3 text-white bg-[#A30162] rounded-md shadow-md hover:bg-[#890140] transition duration-300 transform hover:scale-105"
           aria-label="Go back to the previous page"
+          type="button"
         >
           Go Back
         </button>
