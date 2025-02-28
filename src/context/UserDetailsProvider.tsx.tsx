@@ -28,7 +28,7 @@ function UserDetailsProvider({ children }: UserDetailsProviderProps) {
       const res = await api.post(login_url, payload);
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
-        const { access_token, token_type, emailVerified, bankVerified, email} =
+        const { access_token, token_type, emailVerified, bankVerified, email } =
           res?.data?.data ?? null;
         if (!isTeamMember) {
           if (!emailVerified)
@@ -97,11 +97,11 @@ function UserDetailsProvider({ children }: UserDetailsProviderProps) {
     }
   };
 
-  const logout = () => {
+  const logout = (query?: string) => {
     toast.success("Logout Successful");
-    _handleClearCookiesAndSession("access_token", "token_type", 'email');
+    _handleClearCookiesAndSession("access_token", "token_type", "email");
     setUserDetails({});
-    navigate("/auth/login", { replace: true });
+    navigate(`/auth/login${query}`, { replace: true });
   };
 
   const value = useMemo(

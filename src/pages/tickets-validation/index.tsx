@@ -64,8 +64,7 @@ export default function TicketsValidation() {
 
   const handleLogout = () => {
     setIsMenuOpen(false);
-    logout();
-    navigate("/auth/login");
+    logout(`?eventId=${eventId}`);
   };
 
   return (

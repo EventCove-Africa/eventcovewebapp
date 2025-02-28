@@ -113,7 +113,7 @@ export interface useUserProps {
   handleGetUserDetails: () => any;
   loadingDetails: boolean;
   userDetails: userDetailsProps;
-  logout: () => void;
+  logout: (query?: string) => void;
 }
 
 export type OTPVerifyProps = {
