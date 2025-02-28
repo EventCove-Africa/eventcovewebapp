@@ -21,10 +21,10 @@ const apiResource = () => {
     (config: AxiosRequestConfig) => {
       const internalConfig = config as any;
       internalConfig.headers = internalConfig.headers ?? {};
-      const token = Cookies.get("token");
+      const access_token = Cookies.get("access_token");
       const token_type = Cookies.get("token_type");
-      if (!token) return internalConfig;
-      internalConfig.headers["Authorization"] = `${token_type} ${token}`;
+      if (!access_token) return internalConfig;
+      internalConfig.headers["Authorization"] = `${token_type} ${access_token}`;
       return internalConfig;
     },
     (error) => Promise.reject(error)

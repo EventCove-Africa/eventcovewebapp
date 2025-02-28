@@ -69,7 +69,7 @@ export default function OTPVerify({
         const { access_token, token_type } = res?.data?.data ?? null;
         if (!["create-pin"].includes(transactionType)) {
           if (access_token) {
-            setAuthCookies(access_token, token_type);
+            setAuthCookies({ access_token, token_type });
           }
         }
         toast.success("OTP verified successfully");

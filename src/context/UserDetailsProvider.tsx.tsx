@@ -21,23 +21,30 @@ function UserDetailsProvider({ children }: UserDetailsProviderProps) {
   const navigate = useNavigate();
 
   const login = async ({ payload, actions, from }: LoginProps) => {
+    const login = appUrls.LOGIN_URL;
+    const isTeamMember = payload?.eventId !== null;
+    const login_url = isTeamMember ? `${login}/login/member` : login;
     try {
-      const res = await api.post(appUrls.LOGIN_URL, payload);
+      const res = await api.post(login_url, payload);
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
-        const { access_token, token_type, emailVerified, bankVerified, email } =
+        const { access_token, token_type, emailVerified, bankVerified, email} =
           res?.data?.data ?? null;
-        if (!emailVerified)
-          return navigate(`/auth/signup?verifyOTP=${email}`, { replace: true });
-        if (!bankVerified) {
-          setAuthCookies(access_token, token_type);
-          navigate(`/auth/signup/add-bank`, {
-            replace: true,
-          });
-          return;
+        if (!isTeamMember) {
+          if (!emailVerified)
+            return navigate(`/auth/signup?verifyOTP=${email}`, {
+              replace: true,
+            });
+          if (!bankVerified) {
+            setAuthCookies({ access_token, token_type });
+            navigate(`/auth/signup/add-bank`, {
+              replace: true,
+            });
+            return;
+          }
         }
         if (access_token) {
-          setAuthCookies(access_token, token_type);
+          setAuthCookies({ access_token, token_type, email });
           navigate(from, { replace: true });
         }
       }
@@ -58,7 +65,7 @@ function UserDetailsProvider({ children }: UserDetailsProviderProps) {
         if (!emailVerified) {
           handleOpenClose?.();
         } else if (!bankVerified) {
-          setAuthCookies(access_token, token_type);
+          setAuthCookies({ access_token, token_type });
           navigate(`/auth/signup/add-bank`, {
             replace: true,
           });
@@ -92,7 +99,7 @@ function UserDetailsProvider({ children }: UserDetailsProviderProps) {
 
   const logout = () => {
     toast.success("Logout Successful");
-    _handleClearCookiesAndSession();
+    _handleClearCookiesAndSession("access_token", "token_type", 'email');
     setUserDetails({});
     navigate("/auth/login", { replace: true });
   };

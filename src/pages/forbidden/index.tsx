@@ -1,9 +1,9 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useUser } from "../../context/UserDetailsProvider.tsx";
+import { useUserProps } from "../../types/generalTypes.tsx";
 
 const Forbidden: React.FC = () => {
-  const navigate = useNavigate();
-
+  const { logout } = useUser() as useUserProps;
   return (
     <div
       className="flex items-center justify-center min-h-screen bg-primary_300 text-[#A30162] px-6 text-center"
@@ -24,7 +24,7 @@ const Forbidden: React.FC = () => {
 
         {/* Button with animation */}
         <button
-          onClick={() => navigate(-1)}
+          onClick={logout}
           className="px-6 py-3 text-white bg-[#A30162] rounded-md shadow-md hover:bg-[#890140] transition duration-300 transform hover:scale-105"
           aria-label="Go back to the previous page"
         >

@@ -90,24 +90,25 @@ export const isValidOptionalDetails = (
   return true;
 };
 
-export function _handleClearCookiesAndSession() {
-  Cookies.remove("token");
-  Cookies.remove("token_type");
-  sessionStorage.clear();
-}
 
 export function _handleThrowErrorMessage(message: string) {
   const err = message || "Something went wrong, please try again later";
   return err;
 }
 
-export function setAuthCookies(access_token: string, token_type: string) {
-  Cookies.set("token", access_token, {
-    expires: 3, // Expires in 3 days
-    secure: true, // Only send over HTTPS
-    sameSite: "strict", // Protection against CSRF
+export function _handleClearCookiesAndSession(...cookieNames: string[]) {
+  cookieNames.forEach((name) => Cookies.remove(name));
+  sessionStorage.clear();
+}
+
+export function setAuthCookies(tokens: Record<string, string>) {
+  Object.entries(tokens).forEach(([key, value]) => {
+    Cookies.set(key, value, {
+      expires: 3, // Expires in 3 days
+      secure: true, // Only send over HTTPS
+      sameSite: "strict", // Protection against CSRF
+    });
   });
-  Cookies.set("token_type", token_type);
 }
 
 export const validateUserDetails = (user: userDetailsProps): boolean => {
