@@ -78,7 +78,7 @@ export type UserDetailsProviderProps = {
 export type LoginData = {
   email: string;
   password: string;
-  eventId?: string;
+  eventId?: string | null;
 };
 
 export type SignUpData = {
@@ -98,6 +98,7 @@ export type userDetailsProps = {
   fullName: string;
   email: string;
   id: string;
+  eventId?: string | null;
 };
 
 export type SignupProps = {

@@ -8,20 +8,24 @@ import PasswordInputField from "../../../components/FormComponents/PasswordField
 import GoogleAuth from "../../../components/GoogleAuth";
 import { animationVariants } from "../../../utils";
 import { loginSchema } from "../../../form-schemas";
-// import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useUser } from "../../../context/UserDetailsProvider.tsx";
 import { LoginData, useUserProps } from "../../../types/generalTypes.tsx";
+import useQueryParams from "../../../hooks/useQueryParams.tsx";
 
 export default function Login() {
+  const location = useLocation();
+  const getParam = useQueryParams();
   const { navigate } = useNavigation();
-  // const location = useLocation();
-  // const from = location.state?.from?.pathname || "/app/home";
   const { login } = useUser() as useUserProps;
+  const eventId = getParam("eventId") || null;
+  const from = location.state?.from?.pathname || "/app/home";
 
   const loginGoogle = useGoogleLogin({
     onSuccess: (response) => console.log("Login Success:", response),
     onError: (error) => console.error("Login Failed:", error),
   });
+
 
   return (
     <motion.main
@@ -38,7 +42,7 @@ export default function Login() {
         initialValues={{
           email: "",
           password: "",
-          eventId: "",
+          eventId: eventId,
         }}
         validationSchema={loginSchema}
         enableReinitialize
@@ -46,7 +50,10 @@ export default function Login() {
           login({
             payload: values,
             actions: actions as FormikHelpers<LoginData>,
-            from: "/app/home",
+            from:
+              values?.eventId !== null
+                ? `/tickets-validation?eventId=${values?.eventId}`
+                : from,
           });
         }}
       >

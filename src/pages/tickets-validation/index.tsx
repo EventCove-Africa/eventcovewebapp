@@ -1,6 +1,7 @@
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import { ArrowDown2, ArrowRight2, Logout, User } from "iconsax-react";
 import logo from "../../assets/icons/logo.svg";
-import { useLocation, useNavigate } from "react-router-dom";
 import QRscan from "./components/QRscan";
 import TicketIdEntry from "./components/TicketIdEntry";
 import ModalPopup from "../../components/ModalPopup";
@@ -8,13 +9,18 @@ import SignupSuccess from "../components/SignupSuccess";
 import useOpenCloseModal from "../../hooks/useOpenCloseModal";
 import { MenuItem } from "../../layouts/dashboard-layout/Header";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useUser } from "../../context/UserDetailsProvider.tsx";
+import { useUserProps } from "../../types/generalTypes.tsx";
+import useQueryParams from "../../hooks/useQueryParams.tsx";
 
 export default function TicketsValidation() {
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
-  const location = useLocation();
+  const { logout } = useUser() as useUserProps;
   // Extract query parameter for eventType
-  const params = new URLSearchParams(location.search);
-  const validationType = params.get("validation-type");
+  const getParam = useQueryParams();
+  const validationType = getParam("validation-type");
+  const eventId = getParam("eventId");
+  const email = Cookies.get("email");
   const options = [
     {
       name: "Scan QR code",
@@ -58,6 +64,7 @@ export default function TicketsValidation() {
 
   const handleLogout = () => {
     setIsMenuOpen(false);
+    logout();
     navigate("/auth/login");
   };
 
@@ -88,7 +95,7 @@ export default function TicketsValidation() {
               aria-label="Toggle user menu"
               ref={buttonRef} // Assigning buttonRef to the button
             >
-              <span>adewale@gmail.com</span>
+              <span>{email}</span>
               <ArrowDown2 size="16" color="#767779" />
             </button>
             {isMenuOpen && (
@@ -131,7 +138,9 @@ export default function TicketsValidation() {
               return (
                 <div
                   onClick={() =>
-                    navigate(`/tickets-validation?validation-type=${d?.key}`)
+                    navigate(
+                      `/tickets-validation?eventId=${eventId}&validation-type=${d?.key}`
+                    )
                   }
                   key={i}
                   className={`${

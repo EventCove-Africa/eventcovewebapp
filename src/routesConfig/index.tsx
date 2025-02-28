@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { lazy, useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -113,23 +112,37 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const { loadingDetails, handleGetUserDetails, userDetails } =
     useUser() as useUserProps;
-  const token = Cookies.get("token");
+  const access_token = Cookies.get("access_token");
   const location = useLocation();
 
   useEffect(() => {
     let mounted = true;
-    if (token && mounted) {
+    if (access_token && mounted) {
       handleGetUserDetails().finally(() => setIsInitialLoad(false));
     } else {
-      setIsInitialLoad(false); // No token, no need to load
+      setIsInitialLoad(false); // No access_token, no need to load
     }
     return () => {
       mounted = false;
     };
-  }, [token]);
+  }, [access_token]);
+
+  const hasValidUserDetails = (user: typeof userDetails) => {
+    return user && user.email.trim() !== "" && user.fullName.trim() === "";
+  };
 
   if (isInitialLoad || loadingDetails) return <FallbackLoader />;
-  const isAuthenticated = token && !isObjectEmpty(userDetails);
+  const isAuthenticated = access_token && !isObjectEmpty(userDetails);
+  if (isAuthenticated && hasValidUserDetails(userDetails)) {
+    return (
+      <Navigate
+        to={APP_ROUTES.UNAUTHORIZED}
+        state={{ from: location }}
+        replace
+      />
+    );
+  }
+
   return isAuthenticated ? (
     <>{children}</>
   ) : (
@@ -138,10 +151,10 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
-  const token = Cookies.get("token");
+  const access_token = Cookies.get("access_token");
   const location = useLocation();
   const excludePath = ["/auth/signup/add-bank"].includes(location.pathname);
-  const ProtectedAuthRoutes = !excludePath && token;
+  const ProtectedAuthRoutes = !excludePath && access_token;
   return ProtectedAuthRoutes ? (
     <Navigate to={APP_ROUTES.HOME} state={{ from: location }} replace />
   ) : (
