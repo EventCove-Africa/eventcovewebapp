@@ -4,8 +4,35 @@ import { motion } from "framer-motion";
 import { routeConfig } from "./routesConfig";
 import logo from "./assets/icons/logo.svg";
 
+const LoadingFlicker = () => {
+  return (
+    <div>
+      <style>
+        {`
+          @keyframes flicker {
+            0% { opacity: 1; }
+            10% { opacity: 0.8; }
+            20% { opacity: 1; }
+            30% { opacity: 0.7; }
+            40% { opacity: 1; }
+            50% { opacity: 0.3; }
+            60% { opacity: 1; }
+            70% { opacity: 0.6; }
+            80% { opacity: 1; }
+            90% { opacity: 0.4; }
+            100% { opacity: 1; }
+          }
+        `}
+      </style>
+      <div className="text-primary_100 font-bold text-base animate-flicker animate-pulse">
+        Loading details...
+      </div>
+    </div>
+  );
+};
+
 export const FallbackLoader = () => (
-  <div className="flex justify-center items-center h-screen">
+  <div className="flex justify-center gap-3 items-center h-screen">
     <motion.div
       className="loader"
       initial={{ opacity: 0.5, scale: 0.95 }}
@@ -23,6 +50,7 @@ export const FallbackLoader = () => (
         loading="lazy"
         aria-hidden="true"
       />
+      <LoadingFlicker />
     </motion.div>
   </div>
 );

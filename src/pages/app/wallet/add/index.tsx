@@ -19,8 +19,8 @@ export default function AddWallet() {
   );
 
   const handleCheckIfNinBvnPINIsSet = () => {
-    const { nin, bvn, pinAdded } = state;
     if (!state) return;
+    const { nin, bvn, pinAdded } = state;
     if (!nin || !bvn) {
       return handleChangeStep("bvn_nin");
     }

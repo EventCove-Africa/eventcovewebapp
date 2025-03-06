@@ -14,7 +14,7 @@ export default function DashboardLayout() {
   };
 
   return (
-    <div className="flex w-full h-screen min-h-screen overflow-hidden">
+    <div className="flex w-full h-screen min-h-screen">
       {/* Sidebar */}
       <aside
         className={`bg-white md:flex-shrink-0 px-1 transition-all duration-300 lg:block hidden ${
@@ -28,7 +28,7 @@ export default function DashboardLayout() {
       </aside>
 
       {/* Main Content */}
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 overflow-hidden">
         {/* Header */}
         <header className="h-[56px] bg-white flex-shrink-0 px-4">
           <Header />

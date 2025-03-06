@@ -1,265 +1,285 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import DescriptionBar from "../../../../components/DescriptionBar";
-import { eventTypeStyles, formatToNaira } from "../../../../utils";
-import upcoming_event_bg from "../../../../assets/images/upcoming_event_bg.png";
-import {
-  Briefcase,
-  Calendar2,
-  Crown1,
-  Export,
-  Money4,
-  Notepad2,
-  Teacher,
-  Ticket,
-  TimerPause,
-  User,
-} from "iconsax-react";
+import { _handleThrowErrorMessage, isArrayEmpty } from "../../../../utils";
+import { Export, Trash } from "iconsax-react";
 import Button from "../../../../components/FormComponents/Button";
-import CopyToClipboard from "../../../../components/CopyToClipboard";
 import toast from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { appUrls } from "../../../../services/urls";
+import { api } from "../../../../services/api";
+import SkeletonLoader from "../../../../components/EventCard/components/SkeletonLoader";
+import RenderEventDetails from "./components/RenderEventDetails";
+import RenderTicketsStatForEvents from "./components/RenderTicketsStatForEvents";
+import useEventHook from "../../../../hooks/useEventHook";
+import CopyToClipboard from "../../../../components/CopyToClipboard";
 
 export default function EventDetails() {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const {
+    handleGetEventDetails,
+    allEventDetails,
+    loadingEventDetails,
+    setLoadingEventDetails,
+    handleGetEventTeamMembers,
+    handleGetEventTicketSalesStats,
+    eventTeamMembers,
+    eventTeamMembersUrl,
+  } = useEventHook();
+  const isEventPublised = allEventDetails?.published
+  const isReadyForPublish =
+    allEventDetails?.hasTicketType && !isEventPublised;
+  const NOT_COMPLETED = allEventDetails?.status !== "completed";
+  const isShowDeleteButton =
+    !allEventDetails?.soldTicket &&
+    !allEventDetails?.deleted &&
+    !loadingEventDetails?.event &&
+    NOT_COMPLETED &&
+    !isEventPublised;
+
+  const handlePublishEvent = async () => {
+    const payload = {
+      eventId: id,
+    };
+    setLoadingEventDetails((prev) => ({
+      ...prev,
+      publish: !loadingEventDetails?.publish,
+    }));
+    try {
+      const { status, data } = await api.post(
+        appUrls.EVENT_URL + "/publish",
+        payload
+      );
+      const message = data?.data;
+      if ([200, 201].includes(status)) {
+        handleGetEventDetails(id);
+        toast.success(message);
+      }
+    } catch (error: any) {
+      toast.error(_handleThrowErrorMessage(error?.data?.message));
+    } finally {
+      setLoadingEventDetails((prev) => ({
+        ...prev,
+        publish: !!loadingEventDetails?.publish,
+      }));
+    }
+  };
+
+  const handleExportEvent = async () => {
+    setLoadingEventDetails((prev) => ({
+      ...prev,
+      export: !loadingEventDetails?.export,
+    }));
+    try {
+      const { status, data } = await api.get(appUrls.EXPORT_URL + `/${id}`);
+      const message = data?.data?.data;
+      if ([200, 201].includes(status)) {
+        toast.success(message);
+      }
+    } catch (error: any) {
+      toast.error(_handleThrowErrorMessage(error?.data?.message));
+    } finally {
+      setLoadingEventDetails((prev) => ({
+        ...prev,
+        export: !!loadingEventDetails?.export,
+      }));
+    }
+  };
+
+  const handleCancelEvent = async () => {
+    setLoadingEventDetails((prev) => ({
+      ...prev,
+      delete: !loadingEventDetails?.delete,
+    }));
+    try {
+      const { status, data } = await api.post(
+        appUrls.EVENT_URL + `/delete/${id}`
+      );
+      const message = data?.data;
+      if ([200, 201].includes(status)) {
+        toast.success(message);
+        handleGetEventDetails(id);
+      }
+    } catch (error: any) {
+      toast.error(_handleThrowErrorMessage(error?.data?.message));
+    } finally {
+      setLoadingEventDetails((prev) => ({
+        ...prev,
+        delete: !!loadingEventDetails?.delete,
+      }));
+    }
+  };
+
+  useEffect(() => {
+    let mounted = false;
+    (async () => {
+      mounted = true;
+      if (mounted) {
+        handleGetEventDetails(id);
+        handleGetEventTeamMembers(id);
+        handleGetEventTicketSalesStats(id);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [id]);
+
+  const classNameImageBannerLoader =
+    "h-[200px] sm:h-[300px] md:h-[300px] lg:h-[300px] xl:h-[300px]";
+  const classNameGridEventDetails =
+    "w-full grid md:grid-cols-3 grid-cols-1 gap-3 mt-4";
+
+  const renderSkeletonLoaderForEventDetails = () => {
+    if (!loadingEventDetails?.event) return null;
+    return (
+      <>
+        <SkeletonLoader
+          count={1}
+          className={`w-full flex justify-between ${classNameImageBannerLoader} rounded-md`}
+        />
+        <SkeletonLoader
+          count={1}
+          className="w-full flex justify-between h-[30px] rounded-md"
+        />
+
+        <div className={classNameGridEventDetails}>
+          <SkeletonLoader
+            count={6}
+            className="md:w-1/3 h-[60px] rounded-md mt-4"
+          />
+        </div>
+
+        {[...Array(2)].map((_, index) => (
+          <SkeletonLoader
+            key={index}
+            count={1}
+            className="md:w-1/3 h-[60px] rounded-md mt-4"
+          />
+        ))}
+      </>
+    );
+  };
+
   return (
     <div className="w-full h-full">
       <div className="w-full flex md:flex-row flex-col justify-between mb-3">
         <DescriptionBar text="Get the full picture of your event 🌟" />
-        <button
-          type="button"
-          className="px-3 py-2 bg-primary_300 text-primary_100 rounded-md flex items-center justify-center self-end gap-1 text-sm"
-          aria-label="Export details"
-          onClick={() => {
-            toast.success("COMING SOON...", { duration: 3000 });
-          }}
-        >
-          <Export size={20} className="text-primary_100" />
-          <span>Export details</span>
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            className="px-3 py-2 bg-primary_300 text-primary_100 rounded-md flex items-center justify-center self-end gap-1 text-sm"
+            aria-label="Export details"
+            onClick={handleExportEvent}
+            disabled={loadingEventDetails?.export}
+          >
+            <Export size={20} className="text-primary_100" />
+            <span>
+              {loadingEventDetails?.export
+                ? "Exporting....."
+                : "Export details"}
+            </span>
+          </button>
+          {isShowDeleteButton && (
+            <button
+              type="button"
+              className="px-3 py-2 bg-primary_300 text-primary_100 rounded-md flex items-center justify-center self-end gap-1 text-sm"
+              aria-label="Export details"
+              onClick={handleCancelEvent}
+              disabled={loadingEventDetails?.delete}
+            >
+              <Trash size={20} className="text-primary_100" />
+              <span>
+                {loadingEventDetails?.delete ? "Deleting....." : "Delete Event"}
+              </span>
+            </button>
+          )}
+        </div>
       </div>
       <div className="w-full flex lg:flex-row flex-col gap-4">
         <div className="bg-white w-full h-full rounded-xl p-3">
-          <div className="w-full relative">
-            <img
-              src={upcoming_event_bg}
-              alt={`banner`}
-              className="rounded-xl object-contain w-full"
+          {renderSkeletonLoaderForEventDetails()}
+          <RenderEventDetails
+            allEventDetails={allEventDetails}
+            classNameImageBannerLoader={classNameImageBannerLoader}
+            classNameGridEventDetails={classNameGridEventDetails}
+            loadingEventDetails={loadingEventDetails?.event}
+          />
+        </div>
+        <div className="flex flex-col gap-3 w-full">
+          <RenderTicketsStatForEvents eventId={id} />
+          {id &&
+            !loadingEventDetails?.event &&
+            !isArrayEmpty(eventTeamMembers) && (
+              <>
+                <h4 className="text-dark_200 font-bold md:text-base text-sm">
+                  Existing Team members{" "}
+                </h4>
+                <div className="flex gap-3 items-center flex-wrap">
+                  {eventTeamMembers?.map((d: any, id: number) => {
+                    return (
+                      <div
+                        key={id}
+                        className="px-3 py-2 text-grey_100 border font-semibold border-pink_200 bg-pink_100 rounded-md flex gap-4 items-center justify-between text-xs"
+                      >
+                        Email: {d.email} <br />
+                        Password: {d.password}
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="mt-2">
+                  <h3 className="text-grey_100 font-normal text-xs">
+                    Share the login link with your team members!
+                  </h3>
+                  <div className="w-full h-auto rounded-lg bg-primary_300 p-3 flex justify-between items-center border border-dotted border-grey_100 text-primary_100 mt-2 font-normal text-sm flex-wrap">
+                    {eventTeamMembersUrl}
+                    <CopyToClipboard
+                      text={eventTeamMembersUrl}
+                      size="20"
+                      color="text-primary_100"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+        </div>
+      </div>
+      {!loadingEventDetails?.event && (
+        <div className="flex gap-2 items-center mt-4">
+          {isReadyForPublish && (
+            <Button
+              title="Publish Event"
+              type="button"
+              isLoading={loadingEventDetails?.publish}
+              onClick={handlePublishEvent}
             />
-            <div className="absolute top-3 right-3 flex flex-col gap-2">
-              <div
-                className={`px-3 py-2 ${eventTypeStyles["upcoming"]} text-xs font-normal rounded-md capitalize`}
-              >
-                Upcoming
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col gap-1 w-full mt-4">
-            <h3 className="text-dark_200 font-medium md:text-base text-sm">
-              🎉 Get Ready for an Unforgettable House Party! 🎉
-            </h3>
-            <p className="text-secondary_300 font-normal text-xs">
-              Eko hotel,Lagos, Nigeria
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 grid-cols-1 gap-3 mt-4">
-            <div className="bg-grey_500 rounded-md p-2 flex gap-2 items-center">
-              <Calendar2 size="20" color="#429EFF" />
-              <div className="flex flex-col gap-1">
-                <h3 className="text-grey_100 text-xs font-normal">
-                  Start Date
-                </h3>
-                <h5 className="text-dark_200 font-normal md:text-base text-sm">
-                  Sun 12 Jun 2023
-                </h5>
-              </div>
-            </div>
-            <div className="bg-grey_500 rounded-md p-2 flex gap-2 items-center">
-              <Calendar2 size="20" color="#429EFF" />
-              <div className="flex flex-col gap-1">
-                <h3 className="text-grey_100 text-xs font-normal">End Date</h3>
-                <h5 className="text-dark_200 font-normal md:text-base text-sm">
-                  Sun 12 Jun 2023
-                </h5>
-              </div>
-            </div>
-            <div className="bg-grey_500 rounded-md p-2 flex gap-2 items-center">
-              <Notepad2 size="20" color="#82476E" />
-              <div className="flex flex-col gap-1">
-                <h3 className="text-grey_100 text-xs font-normal">
-                  Event Privacy
-                </h3>
-                <h5 className="text-dark_200 font-normal md:text-base text-sm">
-                  Public
-                </h5>
-              </div>
-            </div>
-            <div className="bg-grey_500 rounded-md p-2 flex gap-2 items-center">
-              <TimerPause size="20" color="#FA43AF" />
-              <div className="flex flex-col gap-1">
-                <h3 className="text-grey_100 text-xs font-normal">
-                  Start Time
-                </h3>
-                <h5 className="text-dark_200 font-normal md:text-base text-sm">
-                  9:AM
-                </h5>
-              </div>
-            </div>
-            <div className="bg-grey_500 rounded-md p-2 flex gap-2 items-center">
-              <TimerPause size="20" color="#FA43AF" />
-              <div className="flex flex-col gap-1">
-                <h3 className="text-grey_100 text-xs font-normal">End Time</h3>
-                <h5 className="text-dark_200 font-normal md:text-base text-sm">
-                  12:AM
-                </h5>
-              </div>
-            </div>
-            <div className="bg-grey_500 rounded-md p-2 flex gap-2 items-center">
-              <User size="20" color="#A30162" />
-              <div className="flex flex-col gap-1">
-                <h3 className="text-grey_100 text-xs font-normal">
-                  Organizer Phone Number
-                </h3>
-                <h5 className="text-dark_200 font-normal md:text-base text-sm">
-                  09012345678
-                </h5>
-              </div>
-            </div>
-          </div>
-          <div className="mt-4">
-            <h3 className="text-dark_200 font-normal text-sm">Event Details</h3>
-            <div className="h-auto bg-grey_500 p-3 text-grey_100 font-normal text-sm">
-              We’re turning up the vibes and making this a night to remember!
-              Join us for an epic house party filled with good music, great
-              company, and plenty of fun. Here’s everything you need to know:
-            </div>
-          </div>
-          <div className="mt-2">
-            <h3 className="text-grey_100 font-normal text-xs">
-              Share the event link with others!
-            </h3>
-            <div className="h-auto rounded-lg bg-primary_300 p-3 flex justify-between border border-dotted border-grey_100 text-primary_100 mt-2 font-normal text-sm">
-              https://eventcove.africa
-              <CopyToClipboard
-                text="https://eventcove.africa"
-                size="20"
-                color="text-primary_100"
-              />
-            </div>
-          </div>
+          )}
+          {NOT_COMPLETED && (
+            <Button
+              title="Create Ticket"
+              type="button"
+              onClick={() =>
+                navigate(`/app/tickets/add/${allEventDetails?.eventId}`, {
+                  state: allEventDetails?.eventId,
+                })
+              }
+            />
+          )}
+          <Button
+            title="Edit Event"
+            type="button"
+            backgroundColor="bg-primary_300"
+            textColor="text-primary_100"
+            className="border border-dark_100"
+            onClick={() =>
+              navigate(`/app/events/edit/${allEventDetails?.eventId}`)
+            }
+          />
         </div>
-        <div className="bg-white w-full rounded-xl h-fit p-3">
-          <h3 className="text-sm font-normal text-dark_200">Tickets</h3>
-          <div className="grid md:grid-cols-3 grid-cols-1 gap-3 mt-4">
-            <div className="bg-grey_500 rounded-md p-2 flex flex-col justify-between">
-              <div className="flex gap-2 items-center">
-                <Teacher size="20" color="#4242FD" />
-                <div className="flex flex-col gap-1">
-                  <h3 className="text-grey_100 text-xs font-normal">
-                    Early bird
-                  </h3>
-                  <h5 className="text-dark_200 font-normal md:text-base text-sm">
-                    {formatToNaira(0)}
-                  </h5>
-                </div>
-              </div>
-              <div className="self-end font-medium md:text-base text-sm text-grey_100">
-                200/
-                <span className="font-medium md:text-base text-sm text-dark_200">
-                  500
-                </span>
-              </div>
-            </div>
-            <div className="bg-grey_500 rounded-md p-2 flex flex-col justify-between">
-              <div className="flex gap-2 items-center">
-                <Briefcase size="20" color="#4242FD" />
-                <div className="flex flex-col gap-1">
-                  <h3 className="text-grey_100 text-xs font-normal">
-                    Standard
-                  </h3>
-                  <h5 className="text-dark_200 font-normal md:text-base text-sm">
-                    {formatToNaira(0)}
-                  </h5>
-                </div>
-              </div>
-              <div className="self-end font-medium md:text-base text-sm text-grey_100">
-                200/
-                <span className="font-medium md:text-base text-sm text-dark_200">
-                  500
-                </span>
-              </div>
-            </div>
-            <div className="bg-grey_500 rounded-md p-2 flex flex-col justify-between">
-              <div className="flex gap-2 items-center">
-                <Crown1 size="20" color="#4242FD" />
-                <div className="flex flex-col gap-1">
-                  <h3 className="text-grey_100 text-xs font-normal">Vip</h3>
-                  <h5 className="text-dark_200 font-normal md:text-base text-sm">
-                    {formatToNaira(0)}
-                  </h5>
-                </div>
-              </div>
-              <div className="self-end font-medium md:text-base text-sm text-grey_100">
-                200/
-                <span className="font-medium md:text-base text-sm text-dark_200">
-                  500
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="grid md:grid-cols-2 grid-cols-1 gap-3 mt-4">
-            <div className="w-full bg-grey_500 p-3">
-              <div className="flex justify-between">
-                <h4 className="text-grey_100 text-sm font-normal">
-                  Total Revenue
-                </h4>
-                <Money4 size="24" color="#4CAF50" />
-              </div>
-              <h3 className="text-dark_400 font-bold md:text-2xl text-xl">
-                {formatToNaira(0)}
-              </h3>
-            </div>
-            <div className="w-full bg-grey_500 p-3">
-              <div className="flex justify-between">
-                <h4 className="text-grey_100 text-sm font-normal">
-                  Total Ticket
-                </h4>
-                <Ticket size="24" color="#A30162" />
-              </div>
-              <h3 className="text-dark_400 font-bold md:text-2xl text-xl">0</h3>
-            </div>
-            <div className="w-full bg-grey_500 p-3">
-              <div className="flex justify-between">
-                <h4 className="text-grey_100 text-sm font-normal">
-                  Sold Ticket
-                </h4>
-                <Ticket size="24" color="#6100FF" />
-              </div>
-              <h3 className="text-dark_400 font-bold md:text-2xl text-xl">0</h3>
-            </div>
-            <div className="w-full bg-grey_500 p-3">
-              <div className="flex justify-between">
-                <h4 className="text-grey_100 text-sm font-normal">
-                  Refunded Ticket
-                </h4>
-                <Ticket size="24" color="#F44336" />
-              </div>
-              <h3 className="text-dark_400 font-bold md:text-2xl text-xl">0</h3>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex gap-2 items-center mt-4">
-        <Button
-          title="Publish Event"
-          type="button"
-          // onClick={() => navigate("/app/events/add")}
-        />
-        <Button
-          title="Edit Event"
-          type="button"
-          backgroundColor="bg-primary_300"
-          textColor="text-primary_100"
-          className="border border-dark_100"
-          // onClick={() => navigate("/app/events/add")}
-        />
-      </div>
+      )}
     </div>
   );
 }

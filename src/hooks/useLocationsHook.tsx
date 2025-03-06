@@ -47,7 +47,7 @@ const useLocationHook = () => {
     };
   }, [fetchStateLocations]);
 
-  return { states: data, loading, refetch: fetchStateLocations };
+  return { cities: data, loading, refetch: fetchStateLocations };
 };
 
 export default useLocationHook;

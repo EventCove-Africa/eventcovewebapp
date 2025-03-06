@@ -1,21 +1,19 @@
-import { useLocation } from "react-router-dom";
 import Button from "../../../components/FormComponents/Button";
 import EventCard from "../../../components/EventCard";
 import useNavigation from "../../../hooks/useNavigation";
+import useQueryParams from "../../../hooks/useQueryParams";
 
 export default function Events() {
   const { navigate } = useNavigation();
-  const location = useLocation();
-
   // Extract query parameter for eventType
-  const params = new URLSearchParams(location.search);
-  const eventType = params.get("eventType");
+  const getParam = useQueryParams();
+  const eventType = getParam("eventType");
 
   const events = [
     { label: "All Events", type: "all" },
     { label: "Upcoming Events", type: "upcoming" },
     { label: "Completed Events", type: "completed" },
-    { label: "Cancelled Events", type: "cancelled" },
+    { label: "Cancelled Events", type: "deleted" },
   ];
 
   return (
@@ -50,9 +48,7 @@ export default function Events() {
           </h3>
         ))}
       </nav>
-      <div className="w-full grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-3 mt-4">
-        <EventCard />
-      </div>
+      <EventCard eventType={eventType} />
     </div>
   );
 }

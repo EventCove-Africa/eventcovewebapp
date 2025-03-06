@@ -1,4 +1,5 @@
 import { TextInputFieldProps } from "../../../types";
+import CustomTooltip from "../../TooltipComponent";
 
 export default function TextInputField({
   handleChange,
@@ -20,6 +21,7 @@ export default function TextInputField({
   style,
   onKeyPress,
   readOnly = false,
+  tooltipContent = "",
   ...props
 }: TextInputFieldProps) {
   return (
@@ -28,9 +30,15 @@ export default function TextInputField({
         {labelName && (
           <label
             htmlFor={htmlFor}
-            className={`text-xs text-dark_200 leading-5 ${labelStyle}`}
+            className={`text-xs text-dark_200 leading-5 ${labelStyle} flex gap-1 items-center`}
           >
             {labelName}
+            {tooltipContent && (
+              <CustomTooltip
+                dataTooltipId={tooltipContent}
+                content={tooltipContent}
+              />
+            )}
           </label>
         )}
         <input

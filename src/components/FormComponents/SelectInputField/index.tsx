@@ -17,6 +17,7 @@ export interface CustomSelectProps<
   label?: string;
   errors?: any;
   value?: any;
+  defaultValue?: any;
   touched?: any;
   name?: string;
 }
@@ -25,7 +26,7 @@ const CustomSelect = <
   OptionType extends Option = Option,
   IsMulti extends boolean = false
 >({
-  options,
+  options = [],
   label,
   name,
   errors,
@@ -33,19 +34,26 @@ const CustomSelect = <
   isMulti,
   placeholder = "",
   value,
+  defaultValue,
+  defaultInputValue,
   ...props
 }: CustomSelectProps<OptionType, IsMulti>) => {
+  // Find the corresponding option object for the given defaultValue string
+  const computedDefaultValue = options.find(
+    (opt: any) => opt.value === defaultValue
+  );
+
   return (
     <div>
       {label && (
-        <label className={`text-xs text-dark_200 leading-5`}>{label}</label>
+        <label className="text-xs text-dark_200 leading-5">{label}</label>
       )}
       <Select
         options={options}
         isMulti={isMulti}
         name={name}
-        value={value}
-        components={{ Option: CustomOption }} // Use the custom Option component
+        value={value || computedDefaultValue} // Use computed default value when value is not provided
+        components={{ Option: CustomOption }}
         styles={{
           control: (baseStyles, state) => ({
             ...baseStyles,
@@ -58,7 +66,7 @@ const CustomSelect = <
             backgroundColor: state.isSelected
               ? "#A30162"
               : state.isFocused
-              ? "#A30162" // Lightened version for hover effect
+              ? "#A30162"
               : undefined,
             cursor: "pointer",
             marginBottom: "3px",
@@ -84,6 +92,7 @@ const CustomSelect = <
           },
         })}
         placeholder={placeholder}
+        defaultInputValue={defaultInputValue}
         {...props}
       />
       {errors && touched ? (

@@ -4,21 +4,27 @@ import Button from "../../../components/FormComponents/Button";
 import TextInputField from "../../../components/FormComponents/InputField";
 import { ticketValidationSchema } from "../../../form-schemas";
 
-export default function TicketIdEntry({ handleOpenClose }: any) {
+export default function TicketIdEntry({
+  eventReference,
+  email,
+  handleValidateTickets,
+}: any) {
   return (
     <div className="lg:w-2/5 w-full bg-white p-4 rounded-xl">
       <Formik
         initialValues={{
-          ticked_id: "",
-          // reference_number: "",
+          ticketNumber: "",
         }}
         validationSchema={ticketValidationSchema}
         enableReinitialize
         onSubmit={(values, actions) => {
-          console.log(values);
-          actions.setSubmitting(false);
-          actions.resetForm()
-          handleOpenClose();
+          const { ticketNumber } = values;
+          const payload = {
+            eventReference,
+            ticketNumber,
+            email,
+          };
+          handleValidateTickets(payload, actions);
         }}
       >
         {({
@@ -33,27 +39,15 @@ export default function TicketIdEntry({ handleOpenClose }: any) {
             <div className="mb-3">
               <TextInputField
                 labelName="Input Ticket ID"
-                name="ticked_id"
+                name="ticketNumber"
                 handleChange={handleChange}
                 type="text"
                 placeholder=""
-                value={values?.ticked_id}
-                errors={errors?.ticked_id}
-                touched={touched?.ticked_id}
+                value={values?.ticketNumber}
+                errors={errors?.ticketNumber}
+                touched={touched?.ticketNumber}
               />
             </div>
-            {/* <div className="mb-1">
-              <TextInputField
-                labelName="Reference Number"
-                name="reference_number"
-                handleChange={handleChange}
-                type="text"
-                placeholder=""
-                value={values?.reference_number}
-                errors={errors?.reference_number}
-                touched={touched?.reference_number}
-              />
-            </div> */}
             <div>
               <Button
                 title="Proceed"

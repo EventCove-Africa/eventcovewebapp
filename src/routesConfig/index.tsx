@@ -23,12 +23,14 @@ export const APP_ROUTES = {
   HOME: "/app/home",
   EVENTS: "/app/events",
   ADD_EVENTS: "/app/events/add",
+  EDIT_EVENTS: "/app/events/edit/:event_id",
   EVENT_DETAILS: "/app/events/:id",
   TICKETS: "/app/tickets",
-  ADD_TICKETS: "/app/tickets/add",
+  ADD_TICKETS: "/app/tickets/add/:eventId",
+  EDIT_TICKETS: "/app/tickets/edit/:ticketId",
   WALLET: "/app/wallet",
   ADD_WALLET: "/app/wallet/update",
-  TICKETS_VALIDATION: "/tickets-validation",
+  TICKETS_VALIDATION: "/tickets-validation/:eventId",
   NOT_FOUND: "*",
   UNAUTHORIZED: "/unauthorized",
 };
@@ -88,6 +90,10 @@ export const AddTickets = lazyLoad(
   () => import("../pages/app/tickets/add"),
   "AddTickets"
 );
+export const EditTicket = lazyLoad(
+  () => import("../pages/app/tickets/edit"),
+  "EditTicket"
+);
 export const Wallet = lazyLoad(() => import("../pages/app/wallet"), "Wallet");
 export const AddWallet = lazyLoad(
   () => import("../pages/app/wallet/add"),
@@ -113,6 +119,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { loadingDetails, handleGetUserDetails, userDetails } =
     useUser() as useUserProps;
   const access_token = Cookies.get("access_token");
+  // const email
+  // setAuthCookies({'email'})
   const location = useLocation();
 
   useEffect(() => {
@@ -237,6 +245,14 @@ export const routeConfig = [
         ),
       },
       {
+        path: APP_ROUTES.EDIT_EVENTS,
+        element: (
+          <AnimatedRoute>
+            <AddEvents />
+          </AnimatedRoute>
+        ),
+      },
+      {
         path: APP_ROUTES.EVENT_DETAILS,
         element: (
           <AnimatedRoute>
@@ -257,6 +273,14 @@ export const routeConfig = [
         element: (
           <AnimatedRoute>
             <AddTickets />
+          </AnimatedRoute>
+        ),
+      },
+      {
+        path: APP_ROUTES.EDIT_TICKETS,
+        element: (
+          <AnimatedRoute>
+            <EditTicket />
           </AnimatedRoute>
         ),
       },
