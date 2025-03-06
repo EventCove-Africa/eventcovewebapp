@@ -85,13 +85,15 @@ function UserDetailsProvider({ children }: UserDetailsProviderProps) {
     setLoadingDetails(true);
     try {
       const res = await api.get(appUrls.GET_USER_DETAILS_URL);
-      if (res?.status === 200) {
+      const status_code = [200, 201].includes(res?.status);
+      if (status_code) {
         const results = res?.data?.data;
         setUserDetails(results);
       }
     } catch (error: any) {
       const err_message = _handleThrowErrorMessage(error?.data?.message);
       toast.error(err_message);
+      navigate("/auth/login");
     } finally {
       setLoadingDetails(false);
     }

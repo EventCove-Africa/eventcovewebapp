@@ -106,11 +106,6 @@ export default function Header() {
             aria-labelledby="user-menu"
           >
             <ul>
-              {/* <MenuItem
-                icon={<Profile size="18" color="#767779" />}
-                label="Profile"
-                onClick={() => navigate("/tickets-validation")}
-              /> */}
               <MenuItem
                 icon={<Wallet size="18" color="#767779" />}
                 label="Wallet"

@@ -1,7 +1,10 @@
+/* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { toast } from "react-hot-toast";
 import Cookies from "js-cookie";
 import { userDetailsProps } from "../types";
+import { api } from "../services/api";
+import { appUrls } from "../services/urls";
 
 export const openNewTabWithUrl = (url: string) => {
   window.open(url, "_blank", "noopener,noreferrer");
@@ -29,12 +32,16 @@ export function formatToNaira(amount: number): string {
 export const eventTypeStyles: Record<string, string> = {
   upcoming: "bg-yellow_100 text-yellow_200",
   completed: "bg-green_300 text-green_200",
-  cancelled: "bg-primary_300 text-primary_100",
+  deleted: "bg-primary_300 text-primary_100",
 };
 
 export const formatNumberWithCommas = (value: string) => {
   return value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
+
+export function checkBoolean(arr: any[]): boolean {
+  return arr[0] === true; // Returns true if the first element is true, otherwise false
+}
 
 export const handleNumberInput = (value: string) => {
   // Remove any non-digit and non-comma characters
@@ -90,7 +97,6 @@ export const isValidOptionalDetails = (
   return true;
 };
 
-
 export function _handleThrowErrorMessage(message: string) {
   const err = message || "Something went wrong, please try again later";
   return err;
@@ -119,7 +125,135 @@ export const validateUserDetails = (user: userDetailsProps): boolean => {
 };
 
 export const isObjectEmpty = (obj: Record<string, unknown>): boolean => {
-  return Object.keys(obj).length === 0;
+  return Object?.keys(obj)?.length === 0;
 };
 
 export const isArrayEmpty = (arr: any[]): boolean => arr.length === 0;
+
+export function convertDateTimeRangeForEventCreation(
+  startDateTime: any,
+  endDateTime: any
+) {
+  if (startDateTime || endDateTime) {
+    const formatDate = (date: Date) => date.toISOString().split("T")[0]; // Extracts YYYY-MM-DD
+    const formatTime = (date: Date) =>
+      date.toISOString().split("T")[1].substring(0, 5); // Extracts HH:MM
+    const start = new Date(startDateTime);
+    const end = new Date(endDateTime);
+    return {
+      startDate: startDateTime ? formatDate(start) : "",
+      startTime: startDateTime ? formatTime(start) : "",
+      endDate: endDateTime ? formatDate(end) : "",
+      endTime: endDateTime ? formatTime(end) : "",
+    };
+  }
+  return {
+    startDate: "",
+    startTime: "",
+    endDate: "",
+    endTime: "",
+  };
+}
+
+export const handleImageUpload = async (payload: any) => {
+  if (!payload) {
+    console.error("No file provided");
+    return;
+  }
+  const formdata = new FormData();
+  formdata.append("file", payload);
+  try {
+    const res = await api.post(appUrls.IMAGE_UPLOAD_URL, formdata, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    const status_code = [200, 201].includes(res?.status);
+    if (status_code) {
+      const image_url = res?.data?.data;
+      return image_url;
+    }
+  } catch (error) {
+    console.error("Upload failed", error);
+    toast.error("Upload failed");
+  }
+};
+
+export function arrayToFormattedDate([year, month, day]: [
+  number,
+  number,
+  number
+]): string {
+  const date = new Date(year, month - 1, day); // Month is 0-based in JavaScript Date
+  const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "long" };
+  const formattedDate = date.toLocaleDateString("en-GB", options);
+  return formattedDate.replace(
+    /\d+/,
+    (d) => `${d}${getOrdinalSuffix(Number(d))}`
+  );
+}
+// Function to get the ordinal suffix (st, nd, rd, th)
+function getOrdinalSuffix(day: number): string {
+  if (day >= 11 && day <= 13) return "th"; // Special case for 11, 12, 13
+  switch (day % 10) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
+  }
+}
+
+export function truncateString(str: string, maxLength: number = 20): string {
+  if (str.length <= maxLength) return str;
+  return str.slice(0, maxLength) + "...";
+}
+
+export const arrayToFormattedDateWithYear = (
+  dateArray: [number, number, number]
+): string => {
+  const [year, month, day] = dateArray;
+  const date = new Date(year, month - 1, day); // Month is zero-based
+  return date.toLocaleDateString("en-GB", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
+
+export const formatTimeToshowAmPm = (timeString: string): string => {
+  const [hours, minutes] = timeString.split(":").map(Number);
+  const period = hours >= 12 ? "pm" : "am";
+  const formattedHours = hours % 12 || 12; // Convert 24-hour format to 12-hour format
+
+  return `${formattedHours}:${minutes.toString().padStart(2, "0")}${period}`;
+};
+
+export const extractEmails = (data: any) =>
+  data?.map((item: any) => item?.email);
+
+export const formatDateTimeToStringDATE = (
+  startDate: [number, number, number] = [1800, 1, 1],
+  startTime: string = "00:00"
+): any => {
+  const [year, month, day] = startDate;
+  const [hours, minutes] = startTime?.split(":")?.map(Number);
+  // Create a Date object (JavaScript months are 0-based)
+  const date = new Date(year, month - 1, day, hours, minutes);
+  return date.toString(); // Converts to local time zone format
+};
+
+export function parseNumber(str: string): number {
+  return parseFloat(str.replace(/,/g, ""));
+}
+
+export const formatDateArrayToString = (dateArray: [number, number, number]): string => {
+  const [year, month, day] = dateArray;
+  const formattedMonth = month.toString().padStart(2, '0'); // Ensure 2 digits
+  const formattedDay = day.toString().padStart(2, '0');     // Ensure 2 digits
+  return `${formattedMonth}/${formattedDay}/${year}`;
+};

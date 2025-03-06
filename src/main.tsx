@@ -1,15 +1,17 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import App from "./App.tsx";
-import "./index.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { UserDetailsProvider } from "./context/UserDetailsProvider.tsx.tsx";
+import "./index.css";
+import "react-loading-skeleton/dist/skeleton.css";
+import "react-tooltip/dist/react-tooltip.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
         <UserDetailsProvider>
           <App />
@@ -21,6 +23,6 @@ createRoot(document.getElementById("root")!).render(
           className: "z-50",
         }}
       />
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>
 );

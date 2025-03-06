@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import { Edit, Eye, EyeSlash } from "iconsax-react";
 import { convertToAsterisks, formatToNaira } from "../../../utils";
 import Button from "../../../components/FormComponents/Button";

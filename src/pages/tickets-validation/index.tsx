@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router-dom";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useNavigate, useParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import { ArrowDown2, ArrowRight2, Logout, User } from "iconsax-react";
 import logo from "../../assets/icons/logo.svg";
@@ -12,15 +13,31 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useUser } from "../../context/UserDetailsProvider.tsx";
 import { useUserProps } from "../../types/generalTypes.tsx";
 import useQueryParams from "../../hooks/useQueryParams.tsx";
+import toast from "react-hot-toast";
+import { _handleThrowErrorMessage } from "../../utils/index.ts";
+import { api } from "../../services/api.ts";
+import { appUrls } from "../../services/urls/index.ts";
+import { FormikHelpers } from "formik";
+
+type TicketValidationProps = {
+  eventReference: string;
+  ticketNumber: string;
+  email: string;
+};
 
 export default function TicketsValidation() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const menuRef = useRef<HTMLDivElement | null>(null); // For the menu
+  const buttonRef = useRef<HTMLButtonElement | null>(null); // For the button
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
-  const { logout } = useUser() as useUserProps;
+  const { logout, userDetails } = useUser() as useUserProps;
   // Extract query parameter for eventType
   const getParam = useQueryParams();
   const validationType = getParam("validation-type");
-  const eventId = getParam("eventId");
+  const { eventId } = useParams();
   const email = Cookies.get("email");
+  const user_email = email || userDetails?.email;
   const options = [
     {
       name: "Scan QR code",
@@ -31,12 +48,6 @@ export default function TicketsValidation() {
       key: "ticket_id_entry",
     },
   ];
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navigate = useNavigate();
-
-  const menuRef = useRef<HTMLDivElement | null>(null); // For the menu
-  const buttonRef = useRef<HTMLButtonElement | null>(null); // For the button
 
   // Memoize the callback to avoid unnecessary re-renders
   const handleMenuToggle = useCallback(() => {
@@ -67,6 +78,26 @@ export default function TicketsValidation() {
     logout(`?eventId=${eventId}`);
   };
 
+  const handleValidateTickets = async (
+    payload: TicketValidationProps,
+    actions: FormikHelpers<TicketValidationProps>
+  ) => {
+    try {
+      const res = await api.post(appUrls.TICKET_VALIDATION_URL, payload);
+      const status_code = [200, 201].includes(res?.status);
+      if (status_code) {
+        const message = res?.data?.data;
+        toast.success(message);
+        handleOpenClose();
+        actions.resetForm();
+      }
+    } catch (error: any) {
+      toast.error(_handleThrowErrorMessage(error?.data?.message));
+    } finally {
+      actions.setSubmitting(false);
+    }
+  };
+
   return (
     <div className="flex flex-col flex-1 gap-3">
       <header className="bg-white h-[68px] w-full px-6 flex justify-between items-center rounded-md shadow-sm">
@@ -94,7 +125,7 @@ export default function TicketsValidation() {
               aria-label="Toggle user menu"
               ref={buttonRef} // Assigning buttonRef to the button
             >
-              <span>{email}</span>
+              <span>{user_email}</span>
               <ArrowDown2 size="16" color="#767779" />
             </button>
             {isMenuOpen && (
@@ -138,7 +169,7 @@ export default function TicketsValidation() {
                 <div
                   onClick={() =>
                     navigate(
-                      `/tickets-validation?eventId=${eventId}&validation-type=${d?.key}`
+                      `/tickets-validation/${eventId}?validation-type=${d?.key}`
                     )
                   }
                   key={i}
@@ -161,7 +192,11 @@ export default function TicketsValidation() {
           <QRscan handleOpenClose={handleOpenClose} />
         )}
         {validationType === "ticket_id_entry" && (
-          <TicketIdEntry handleOpenClose={handleOpenClose} />
+          <TicketIdEntry
+            eventReference={eventId}
+            email={user_email}
+            handleValidateTickets={handleValidateTickets}
+          />
         )}
       </div>
       <ModalPopup isOpen={isOpenModal}>

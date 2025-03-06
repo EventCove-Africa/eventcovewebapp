@@ -1,9 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as Yup from "yup";
-
-function checkBoolean(arr: any[]): boolean {
-  return arr[0] === true; // Returns true if the first element is true, otherwise false
-}
 
 export const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -67,43 +62,89 @@ export const forgetPasswordSchema = Yup.object().shape({
 });
 
 export const addTicketSchema = Yup.object().shape({
-  ticket_category: Yup.mixed().required("Category is required"),
-  ticket_type: Yup.string().required("Ticket type is required"),
+  // classification: Yup.mixed().required("Classification is required"),
+  classification: Yup.string().when("all_values", ([all_values], schema) => {
+    if (all_values.length >= 1) {
+      return schema.notRequired();
+    }
+    return schema.required("Classification is required");
+  }),
+  // category: Yup.string().required("Category is required"),
+  category: Yup.string().when("all_values", ([all_values], schema) => {
+    if (all_values.length >= 1) {
+      return schema.notRequired();
+    }
+    return schema.required("Category is required");
+  }),
+  // name: Yup.string().required("Seat name is required"),
+  name: Yup.string().when("all_values", ([all_values], schema) => {
+    if (all_values.length >= 1) {
+      return schema.notRequired();
+    }
+    return schema.required("Seat name is required");
+  }),
+  groupTicketLimit: Yup.string(),
+  colour: Yup.string(),
+  all_values: Yup.mixed(),
   ticket_details: Yup.boolean(), // Must be defined as a boolean
-  seat_name: Yup.string().when("ticket_details", (ticketDetails, schema) =>
-    checkBoolean(ticketDetails)
-      ? schema.required("Seat name is required")
-      : schema.notRequired()
+  price: Yup.string().when(
+    ["category", "all_values"],
+    ([category, all_values], schema) => {
+      if (all_values.length >= 1) {
+        return schema.notRequired();
+      }
+      if (category && category?.toLowerCase() !== "free") {
+        return schema.required("Price is required");
+      }
+      return schema.notRequired();
+    }
   ),
-  price: Yup.string().when("ticket_type", ([ticketType], schema) => {
-    if (ticketType !== "free") {
+  // sales_end_date_time: Yup.date().when(
+  //   "ticket_details",
+  //   (ticketDetails, schema) =>
+  //     checkBoolean(ticketDetails)
+  //       ? schema.required("Sales end date and time are required")
+  //       : schema.notRequired()
+  // ),
+  sales_end_date_time: Yup.date().nullable(), // Optional field
+  sales_start_date_time: Yup.date().nullable(), // Optional field
+  perks: Yup.string().nullable(), // Optional field
+  capacity: Yup.string().nullable(), // Optional field
+  purchaseLimit: Yup.string().nullable(), // Optional field
+});
+
+export const editTicketSchema = Yup.object().shape({
+  classification: Yup.mixed().required("Classification is required"),
+  category: Yup.string().required("Category is required"),
+  name: Yup.string().required("Seat name is required"),
+  groupTicketLimit: Yup.string(),
+  colour: Yup.string(),
+  all_values: Yup.mixed(),
+  ticket_details: Yup.boolean(), // Must be defined as a boolean
+  price: Yup.string().when(["category"], ([category], schema) => {
+    if (category && category?.toLowerCase() !== "free") {
       return schema.required("Price is required");
     }
     return schema.notRequired();
   }),
-  sales_end_date_time: Yup.date().when(
-    "ticket_details",
-    (ticketDetails, schema) =>
-      checkBoolean(ticketDetails)
-        ? schema.required("Sales end date and time are required")
-        : schema.notRequired()
-  ),
-  ticket_perks: Yup.string().nullable(), // Optional field
+  sales_end_date_time: Yup.date().nullable(), // Optional field
+  sales_start_date_time: Yup.date().nullable(), // Optional field
+  perks: Yup.string().nullable(), // Optional field
   capacity: Yup.string().nullable(), // Optional field
-  purchase_limit: Yup.string().nullable(),
+  purchaseLimit: Yup.string().nullable(), // Optional field
 });
 
 export const addEventSchema = Yup.object().shape({
-  event_image: Yup.mixed().required("Image is required"),
-  event_name: Yup.string().required("Name is required"),
-  venue_type: Yup.string().required("Venue type is required"),
-  states: Yup.string().when("venue_type", ([venueType], schema) => {
-    if (venueType === "Physical") {
+  eventImageUrl: Yup.mixed().required("Image is required"),
+  eventName: Yup.string().required("Name is required"),
+  eventVenueType: Yup.string().required("Venue type is required"),
+  city: Yup.string().when("eventVenueType", ([eventVenueType], schema) => {
+    if (eventVenueType === "Physical") {
       return schema.required("State is required");
     }
     return schema.notRequired();
   }),
-  category: Yup.string().required("Category is required"),
+  eventCategory: Yup.string().required("Category is required"),
   location: Yup.string().required("Location is required"),
   start_date_time: Yup.date()
     .min(new Date(), "Date cannot be in the past")
@@ -111,9 +152,9 @@ export const addEventSchema = Yup.object().shape({
   end_date_time: Yup.date()
     .min(new Date(), "Date cannot be in the past")
     .required("End date and time is required"),
-  event_privacy: Yup.string().required("Event privacy is required"),
-  event_description: Yup.string().required("Event description is required"),
-  organizer_phone_number: Yup.string()
+  eventPrivacy: Yup.string().required("Event privacy is required"),
+  eventDescription: Yup.string().required("Event description is required"),
+  phoneNumber: Yup.string()
     .matches(/^\d+$/, "Phone number must contain only digits") // Ensures only digits
     .min(11, "Phone number must be at least 10 digits") // Adjust as needed
     .max(15, "Phone number cannot exceed 15 digits") // Adjust as needed
@@ -149,6 +190,5 @@ export const withdrawalsSchema = (maxValue: number) =>
   });
 
 export const ticketValidationSchema = Yup.object().shape({
-  ticked_id: Yup.mixed().required("Ticket is required"),
-  // reference_number: Yup.string().required("Reference is required"),
+  ticketNumber: Yup.mixed().required("Ticket Id is required"),
 });

@@ -12,5 +12,11 @@ export const appUrls: apiUrlsType = {
   FORGET_PASSWORD_URL: `${USER_PATH}/reset/password`,
   RESET_PASSWORD_URL: `${USER_PATH}/update/password`,
   EVENT_URL: "/event",
-  LOCATIONS_URL: "/locations"
+  EXPORT_URL: "/export",
+  LOCATIONS_URL: "/locations",
+  IMAGE_UPLOAD_URL: "/images/upload",
+  TICKET_URL: "/ticket",
+  TICKET_TYPE_URL: "/tickets",
+  TICKET_VALIDATION_URL: "/validate",
+  EVENT_TICKET_SALES_URL: "/details",
 };

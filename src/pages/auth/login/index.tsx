@@ -52,7 +52,7 @@ export default function Login() {
             actions: actions as FormikHelpers<LoginData>,
             from:
               values?.eventId !== null
-                ? `/tickets-validation?eventId=${values?.eventId}`
+                ? `/tickets-validation/${values?.eventId}`
                 : from,
           });
         }}

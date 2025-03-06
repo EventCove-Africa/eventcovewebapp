@@ -12,7 +12,13 @@ export interface apiUrlsType {
   FORGET_PASSWORD_URL: string;
   RESET_PASSWORD_URL: string;
   EVENT_URL: string;
+  EXPORT_URL: string;
   LOCATIONS_URL: string;
+  IMAGE_UPLOAD_URL: string;
+  TICKET_URL: string;
+  TICKET_TYPE_URL: string;
+  TICKET_VALIDATION_URL: string;
+  EVENT_TICKET_SALES_URL: string;
 }
 
 export interface ButtonProps {
@@ -47,6 +53,7 @@ export interface TextInputFieldProps {
   labelStyle?: string;
   inputClassName?: string;
   placeholder?: string;
+  tooltipContent?: string;
   maxLength?: number;
   onInput?: any;
   onBlur?: any;
@@ -131,4 +138,12 @@ export type AddBankWalletProps = {
   nin?: string;
   bvn?: string;
   walletId?: string;
+};
+
+export type eventSalesStatsProps = {
+  totalTicketBuyers: number;
+  totalTicketNotValidated: number;
+  totalTicketSales: number;
+  totalTicketSold: number;
+  totalTicketValidated: number;
 };

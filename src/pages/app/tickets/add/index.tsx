@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { Add, ArrowUp2, Trash } from "iconsax-react";
 import DescriptionBar from "../../../../components/DescriptionBar";
 import ModalPopup from "../../../../components/ModalPopup";
@@ -11,40 +11,140 @@ import Button from "../../../../components/FormComponents/Button";
 import TextInputField from "../../../../components/FormComponents/InputField";
 import DateTimePicker from "../../../../components/FormComponents/DateTimePicker";
 import {
+  _handleThrowErrorMessage,
+  convertDateTimeRangeForEventCreation,
   formatDateTime,
   handleNumberInput,
+  isArrayEmpty,
   isValidOptionalDetails,
+  parseNumber,
 } from "../../../../utils";
 import { addTicketSchema } from "../../../../form-schemas";
+import { api } from "../../../../services/api";
+import { appUrls } from "../../../../services/urls";
+import toast from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
+
+type ticketTypesProps = {
+  perks: string;
+  salesEndDate: string;
+  salesStartDate: string;
+  salesEndTime: string;
+  salesStartTime: string;
+  capacity: number;
+  purchaseLimit: number; //1 by default
+  groupTicketLimit: number; //only applicable for group ticket.  2 by default
+  name: string;
+  price: number;
+  colour: string;
+  category: "Free" | "Paid"; //Free, Paid
+  classification: "Single" | "Group"; //Single, Group
+};
+
+type AddTicketProps = {
+  eventId?: string;
+  ticketTypes: ticketTypesProps[];
+};
 
 export default function AddTickets() {
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
+  const navigate = useNavigate();
+  const { eventId } = useParams();
+
+  const _handleCreateTicketForEvent = async (
+    payload: AddTicketProps,
+    actions: FormikHelpers<any>
+  ) => {
+    try {
+      const res = await api.post(appUrls.TICKET_URL, payload);
+      const status_code = [200, 201].includes(res?.status);
+      if (status_code) {
+        actions.resetForm();
+        handleOpenClose();
+      }
+    } catch (error: any) {
+      const err_message = _handleThrowErrorMessage(error?.data?.message);
+      toast.error(err_message);
+      actions.setSubmitting(false);
+    }
+  };
 
   return (
     <>
       <div className="w-full h-full">
-        <DescriptionBar text="✨ Yo bestie! Let's make your ticket real quick, no cap." />
-
+        <DescriptionBar text="✨Let's make your ticket real quick." />
         <Formik
           validationSchema={addTicketSchema}
           initialValues={{
-            ticket_category: "",
-            ticket_type: "",
-            seat_name: "",
+            classification: "",
+            category: "",
+            name: "",
             price: "",
             capacity: "",
-            purchase_limit: "",
-            ticket_perks: "",
+            colour: "",
+            groupTicketLimit: "",
+            purchaseLimit: "",
+            perks: "",
             sales_end_date_time: null,
+            sales_start_date_time: null,
             all_values: [],
-            ticket_details: false,
+            ticket_details: true,
           }}
           enableReinitialize
           onSubmit={(values, actions) => {
-            console.log(values);
-            actions.setSubmitting(false);
-            actions.resetForm();
-            handleOpenClose();
+            const {
+              sales_end_date_time,
+              sales_start_date_time,
+              all_values,
+              price,
+              ...rest
+            } = values;
+            const { startDate, endDate, startTime, endTime }: any =
+              convertDateTimeRangeForEventCreation(
+                sales_start_date_time,
+                sales_end_date_time
+              );
+            const ticketTypes: any = [];
+            const payload = {
+              eventId,
+              ticketTypes,
+            };
+            if (!isArrayEmpty(all_values)) {
+              all_values.forEach((ticket: any) => {
+                const formated_sales_start_date_time =
+                  ticket?.sales_start_date_time;
+                const formated_sales_end_date_time =
+                  ticket?.sales_end_date_time;
+                const {
+                  startDate: formatedStartDate,
+                  endDate: formatedEndDate,
+                  startTime: formatedStartTime,
+                  endTime: formatedEndTime,
+                }: any = convertDateTimeRangeForEventCreation(
+                  formated_sales_start_date_time,
+                  formated_sales_end_date_time
+                );
+                const formatedPrice = parseNumber(ticket.price);
+                ticketTypes.push({
+                  ...ticket,
+                  price: formatedPrice,
+                  startDate: formatedStartDate,
+                  endDate: formatedEndDate,
+                  startTime: formatedStartTime,
+                  endTime: formatedEndTime,
+                });
+              });
+            } else {
+              ticketTypes.push({
+                startDate,
+                endDate,
+                startTime,
+                endTime,
+                price: parseNumber(price),
+                ...rest,
+              });
+            }
+            _handleCreateTicketForEvent(payload, actions);
           }}
         >
           {({
@@ -57,19 +157,22 @@ export default function AddTickets() {
             isSubmitting,
           }) => {
             const resetOptionalValues = () => {
-              let requiredFields = ["seat_name", "sales_end_date_time"];
-              if (values?.ticket_type === "paid") {
+              let requiredFields = ["name", "classification", "category"];
+              if (values?.category.toLocaleLowerCase() === "paid") {
                 requiredFields.push("price");
               }
               const optionalDetails = {
-                seat_name: values?.seat_name,
+                name: values?.name,
                 price: values?.price,
                 capacity: values?.capacity,
-                purchase_limit: values?.purchase_limit,
-                ticket_perks: values?.ticket_perks,
-                sales_end_date_time: formatDateTime(
-                  values?.sales_end_date_time
-                ),
+                colour: values?.colour,
+                purchaseLimit: values?.purchaseLimit,
+                classification: values?.classification,
+                category: values?.category,
+                groupTicketLimit: values?.groupTicketLimit,
+                perks: values?.perks,
+                sales_start_date_time: values?.sales_start_date_time || null,
+                sales_end_date_time: values?.sales_end_date_time || null,
               };
               if (isValidOptionalDetails(values, requiredFields)) {
                 // Calculate the next numeric ID
@@ -81,13 +184,20 @@ export default function AddTickets() {
                     : 1;
 
                 setFieldValue("all_values", [
-                  ...values.all_values,
                   { id: nextId, ...optionalDetails }, // Add numeric id
+                  ...values.all_values,
                 ]);
 
                 // Reset fields
                 Object.keys(optionalDetails).forEach((key) =>
-                  setFieldValue(key, key === "sales_end_date_time" ? null : "")
+                  setFieldValue(
+                    key,
+                    ["sales_end_date_time", "sales_start_date_time"].includes(
+                      key
+                    )
+                      ? null
+                      : ""
+                  )
                 );
               }
             };
@@ -98,40 +208,90 @@ export default function AddTickets() {
               );
               setFieldValue("all_values", updatedValues);
             };
-
+            const selectedValues = values?.all_values || [];
             return (
               <Form onSubmit={handleSubmit} className="w-full">
                 <div className="w-full h-fit flex gap-3 md:flex-row flex-col">
                   <div className="h-fit w-full">
                     <div className="w-full px-3 pb-6 pt-3 bg-white h-fit rounded-xl shadow flex flex-col gap-3">
+                      <div className="mb-2">
+                        <TextInputField
+                          labelName="Seat Name"
+                          name="name"
+                          handleChange={handleChange}
+                          type="text"
+                          placeholder=""
+                          value={values.name}
+                          errors={errors?.name}
+                          touched={touched?.name}
+                        />
+                      </div>
+                      <CustomSelect
+                        label="Ticket Classification"
+                        name="classification"
+                        onChange={(event) => {
+                          const isGroup =
+                            event?.value.toLowerCase() === "group";
+                          setFieldValue("groupTicketLimit", isGroup ? "2" : "");
+                          setFieldValue("classification", event?.value);
+                        }}
+                        options={[
+                          { label: "Single", value: "Single" },
+                          { label: "Group", value: "Group" },
+                        ]}
+                        errors={errors?.classification}
+                        touched={touched?.classification}
+                        defaultValue={values?.classification}
+                      />
+
+                      {values?.classification === "Group" && (
+                        <div className="mb-2">
+                          <TextInputField
+                            labelName="Group limit"
+                            name="groupTicketLimit"
+                            handleChange={handleChange}
+                            type="text"
+                            placeholder=""
+                            value={values.groupTicketLimit}
+                            errors={errors?.groupTicketLimit}
+                            touched={touched?.groupTicketLimit}
+                            tooltipContent="Group limit by default is 2 persons"
+                          />
+                        </div>
+                      )}
                       <CustomSelect
                         label="Ticket Category"
-                        name="ticket_category"
+                        name="category"
                         onChange={(event) =>
-                          setFieldValue("ticket_category", event?.value)
+                          setFieldValue("category", event?.value)
                         }
                         options={[
-                          { label: "Single", value: "single" },
-                          { label: "Multiple", value: "multiple" },
+                          { label: "Paid", value: "Paid" },
+                          { label: "Free", value: "Free" },
                         ]}
-                        // value={values?.ticket_category}
-                        errors={errors?.ticket_category}
-                        touched={touched?.ticket_category}
+                        errors={errors?.category}
+                        touched={touched?.category}
+                        defaultValue={values?.category}
                       />
-                      <CustomSelect
-                        label="Ticket Type"
-                        name="ticket_type"
-                        onChange={(event) =>
-                          setFieldValue("ticket_type", event?.value)
-                        }
-                        options={[
-                          { label: "Paid", value: "paid" },
-                          { label: "Free", value: "free" },
-                        ]}
-                        // value={values?.ticket_type}
-                        errors={errors?.ticket_type}
-                        touched={touched?.ticket_type}
-                      />
+                      {values?.category === "Paid" && (
+                        <div className="mb-2">
+                          <TextInputField
+                            labelName="Price"
+                            name="price"
+                            handleChange={(e: any) =>
+                              setFieldValue(
+                                "price",
+                                handleNumberInput(e.target.value)
+                              )
+                            }
+                            type="text"
+                            placeholder=""
+                            value={values.price}
+                            errors={errors?.price}
+                            touched={touched?.price}
+                          />
+                        </div>
+                      )}
                       <div
                         onClick={() =>
                           setFieldValue(
@@ -142,46 +302,12 @@ export default function AddTickets() {
                         className="w-full p-3 bg-pink_100 flex justify-between items-center rounded-md cursor-pointer"
                       >
                         <h3 className="text-dark_200 font-medium text-sm">
-                          Ticket Details (optional)
+                          Other Details (optional)
                         </h3>
                         <ArrowUp2 size="16" color="#767779" variant="Bold" />
                       </div>
                       {values.ticket_details && (
                         <div className="w-full">
-                          <h3 className="text-grey_100 font-normal text-xs mb-2">
-                            Yo bestie! Let’s get this party started! 🎉 Pick
-                            your vibe for example: 💎 VIP, 🎟️ Standard, ⏰ Early
-                            Bird.
-                          </h3>
-                          <div className="mb-2">
-                            <TextInputField
-                              labelName="Seat Name"
-                              name="seat_name"
-                              handleChange={handleChange}
-                              type="text"
-                              placeholder=""
-                              value={values.seat_name}
-                              errors={errors?.seat_name}
-                              touched={touched?.seat_name}
-                            />
-                          </div>
-                          <div className="mb-2">
-                            <TextInputField
-                              labelName="Price"
-                              name="price"
-                              handleChange={(e: any) =>
-                                setFieldValue(
-                                  "price",
-                                  handleNumberInput(e.target.value)
-                                )
-                              }
-                              type="text"
-                              placeholder=""
-                              value={values.price}
-                              errors={errors?.price}
-                              touched={touched?.price}
-                            />
-                          </div>
                           <div className="mb-2">
                             <TextInputField
                               labelName="Capacity (optional)"
@@ -201,33 +327,67 @@ export default function AddTickets() {
                           </div>
                           <div className="mb-2">
                             <TextInputField
-                              labelName="Purchase Limit Per User (optional)"
-                              name="purchase_limit"
+                              labelName="Colour (optional)"
+                              name="colour"
                               handleChange={handleChange}
                               type="text"
                               placeholder=""
-                              value={values.purchase_limit}
-                              errors={errors?.purchase_limit}
-                              touched={touched?.purchase_limit}
+                              value={values.colour}
+                              errors={errors?.colour}
+                              touched={touched?.colour}
+                            />
+                          </div>
+                          <div className="mb-2">
+                            <TextInputField
+                              labelName="Purchase Limit Per User (optional)"
+                              name="purchaseLimit"
+                              handleChange={handleChange}
+                              type="text"
+                              placeholder=""
+                              value={values.purchaseLimit}
+                              errors={errors?.purchaseLimit}
+                              touched={touched?.purchaseLimit}
                             />
                           </div>
                           <div className="mb-2">
                             <TextInputField
                               labelName="Ticket Perks (optional)"
-                              name="ticket_perks"
+                              name="perks"
                               handleChange={handleChange}
                               type="text"
                               placeholder=""
-                              value={values.ticket_perks}
-                              errors={errors?.ticket_perks}
-                              touched={touched?.ticket_perks}
+                              value={values.perks}
+                              errors={errors?.perks}
+                              touched={touched?.perks}
+                            />
+                          </div>
+                          <div className="mb-2 w-full">
+                            <DateTimePicker
+                              labelName="Sale Start Date & Time"
+                              name="sales_start_date_time"
+                              value={
+                                values.sales_start_date_time
+                                  ? new Date(values.sales_start_date_time)
+                                  : null
+                              }
+                              onChange={(date) =>
+                                setFieldValue("sales_start_date_time", date)
+                              }
+                              showTime={true}
+                              minDate={new Date()}
+                              errors={errors?.sales_start_date_time}
+                              touched={touched?.sales_start_date_time}
                             />
                           </div>
                           <div className="mb-2 w-full">
                             <DateTimePicker
                               labelName="Sale End Date & Time"
                               name="sales_end_date_time"
-                              value={values.sales_end_date_time}
+                              value={
+                                values.sales_end_date_time
+                                  ? new Date(values.sales_end_date_time)
+                                  : null
+                              }
                               onChange={(date) =>
                                 setFieldValue("sales_end_date_time", date)
                               }
@@ -235,96 +395,111 @@ export default function AddTickets() {
                               minDate={new Date()}
                               errors={errors?.sales_end_date_time}
                               touched={touched?.sales_end_date_time}
+                              tooltipContent="Defaults to Event End date if left empty"
                             />
-                          </div>
-                          <div className="mt-4 w-full flex justify-end">
-                            <button
-                              type="button"
-                              className="bg-primary_300 px-3 py-2 flex gap-2 text-primary_100 text-xs rounded-md"
-                              onClick={resetOptionalValues}
-                            >
-                              <Add size="16" color="#A30162" />
-                              Add another seat
-                            </button>
                           </div>
                         </div>
                       )}
-                    </div>
-                    <div className="lg:w-[30%] w-full">
-                      <Button
-                        title="Create Ticket"
-                        className="w-full h-[40px] text-center my-6 border border-dark_200"
-                        type="submit"
-                        isLoading={isSubmitting}
-                      />
+                      <div className="mt-4 w-full flex gap-2 justify-end">
+                        {isArrayEmpty(selectedValues) && (
+                          <button
+                            type="submit"
+                            className="bg-primary_300 px-3 py-2 flex items-center gap-2 text-primary_100 text-xs rounded-md"
+                            disabled={isSubmitting}
+                            // onClick={handleSubmit}
+                          >
+                            {isSubmitting
+                              ? "Please wait....."
+                              : "Create Ticket"}
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          className="bg-primary_300 px-3 py-2 flex items-center gap-2 text-primary_100 text-xs rounded-md"
+                          onClick={resetOptionalValues}
+                        >
+                          <Add size="16" color="#A30162" />
+                          Add another ticket
+                        </button>
+                      </div>
                     </div>
                   </div>
-                  <div className="w-full grid md:grid-cols-2 grid-cols-1 gap-3 h-fit">
-                    {values?.all_values.map((list: any, index: number) => {
-                      return (
-                        <div
-                          key={index}
-                          className="bg-white w-full shadow-sm rounded p-3"
-                        >
-                          <div className="w-full flex justify-end">
-                            <Trash
-                              size="16"
-                              color="#F44336"
-                              className="cursor-pointer"
-                              onClick={() => removeItemFromAllValues(list?.id)}
-                            />
+                  <div className="w-full">
+                    <div className="overflow-x-auto w-full grid md:grid-cols-2 grid-cols-1 gap-3 h-fit">
+                      {selectedValues?.map((list: any, index: number) => {
+                        const fields = [
+                          { label: "Seat Name", value: list?.name },
+                          { label: "Price", value: list?.price },
+                          { label: "Capacity", value: list?.capacity },
+                          {
+                            label: "Classification",
+                            value: list?.classification,
+                          },
+                          {
+                            label: "Group Limit",
+                            value: list?.groupTicketLimit,
+                          },
+                          { label: "Ticket Perk", value: list?.perks },
+                          { label: "Colour", value: list?.colour },
+                          { label: "Category", value: list?.category },
+                          {
+                            label: "Purchase Limit",
+                            value: list?.purchaseLimit,
+                          },
+                          {
+                            label: "Sale Start Date & Time",
+                            value: formatDateTime(list?.sales_start_date_time),
+                          },
+                          {
+                            label: "Sale End Date & Time",
+                            value: formatDateTime(list?.sales_end_date_time),
+                          },
+                        ];
+                        return (
+                          <div
+                            key={index}
+                            className="bg-white w-full h-fit shadow-sm rounded p-3"
+                          >
+                            {/* Trash Icon */}
+                            <div className="w-full flex justify-end">
+                              <Trash
+                                size="16"
+                                color="#F44336"
+                                className="cursor-pointer"
+                                onClick={() =>
+                                  removeItemFromAllValues(list?.id)
+                                }
+                              />
+                            </div>
+                            {/* Dynamic Fields Rendering */}
+                            {fields.map(
+                              ({ label, value }) =>
+                                value && (
+                                  <div
+                                    key={label}
+                                    className="w-full flex flex-col gap-1 border-b border-border_color py-2"
+                                  >
+                                    <h3 className="text-grey_100 text-xs font-normal">
+                                      {label}
+                                    </h3>
+                                    <h3 className="text-dark_200 text-sm font-normal">
+                                      {value}
+                                    </h3>
+                                  </div>
+                                )
+                            )}
                           </div>
-                          <div className="w-full flex flex-col gap-1 border-b border-border_color py-2">
-                            <h3 className="text-grey_100 text-xs font-normal">
-                              Seat Name
-                            </h3>
-                            <h3 className="text-dark_200 text-sm font-normal">
-                              {list?.seat_name ?? "N/A"}
-                            </h3>
-                          </div>
-                          <div className="w-full flex flex-col gap-1 border-b border-border_color py-2">
-                            <h3 className="text-grey_100 text-xs font-normal">
-                              Price
-                            </h3>
-                            <h3 className="text-dark_200 text-sm font-normal">
-                              {list?.price || "N/A"}
-                            </h3>
-                          </div>
-                          <div className="w-full flex flex-col gap-1 border-b border-border_color py-2">
-                            <h3 className="text-grey_100 text-xs font-normal">
-                              Capacity
-                            </h3>
-                            <h3 className="text-dark_200 text-sm font-normal">
-                              {list?.capacity || "N/A"}
-                            </h3>
-                          </div>
-                          <div className="w-full flex flex-col gap-1 border-b border-border_color py-2">
-                            <h3 className="text-grey_100 text-xs font-normal">
-                              Ticket Perk
-                            </h3>
-                            <h3 className="text-dark_200 text-sm font-normal">
-                              {list?.ticket_perks || "N/A"}
-                            </h3>
-                          </div>
-                          <div className="w-full flex flex-col gap-1 border-b border-border_color py-2">
-                            <h3 className="text-grey_100 text-xs font-normal">
-                              Purchase limit
-                            </h3>
-                            <h3 className="text-dark_200 text-sm font-normal">
-                              {list?.purchase_limit || "N/A"}
-                            </h3>
-                          </div>
-                          <div className="w-full flex flex-col gap-1 border-b border-border_color py-2">
-                            <h3 className="text-grey_100 text-xs font-normal">
-                              Sale End Date & Time
-                            </h3>
-                            <h3 className="text-dark_200 text-sm font-normal">
-                              {list?.sales_end_date_time || "N/A"}
-                            </h3>
-                          </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
+                    {!isArrayEmpty(selectedValues) && (
+                      <Button
+                        title="Create Ticket"
+                        className="md:w-[50%] w-full h-[40px] text-center my-6 border border-dark_200"
+                        type="submit"
+                        // isLoading={isSubmitting}
+                      />
+                    )}
                   </div>
                 </div>
               </Form>
@@ -334,10 +509,10 @@ export default function AddTickets() {
       </div>
       <ModalPopup isOpen={isOpenModal}>
         <SignupSuccess
-          text="Woohoo! You just created your ticket ! 🎊✨"
-          // buttonText="Proceed to create ticket"
+          text="You just created your ticket! 🎊✨"
+          buttonText="Proceed to event details"
           handleOpenClose={handleOpenClose}
-          // handleFunction={() => navigate("/app/tickets/add")}
+          handleFunction={() => navigate(`/app/events/${eventId}`)}
         />
       </ModalPopup>
     </>
