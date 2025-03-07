@@ -131,6 +131,9 @@ export default function AddEvents() {
           handleOpenClose();
           setIsCreating(false);
         }
+        if (path) {
+          handleGetEventDetails(event_id);
+        }
       }
     } catch (error: any) {
       const err_message = _handleThrowErrorMessage(error?.data?.message);

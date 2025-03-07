@@ -135,9 +135,15 @@ export function convertDateTimeRangeForEventCreation(
   endDateTime: any
 ) {
   if (startDateTime || endDateTime) {
-    const formatDate = (date: Date) => date.toISOString().split("T")[0]; // Extracts YYYY-MM-DD
+    const formatDate = (date: Date) =>
+      `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+        2,
+        "0"
+      )}-${String(date.getDate()).padStart(2, "0")}`;
     const formatTime = (date: Date) =>
-      date.toISOString().split("T")[1].substring(0, 5); // Extracts HH:MM
+      `${String(date.getHours()).padStart(2, "0")}:${String(
+        date.getMinutes()
+      ).padStart(2, "0")}`;
     const start = new Date(startDateTime);
     const end = new Date(endDateTime);
     return {
@@ -147,6 +153,7 @@ export function convertDateTimeRangeForEventCreation(
       endTime: endDateTime ? formatTime(end) : "",
     };
   }
+
   return {
     startDate: "",
     startTime: "",
@@ -251,9 +258,11 @@ export function parseNumber(str: string): number {
   return parseFloat(str.replace(/,/g, ""));
 }
 
-export const formatDateArrayToString = (dateArray: [number, number, number]): string => {
+export const formatDateArrayToString = (
+  dateArray: [number, number, number]
+): string => {
   const [year, month, day] = dateArray;
-  const formattedMonth = month.toString().padStart(2, '0'); // Ensure 2 digits
-  const formattedDay = day.toString().padStart(2, '0');     // Ensure 2 digits
+  const formattedMonth = month.toString().padStart(2, "0"); // Ensure 2 digits
+  const formattedDay = day.toString().padStart(2, "0"); // Ensure 2 digits
   return `${formattedMonth}/${formattedDay}/${year}`;
 };
