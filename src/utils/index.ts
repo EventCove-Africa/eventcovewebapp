@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { toast } from "react-hot-toast";
@@ -164,7 +165,7 @@ export function convertDateTimeRangeForEventCreation(
 
 export const handleImageUpload = async (payload: any) => {
   if (!payload) {
-    console.error("No file provided");
+    toast.error("No file provided");
     return;
   }
   const formdata = new FormData();
@@ -181,7 +182,6 @@ export const handleImageUpload = async (payload: any) => {
       return image_url;
     }
   } catch (error) {
-    console.error("Upload failed", error);
     toast.error("Upload failed");
   }
 };
