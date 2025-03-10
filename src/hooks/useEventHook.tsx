@@ -8,11 +8,11 @@ import { useUser } from "../context/UserDetailsProvider.tsx";
 import { eventSalesStatsProps, useUserProps } from "../types/generalTypes.tsx";
 
 type ticketDetailsProps = {
-  ticket_type: string;
+  ticketType: string;
   colour: string;
   price: number;
-  validated_count: number;
-  sold_count: number;
+  validatedCount: number;
+  soldCount: number;
   capacity: number;
 };
 
