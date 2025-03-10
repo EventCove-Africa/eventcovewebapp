@@ -8,19 +8,19 @@ import { ArrowLeft } from "iconsax-react";
 import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
 import ModalPopup from "../../../components/ModalPopup";
 import InfoModal from "../../components/InfoModal";
-import useNavigation from "../../../hooks/useNavigation";
 import { forgetPasswordSchema } from "../../../form-schemas";
 import toast from "react-hot-toast";
 import { appUrls } from "../../../services/urls";
 import { api } from "../../../services/api";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 type ForgetPasswordProps = {
   email: string;
 };
 
 export default function ForgetPassword() {
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
     const [successText, setSuccessText] = useState("");
 

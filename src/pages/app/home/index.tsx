@@ -1,6 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "iconsax-react";
-
 import PieChartComponent from "../../../components/PieChartComponent";
 import CalendarComponent from "../../../components/CalendarComponent";
 import SelectDropdown from "../../../components/FormComponents/SelectDropdown";
@@ -11,10 +11,9 @@ import guest from "../../../assets/icons/guest.svg";
 import payment from "../../../assets/icons/payment.svg";
 import ticket2 from "../../../assets/icons/ticket2.svg";
 import EventCard from "../../../components/EventCard";
-import useNavigation from "../../../hooks/useNavigation";
 
 export default function Home() {
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   const [, setSelectedOption] = useState("");
 
   const handleSelectChange = (value: string) => {

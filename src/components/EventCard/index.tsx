@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Calendar2,
   InfoCircle,
@@ -17,12 +18,11 @@ import {
   isArrayEmpty,
   truncateString,
 } from "../../utils";
-import useNavigation from "../../hooks/useNavigation";
 import SkeletonLoader from "./components/SkeletonLoader";
 import useEventHook from "../../hooks/useEventHook";
 
 export default function EventCard({ eventType }: any) {
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   const {
     loadingEvents,
     handleGetFilteredEvents,

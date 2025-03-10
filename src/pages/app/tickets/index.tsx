@@ -17,6 +17,8 @@ import ModalPopup from "../../../components/ModalPopup";
 import InfoModal from "../../components/InfoModal";
 import { useOpenCloseModals } from "../../../hooks/useOpenCloseModal";
 import useQueryParams from "../../../hooks/useQueryParams";
+import { useUser } from "../../../context/UserDetailsProvider.tsx";
+import { useUserProps } from "../../../types/generalTypes.tsx";
 
 type TicketProp = {
   name: string;
@@ -42,6 +44,7 @@ type TicketProp = {
 };
 
 export default function Tickets() {
+  const { userDetails } = useUser() as useUserProps;
   const navigate = useNavigate();
   const getParam = useQueryParams();
   const event_id = getParam("event_id");
@@ -154,7 +157,9 @@ export default function Tickets() {
 
   const handleGetEvents = async () => {
     try {
-      const { status, data } = await api.get(appUrls.EVENT_URL);
+      const { status, data } = await api.get(
+        appUrls.EVENT_URL + `?organizerId=${userDetails?.id}`
+      );
       const results = data?.data;
       if ([200, 201].includes(status)) {
         const record = [] as any;

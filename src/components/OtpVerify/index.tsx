@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
+import { useNavigate } from "react-router-dom";
 import { Form, Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import OTPInput from "react-otp-input";
 import close_cancel from "../../assets/icons/close-circle.svg";
 import Button from "../FormComponents/Button";
-import useNavigation from "../../hooks/useNavigation";
 import { api } from "../../services/api";
 import { appUrls } from "../../services/urls";
 import { _handleThrowErrorMessage, setAuthCookies } from "../../utils";
@@ -29,7 +29,7 @@ export default function OTPVerify({
 }: OTPVerifyProps) {
   const { userDetails } = useUser() as useUserProps;
   const [isResending, setIsResending] = useState(false);
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   const otpSchema = Yup.object().shape({
     otp: Yup.string()
       .required("OTP is Required")
