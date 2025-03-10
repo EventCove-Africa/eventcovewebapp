@@ -497,7 +497,7 @@ export default function AddTickets() {
                         title="Create Ticket"
                         className="md:w-[50%] w-full h-[40px] text-center my-6 border border-dark_200"
                         type="submit"
-                        // isLoading={isSubmitting}
+                        isLoading={isSubmitting}
                       />
                     )}
                   </div>
