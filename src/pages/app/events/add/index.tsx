@@ -281,7 +281,7 @@ export default function AddEvents() {
                       type="file"
                       name="eventImageUrl"
                       id="eventImageUrl"
-                      accept=".jpg, .png, jpeg"
+                      accept=".jpg, .png, .jpeg"
                       className="h-[52px] w-full outline-none px-4"
                       onChange={(e) => {
                         setFieldValue("eventImageUrl", e.target.files?.[0]);
