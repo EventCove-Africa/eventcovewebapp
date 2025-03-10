@@ -58,7 +58,7 @@ export default function RenderTicketsStatForEvents({
                   {icons?.[index % icons?.length]} {/* Cycles through the icons */}
                   <div className="flex flex-col gap-1">
                     <h3 className="text-grey_100 text-xs font-normal">
-                      {types?.ticket_type}
+                      {types?.ticketType}
                     </h3>
                     <h5 className="text-dark_200 font-normal md:text-base text-sm">
                       {formatToNaira(types?.price || 0)}
@@ -66,7 +66,7 @@ export default function RenderTicketsStatForEvents({
                   </div>
                 </div>
                 <div className="self-end font-medium md:text-base text-sm text-grey_100">
-                  {types?.sold_count}/
+                  {types?.soldCount}/
                   <span className="font-medium md:text-base text-sm text-dark_200">
                     {types?.capacity}
                   </span>
