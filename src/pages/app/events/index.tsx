@@ -1,10 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import Button from "../../../components/FormComponents/Button";
 import EventCard from "../../../components/EventCard";
-import useNavigation from "../../../hooks/useNavigation";
 import useQueryParams from "../../../hooks/useQueryParams";
 
 export default function Events() {
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   // Extract query parameter for eventType
   const getParam = useQueryParams();
   const eventType = getParam("eventType");

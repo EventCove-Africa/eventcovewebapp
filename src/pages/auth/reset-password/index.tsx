@@ -7,13 +7,13 @@ import { _handleThrowErrorMessage, animationVariants } from "../../../utils";
 import ModalPopup from "../../../components/ModalPopup";
 import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
 import SignupSuccess from "../../components/SignupSuccess";
-import useNavigation from "../../../hooks/useNavigation";
 import { signupResetPasswordSchema } from "../../../form-schemas";
 import useQueryParams from "../../../hooks/useQueryParams";
 import { appUrls } from "../../../services/urls";
 import { api } from "../../../services/api";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 type ResetPasswordProps = {
   code: string | null;
@@ -21,7 +21,7 @@ type ResetPasswordProps = {
 };
 
 export default function ResetPassword() {
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   const [successText, setSuccessText] = useState("");
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
   const getParam = useQueryParams();

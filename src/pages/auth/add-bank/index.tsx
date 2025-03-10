@@ -2,7 +2,6 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import { motion } from "framer-motion";
 import Button from "../../../components/FormComponents/Button";
-import useNavigation from "../../../hooks/useNavigation";
 import TextInputField from "../../../components/FormComponents/InputField";
 import { _handleThrowErrorMessage, animationVariants } from "../../../utils";
 import ModalPopup from "../../../components/ModalPopup";
@@ -16,9 +15,10 @@ import { appUrls } from "../../../services/urls";
 import { api } from "../../../services/api";
 import { useState } from "react";
 import { AddBankWalletProps } from "../../../types";
+import { useNavigate } from "react-router-dom";
 
 export default function AddBank() {
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
   const [successText, setSuccessText] = useState("");
   const { banks, loading } = useFetchBanks();

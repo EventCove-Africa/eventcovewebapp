@@ -10,15 +10,15 @@ import ModalPopup from "../../../components/ModalPopup";
 import OTPVerify from "../../../components/OtpVerify";
 import toast from "react-hot-toast";
 import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
-import useNavigation from "../../../hooks/useNavigation";
 import { signupSchema } from "../../../form-schemas";
 import { useUser } from "../../../context/UserDetailsProvider.tsx";
 import { SignUpData, useUserProps } from "../../../types/generalTypes.tsx";
 import { useEffect, useState } from "react";
 import useQueryParams from "../../../hooks/useQueryParams.tsx";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   const getParam = useQueryParams();
   const verifyOTPEmailFromLogin = getParam("verifyOTP");
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();

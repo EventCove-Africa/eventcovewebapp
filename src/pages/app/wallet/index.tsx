@@ -3,7 +3,6 @@ import Skeleton from "react-loading-skeleton";
 import { Edit, Eye, EyeSlash } from "iconsax-react";
 import { convertToAsterisks, formatToNaira } from "../../../utils";
 import Button from "../../../components/FormComponents/Button";
-import useNavigation from "../../../hooks/useNavigation";
 import CopyToClipboard from "../../../components/CopyToClipboard";
 import ModalPopup from "../../../components/ModalPopup";
 import InfoModal from "../../components/InfoModal";
@@ -12,9 +11,10 @@ import TransactionHistory from "./TransactionHistory";
 import SetUpWalletList from "./SetUpWalletList";
 import Withdrawals from "./Withdrawals";
 import useFetchWalletDetails from "../../../hooks/useFetchWalletDetails";
+import { useNavigate } from "react-router-dom";
 
 export default function Wallet() {
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   const { isOpenModal, handleOpenClose } = useOpenCloseModals();
   const [isAmountVisible, setIsAmountVisible] = useState(false);
   const { walletDetails, loading } = useFetchWalletDetails();

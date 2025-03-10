@@ -1,14 +1,13 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import { motion } from "framer-motion";
 import { useGoogleLogin } from "@react-oauth/google";
-import useNavigation from "../../../hooks/useNavigation";
 import Button from "../../../components/FormComponents/Button";
 import TextInputField from "../../../components/FormComponents/InputField";
 import PasswordInputField from "../../../components/FormComponents/PasswordField";
 import GoogleAuth from "../../../components/GoogleAuth";
 import { animationVariants } from "../../../utils";
 import { loginSchema } from "../../../form-schemas";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../../../context/UserDetailsProvider.tsx";
 import { LoginData, useUserProps } from "../../../types/generalTypes.tsx";
 import useQueryParams from "../../../hooks/useQueryParams.tsx";
@@ -16,7 +15,7 @@ import useQueryParams from "../../../hooks/useQueryParams.tsx";
 export default function Login() {
   const location = useLocation();
   const getParam = useQueryParams();
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   const { login } = useUser() as useUserProps;
   const eventId = getParam("eventId") || null;
   const from = location.state?.from?.pathname || "/app/home";
