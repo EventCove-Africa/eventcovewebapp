@@ -38,15 +38,23 @@ export default function RenderEventDetails({
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-1 w-full mt-4">
-        <h3 className="text-dark_200 font-medium md:text-base text-sm">
-          {allEventDetails.eventName}
-        </h3>
-        <p className="text-secondary_300 font-normal text-xs">
-          {allEventDetails?.location}{" "}
-          {allEventDetails?.eventVenueType?.toLowerCase() == "physical" &&
-            allEventDetails?.city}
-        </p>
+      <div className="w-full flex sm:flex-row flex-col justify-between items-center">
+        <div className="flex flex-col gap-1 w-full mt-4">
+          <h3 className="text-dark_200 font-medium md:text-base text-sm">
+            {allEventDetails.eventName}
+          </h3>
+          <p className="text-secondary_300 font-normal text-xs">
+            {allEventDetails?.location}{" "}
+            {allEventDetails?.eventVenueType?.toLowerCase() == "physical" &&
+              allEventDetails?.city}
+          </p>
+        </div>
+        {["private"]?.includes(allEventDetails?.eventPrivacy?.toLowerCase()) && (
+          <div className="w-full font-semibold justify-end flex items-center gap-2 md:text-sm text-xs">
+            Passcode:
+            <span className="font-bold">{allEventDetails?.passCode}</span>
+          </div>
+        )}
       </div>
       <div className={classNameGridEventDetails}>
         <div className="bg-grey_500 rounded-md p-2 flex gap-2 items-center">
