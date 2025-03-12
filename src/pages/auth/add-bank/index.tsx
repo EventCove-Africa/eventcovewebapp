@@ -52,7 +52,8 @@ export default function AddBank() {
       exit="hidden" // Optional for exit animations
     >
       <h3 className="text-dark_200 font-bold lg:text-3xl text-xl">
-        You’re so close! Slide in your account deets to finish up. 🚀
+        Add your payout account details to recieves funds from your eventcove
+        sales 🚀
       </h3>
       <Formik
         initialValues={{

@@ -9,7 +9,7 @@ import {
   TimerStart,
   Verify,
 } from "iconsax-react";
-import ProgressBar from "@ramonak/react-progress-bar";
+// import ProgressBar from "@ramonak/react-progress-bar";
 import empty_state from "../../assets/images/empty_state.svg";
 import {
   arrayToFormattedDate,
@@ -141,14 +141,14 @@ export default function EventCard({ eventType }: any) {
                   </div>
                 </div>
 
-                {event?.soldTicket && (
+                {/* {event?.soldTicket && (
                   <div className="w-full flex flex-col gap-1">
                     <p className="text-grey_100 font-normal text-xs">
                       Sold Tickets
                     </p>
                     <ProgressBar
                       animateOnRender
-                      completed={event.progress}
+                      completed={50}
                       height="10px"
                       barContainerClassName="bg-yellow_100"
                       labelClassName="text-xs text-white font-bold"
@@ -159,7 +159,7 @@ export default function EventCard({ eventType }: any) {
                       {event.ticketsSold}
                     </p>
                   </div>
-                )}
+                )} */}
                 <div className="w-full flex justify-between items-center mt-2">
                   <div
                     className={`flex items-center gap-1 ${
