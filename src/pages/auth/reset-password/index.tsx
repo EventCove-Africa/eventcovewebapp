@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Form, Formik, FormikHelpers } from "formik";
+import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import Button from "../../../components/FormComponents/Button";
 import PasswordInputField from "../../../components/FormComponents/PasswordField";
-import { _handleThrowErrorMessage, animationVariants } from "../../../utils";
 import ModalPopup from "../../../components/ModalPopup";
 import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
 import SignupSuccess from "../../components/SignupSuccess";
+import { _handleThrowErrorMessage, animationVariants } from "../../../utils";
 import { signupResetPasswordSchema } from "../../../form-schemas";
 import useQueryParams from "../../../hooks/useQueryParams";
 import { appUrls } from "../../../services/urls";
 import { api } from "../../../services/api";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 type ResetPasswordProps = {
   code: string | null;

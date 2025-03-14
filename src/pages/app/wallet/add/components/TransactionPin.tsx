@@ -84,7 +84,7 @@ export default function TransactionPin({
                     name="pin"
                     type="tel"
                     handleChange={handleChange}
-                    placeholder="****"
+                    placeholder="******"
                     value={values.pin}
                     errors={errors?.pin}
                     touched={touched?.pin}
@@ -96,7 +96,7 @@ export default function TransactionPin({
                     name="confirm_pin"
                     type="tel"
                     handleChange={handleChange}
-                    placeholder="****"
+                    placeholder="******"
                     value={values.confirm_pin}
                     errors={errors?.confirm_pin}
                     touched={touched?.confirm_pin}

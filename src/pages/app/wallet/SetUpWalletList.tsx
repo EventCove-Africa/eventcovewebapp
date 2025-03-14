@@ -36,10 +36,6 @@ export default function SetUpWalletList() {
             icon={<Framer size="16" className="text-primary_100" />}
             label="Transaction PIN"
           />
-          {/* <WalletInfo
-            icon={<PasswordCheck size="16" className="text-primary_100" />}
-            label="One Time password"
-          /> */}
         </div>
       </article>
     </>

@@ -30,6 +30,9 @@ export const APP_ROUTES = {
   EDIT_TICKETS: "/app/tickets/edit/:ticketId",
   WALLET: "/app/wallet",
   ADD_WALLET: "/app/wallet/update",
+  SETTINGS: "/app/settings",
+  SETTINGS_PROFILE: "/app/settings/profile",
+  SETTINGS_PASSWORD: "/app/settings/password",
   TICKETS_VALIDATION: "/tickets-validation/:eventId",
   NOT_FOUND: "*",
   UNAUTHORIZED: "/unauthorized",
@@ -98,6 +101,18 @@ export const Wallet = lazyLoad(() => import("../pages/app/wallet"), "Wallet");
 export const AddWallet = lazyLoad(
   () => import("../pages/app/wallet/add"),
   "AddWallet"
+);
+export const Settings = lazyLoad(
+  () => import("../pages/app/settings"),
+  "Settings"
+);
+export const SettingsProfile = lazyLoad(
+  () => import("../pages/app/settings/components/SettingsProfile.tsx"),
+  "SettingsProfile"
+);
+export const SettingsPassword = lazyLoad(
+  () => import("../pages/app/settings/components/SettingsPassword.tsx"),
+  "SettingsPassword"
 );
 
 // Other Pages
@@ -299,6 +314,32 @@ export const routeConfig = [
             <AddWallet />
           </AnimatedRoute>
         ),
+      },
+      {
+        path: APP_ROUTES.SETTINGS,
+        element: <Settings />,
+        children: [
+          {
+            path: APP_ROUTES.SETTINGS,
+            element: <Navigate to={APP_ROUTES.SETTINGS_PROFILE} />,
+          },
+          {
+            path: APP_ROUTES.SETTINGS_PROFILE,
+            element: (
+              <AnimatedRoute>
+                <SettingsProfile />
+              </AnimatedRoute>
+            ),
+          },
+          {
+            path: APP_ROUTES.SETTINGS_PASSWORD,
+            element: (
+              <AnimatedRoute>
+                <SettingsPassword />
+              </AnimatedRoute>
+            ),
+          },
+        ],
       },
     ],
   },
