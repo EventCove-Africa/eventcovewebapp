@@ -39,6 +39,7 @@ export default function BvnNinEntry({
       actions.setSubmitting(false);
     }
   };
+  
   return (
     <div className="w-full h-full">
       <DescriptionBar text="We promise it’s safe—just keeping things legit! 🔒✨" />
@@ -58,7 +59,6 @@ export default function BvnNinEntry({
               bankName: walletDetails?.bankName,
               accountNumber: walletDetails?.accountNumber,
             };
-
             handleUpdateBankWallet(payload, actions);
           }}
         >

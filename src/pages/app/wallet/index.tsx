@@ -12,9 +12,12 @@ import SetUpWalletList from "./SetUpWalletList";
 import Withdrawals from "./Withdrawals";
 import useFetchWalletDetails from "../../../hooks/useFetchWalletDetails";
 import { useNavigate } from "react-router-dom";
+import { useUserProps } from "../../../types";
+import { useUser } from "../../../context/UserDetailsProvider.tsx";
 
 export default function Wallet() {
   const navigate = useNavigate();
+  const { userDetails } = useUser() as useUserProps;
   const { isOpenModal, handleOpenClose } = useOpenCloseModals();
   const [isAmountVisible, setIsAmountVisible] = useState(false);
   const { walletDetails, loading } = useFetchWalletDetails();
@@ -135,7 +138,7 @@ export default function Wallet() {
           ) : (
             <Skeleton className="w-full min-h-[124px] rounded-md" />
           )}
-          <TransactionHistory />
+          <TransactionHistory userDetails={userDetails} />
         </div>
       </section>
 
@@ -149,6 +152,7 @@ export default function Wallet() {
       <ModalPopup isOpen={isOpenModal("withdrawals")}>
         <Withdrawals
           walletDetails={walletDetails}
+          userDetails={userDetails}
           handleOpenClose={() => handleOpenClose("withdrawals")}
         />
       </ModalPopup>

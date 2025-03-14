@@ -3,8 +3,8 @@ import {
   ArrowDown2,
   Logout,
   NotificationBing,
+  Setting2,
   User,
-  Wallet,
 } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
 import { useUserProps } from "../../types";
@@ -107,9 +107,9 @@ export default function Header() {
           >
             <ul>
               <MenuItem
-                icon={<Wallet size="18" color="#767779" />}
-                label="Wallet"
-                onClick={() => navigate("/app/wallet")}
+                icon={<Setting2 size="18" color="#767779" />}
+                label="Settings"
+                onClick={() => navigate("/app/settings")}
               />
               <MenuItem
                 icon={<Logout size="18" color="#767779" />}

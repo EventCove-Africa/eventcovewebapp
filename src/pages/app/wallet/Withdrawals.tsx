@@ -1,15 +1,46 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import close_cancel from "../../../assets/icons/close-circle.svg";
 import { withdrawalsSchema } from "../../../form-schemas";
 import TextInputField from "../../../components/FormComponents/InputField";
 import Button from "../../../components/FormComponents/Button";
 import PasswordInputField from "../../../components/FormComponents/PasswordField";
-import { handleNumberInput } from "../../../utils";
+import {
+  _handleThrowErrorMessage,
+  handleNumberInput,
+} from "../../../utils";
+import toast from "react-hot-toast";
+import { api } from "../../../services/api";
+import { appUrls } from "../../../services/urls";
 
-export default function Withdrawals({ handleOpenClose, walletDetails }: any) {
+export default function Withdrawals({
+  handleOpenClose,
+  walletDetails,
+  userDetails,
+}: any) {
   const validationSchema = withdrawalsSchema(walletDetails.balance);
-  
+
+  const handleUpdateInitiatePayout = async (
+    payload: any,
+    actions: FormikHelpers<any>
+  ) => {
+    try {
+      const res = await api.post(appUrls.WALLET_URL + "/payout", payload);
+      const status_code = [200, 201].includes(res?.status);
+      if (status_code) {
+        const message = res?.data?.data ?? null;
+        toast.success(message);
+        actions.resetForm();
+        handleOpenClose();
+      }
+    } catch (error: any) {
+      const err_message = _handleThrowErrorMessage(error?.data?.message);
+      toast.error(err_message);
+    } finally {
+      actions.setSubmitting(false);
+    }
+  };
+
   return (
     <div className="bg-white h-auto w-full md:w-[350px] rounded-xl p-3">
       <div className="flex justify-between items-center">
@@ -35,9 +66,14 @@ export default function Withdrawals({ handleOpenClose, walletDetails }: any) {
         validationSchema={validationSchema}
         enableReinitialize
         onSubmit={(values, actions) => {
-          console.log(values);
-          actions.setSubmitting(false);
-          handleOpenClose();
+          const payload = {
+            organiserId: userDetails?.id,
+            payoutAmount: parseInt(values?.amount?.replace(/,/g, ""), 10),
+            transactionPin: values?.transaction_pin
+          };
+          console.log(payload);
+          return;
+          handleUpdateInitiatePayout(payload, actions);
         }}
       >
         {({

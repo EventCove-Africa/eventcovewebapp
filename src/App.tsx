@@ -60,21 +60,25 @@ function App() {
     <main className="scroll-smooth w-full h-full">
       <Suspense fallback={<FallbackLoader />}>
         <Routes>
-          {routeConfig.map((route) => {
-            return (
-              <Route key={route.path} path={route.path} element={route.element}>
-                {route.children?.map((child) => {
-                  return (
+          {routeConfig.map((route) => (
+            <Route key={route.path} path={route.path} element={route.element}>
+              {route.children?.map((child) => (
+                <Route
+                  key={child.path}
+                  path={child.path}
+                  element={child.element}
+                >
+                  {child.children?.map((subChild) => (
                     <Route
-                      key={child.path}
-                      path={child.path}
-                      element={child.element}
+                      key={subChild.path}
+                      path={subChild.path}
+                      element={subChild.element}
                     />
-                  );
-                })}
-              </Route>
-            );
-          })}
+                  ))}
+                </Route>
+              ))}
+            </Route>
+          ))}
         </Routes>
       </Suspense>
     </main>

@@ -11,9 +11,7 @@ import { isObjectEmpty } from "../../../../utils";
 export default function AddWallet() {
   const navigate = useNavigate();
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
-  const {
-    state: { state },
-  } = useLocation();
+  const { state } = useLocation();
   const [curStep, setCurStep] = useState<"bvn_nin" | "transaction_pin">(
     "bvn_nin"
   );

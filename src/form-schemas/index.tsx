@@ -35,7 +35,27 @@ export const signupSchema = Yup.object().shape({
     .required("Confirm password is required...."),
 });
 
+export const updateProfileSchema = Yup.object().shape({
+  lastName: Yup.string().required("Lastname is required"),
+  firstName: Yup.string().required("Firstname is required"),
+  phoneNumber: Yup.string().required("Phone number is required"),
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+});
+
 export const signupResetPasswordSchema = Yup.object().shape({
+  password: Yup.string()
+    .min(8, "Too Short!")
+    .max(50, "Too Long!")
+    .required("Password is required"),
+  confirm_password: Yup.string()
+    .oneOf([Yup.ref("password")], "Passwords must match")
+    .required("Confirm password is required...."),
+});
+
+export const resetPasswordSchema = Yup.object().shape({
+  old_password: Yup.string().required("Password is required"),
   password: Yup.string()
     .min(8, "Too Short!")
     .max(50, "Too Long!")
@@ -182,10 +202,11 @@ export const withdrawalsSchema = (maxValue: number) =>
         (value) =>
           value !== undefined &&
           parseInt(value.replace(/,/g, ""), 10) <= maxValue
-      ),
+      )
+      ,
     transaction_pin: Yup.string()
-      .min(4, "Too Short!")
-      .max(4, "PIN must be 4 digits!")
+      .min(6, "Too Short!")
+      .max(6, "PIN must be 6 digits!")
       .required("PIN is required"),
   });
 
