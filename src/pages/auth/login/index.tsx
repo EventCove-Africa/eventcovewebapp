@@ -25,7 +25,6 @@ export default function Login() {
     onError: (error) => console.error("Login Failed:", error),
   });
 
-
   return (
     <motion.main
       className="w-full h-full flex lg:justify-center items-center flex-col"
@@ -100,10 +99,12 @@ export default function Login() {
               type="submit"
               isLoading={isSubmitting}
             />
-            <GoogleAuth
-              text="Sign In with Google"
-              handleFunction={loginGoogle}
-            />
+            {!values?.eventId && (
+              <GoogleAuth
+                text="Sign In with Google"
+                handleFunction={loginGoogle}
+              />
+            )}
             <h4 className="text-sm font-semibold text-grey_100">
               Don’t have an account?{" "}
               <span

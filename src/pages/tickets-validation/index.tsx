@@ -193,7 +193,7 @@ export default function TicketsValidation() {
         )}
         {validationType === "ticket_id_entry" && (
           <TicketIdEntry
-            eventId={eventId}
+            eventReference={eventId}
             email={user_email}
             handleValidateTickets={handleValidateTickets}
           />
