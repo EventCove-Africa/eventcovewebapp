@@ -1,16 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
 import { Form, Formik, FormikHelpers } from "formik";
+import toast from "react-hot-toast";
 import close_cancel from "../../../assets/icons/close-circle.svg";
-import { withdrawalsSchema } from "../../../form-schemas";
 import TextInputField from "../../../components/FormComponents/InputField";
 import Button from "../../../components/FormComponents/Button";
 import PasswordInputField from "../../../components/FormComponents/PasswordField";
-import {
-  _handleThrowErrorMessage,
-  handleNumberInput,
-} from "../../../utils";
-import toast from "react-hot-toast";
+import { _handleThrowErrorMessage, handleNumberInput } from "../../../utils";
 import { api } from "../../../services/api";
+import { withdrawalsSchema } from "../../../form-schemas";
 import { appUrls } from "../../../services/urls";
 
 export default function Withdrawals({
@@ -19,6 +17,7 @@ export default function Withdrawals({
   userDetails,
 }: any) {
   const validationSchema = withdrawalsSchema(walletDetails.balance);
+  const [isResending, setIsResending] = useState(false);
 
   const handleUpdateInitiatePayout = async (
     payload: any,
@@ -41,6 +40,27 @@ export default function Withdrawals({
     }
   };
 
+  const handleResendOTP = async () => {
+    const payload = {
+      email: userDetails?.email,
+      transactionType: "initiate-payout",
+    };
+    setIsResending(true);
+    try {
+      const res = await api.post(appUrls.OTP_URL, payload);
+      const status_code = [200, 201].includes(res?.status);
+      if (status_code) {
+        const message = res?.data?.data;
+        toast.success(message);
+      }
+    } catch (error: any) {
+      const err_message = _handleThrowErrorMessage(error?.data?.message);
+      toast.error(err_message);
+    } finally {
+      setIsResending(false);
+    }
+  };
+
   return (
     <div className="bg-white h-auto w-full md:w-[350px] rounded-xl p-3">
       <div className="flex justify-between items-center">
@@ -60,6 +80,7 @@ export default function Withdrawals({
         initialValues={{
           transaction_pin: "",
           amount: "",
+          transaction_otp: "",
           bankName: walletDetails?.bankName || "",
           accountNumber: walletDetails?.accountNumber || "",
         }}
@@ -69,10 +90,9 @@ export default function Withdrawals({
           const payload = {
             organiserId: userDetails?.id,
             payoutAmount: parseInt(values?.amount?.replace(/,/g, ""), 10),
-            transactionPin: values?.transaction_pin
+            pin: values?.transaction_pin,
+            otp: values?.transaction_otp,
           };
-          console.log(payload);
-          return;
           handleUpdateInitiatePayout(payload, actions);
         }}
       >
@@ -129,18 +149,40 @@ export default function Withdrawals({
                 name="transaction_pin"
                 type="tel"
                 handleChange={handleChange}
-                placeholder="**********"
+                placeholder="******"
                 value={values.transaction_pin}
                 errors={errors?.transaction_pin}
                 touched={touched?.transaction_pin}
               />
+            </div>
+            <div className="mb-1">
+              <PasswordInputField
+                labelName="OTP"
+                name="transaction_otp"
+                type="tel"
+                handleChange={handleChange}
+                placeholder="******"
+                value={values.transaction_otp}
+                errors={errors?.transaction_otp}
+                touched={touched?.transaction_otp}
+              />
+              <h2 className="text-xs font-semibold mt-1 text-dark_300">
+                Note: Please{" "}
+                <span
+                  onClick={handleResendOTP}
+                  className="cursor-pointer text-primary_100 hover:border-b border-primary_100"
+                >
+                  Click here
+                </span>{" "}
+                to recieve one time password
+              </h2>
             </div>
             <div>
               <Button
                 title="Submit"
                 className=" h-[40px] text-center my-6 border border-dark_200"
                 type="submit"
-                isLoading={isSubmitting}
+                isLoading={isSubmitting || isResending}
               />
             </div>
           </Form>

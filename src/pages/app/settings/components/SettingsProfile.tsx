@@ -1,22 +1,65 @@
-import { Form, Formik } from "formik";
+/* eslint-disable no-unsafe-optional-chaining */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Form, Formik, FormikHelpers } from "formik";
 import Button from "../../../../components/FormComponents/Button";
 import TextInputField from "../../../../components/FormComponents/InputField";
 import { updateProfileSchema } from "../../../../form-schemas";
+import { _handleThrowErrorMessage } from "../../../../utils";
+import toast from "react-hot-toast";
+import { api } from "../../../../services/api";
+import { appUrls } from "../../../../services/urls";
+import { useUser } from "../../../../context/UserDetailsProvider.tsx";
+import { useUserProps } from "../../../../types";
+
+type UpdateProfleProp = {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+};
 
 export default function SettingsProfile() {
+  const { userDetails, handleGetUserDetails } = useUser() as useUserProps;
+  const [firstName, lastName] = userDetails?.fullName.split?.(" ");
+
+  const handleUpdateProfile = async (
+    payload: UpdateProfleProp,
+    actions: FormikHelpers<any>
+  ) => {
+    try {
+      const res = await api.post(appUrls.PROFILE_URL, payload);
+      const status_code = [200, 201].includes(res?.status);
+      if (status_code) {
+        const message = res?.data?.data ?? null;
+        toast.success(message);
+        actions.resetForm();
+        handleGetUserDetails();
+      }
+    } catch (error: any) {
+      const err_message = _handleThrowErrorMessage(error?.data?.message);
+      toast.error(err_message);
+    } finally {
+      actions.setSubmitting(false);
+    }
+  };
+  
   return (
     <Formik
       initialValues={{
-        firstName: "",
-        lastName: "",
-        email: "",
+        firstName: firstName || "",
+        lastName: lastName || "",
+        email: userDetails?.email || "",
         phoneNumber: "",
       }}
       validationSchema={updateProfileSchema}
       enableReinitialize
       onSubmit={(values, actions) => {
-        console.log(values);
-        actions.setSubmitting(false);
+        const { phoneNumber, lastName, firstName } = values;
+        const payload = {
+          firstName,
+          lastName,
+          phoneNumber,
+        };
+        handleUpdateProfile(payload, actions);
       }}
     >
       {({
@@ -56,12 +99,8 @@ export default function SettingsProfile() {
             <TextInputField
               labelName="Email"
               name="email"
-              handleChange={handleChange}
               type="email"
-              placeholder=""
               value={values.email}
-              errors={errors?.email}
-              touched={touched?.email}
               readOnly
             />
           </div>

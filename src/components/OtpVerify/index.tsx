@@ -23,6 +23,7 @@ export default function OTPVerify({
   handleOpenClose,
   nextPath,
   email,
+  handleNextFunction,
   transactionType,
   showCancelButton = true,
   allowResendOTPOnRender = false,
@@ -67,12 +68,13 @@ export default function OTPVerify({
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
         const { access_token, token_type } = res?.data?.data ?? null;
-        if (!["create-pin"].includes(transactionType)) {
+        if (!["create-pin", "initiate-payout"].includes(transactionType)) {
           if (access_token) {
             setAuthCookies({ access_token, token_type });
           }
         }
         toast.success("OTP verified successfully");
+        handleNextFunction && handleNextFunction?.();
         nextPath && navigate(nextPath);
       }
     } catch (error: any) {
@@ -94,7 +96,7 @@ export default function OTPVerify({
     return () => {
       mounted = false;
     };
-  }, [allowResendOTPOnRender]);
+  }, []);
 
   return (
     <div className="h-auto bg-white md:w-[458px] w-full rounded-xl p-3">

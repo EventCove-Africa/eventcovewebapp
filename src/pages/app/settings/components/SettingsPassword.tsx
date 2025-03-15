@@ -1,22 +1,47 @@
-import { Form, Formik } from "formik";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Form, Formik, FormikHelpers } from "formik";
 import Button from "../../../../components/FormComponents/Button";
 import PasswordInputField from "../../../../components/FormComponents/PasswordField";
 import { resetPasswordSchema } from "../../../../form-schemas";
+import toast from "react-hot-toast";
+import { _handleThrowErrorMessage } from "../../../../utils";
+import { api } from "../../../../services/api";
+import { appUrls } from "../../../../services/urls";
 
 export default function SettingsPassword() {
+  const handleChangePassword = async (
+    payload: any,
+    actions: FormikHelpers<any>
+  ) => {
+    try {
+      const res = await api.post(
+        appUrls.PROFILE_URL + "/change/password",
+        payload
+      );
+      const status_code = [200, 201].includes(res?.status);
+      if (status_code) {
+        const message = res?.data?.data ?? null;
+        toast.success(message);
+        actions.resetForm();
+      }
+    } catch (error: any) {
+      const err_message = _handleThrowErrorMessage(error?.data?.message);
+      toast.error(err_message);
+    } finally {
+      actions.setSubmitting(false);
+    }
+  };
   return (
     <Formik
       initialValues={{
-        old_password: "",
-        password: "",
+        oldPassword: "",
+        newPassword: "",
         confirm_password: "",
       }}
       validationSchema={resetPasswordSchema}
       enableReinitialize
       onSubmit={(values, actions) => {
-        console.log(values);
-        actions.setSubmitting(false);
-        actions.resetForm();
+        handleChangePassword(values, actions);
       }}
     >
       {({
@@ -31,23 +56,23 @@ export default function SettingsPassword() {
           <div className="mb-1">
             <PasswordInputField
               labelName="Old Password"
-              name="old_password"
+              name="oldPassword"
               handleChange={handleChange}
               placeholder="**********"
-              value={values.old_password}
-              errors={errors?.old_password}
-              touched={touched?.old_password}
+              value={values.oldPassword}
+              errors={errors?.oldPassword}
+              touched={touched?.oldPassword}
             />
           </div>
           <div className="mb-1">
             <PasswordInputField
-              labelName="Password"
-              name="password"
+              labelName="New Password"
+              name="newPassword"
               handleChange={handleChange}
               placeholder="**********"
-              value={values.password}
-              errors={errors?.password}
-              touched={touched?.password}
+              value={values.newPassword}
+              errors={errors?.newPassword}
+              touched={touched?.newPassword}
             />
           </div>
           <div className="mb-1">
