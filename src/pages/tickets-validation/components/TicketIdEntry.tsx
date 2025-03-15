@@ -5,7 +5,7 @@ import TextInputField from "../../../components/FormComponents/InputField";
 import { ticketValidationSchema } from "../../../form-schemas";
 
 export default function TicketIdEntry({
-  eventReference,
+  eventId,
   email,
   handleValidateTickets,
 }: any) {
@@ -20,7 +20,7 @@ export default function TicketIdEntry({
         onSubmit={(values, actions) => {
           const { ticketNumber } = values;
           const payload = {
-            eventReference,
+            eventId,
             ticketNumber,
             email,
           };
