@@ -34,7 +34,7 @@ export default function Wallet() {
     <main className="w-full h-full">
       <header>
         <h1 className="text-dark_200 md:text-base text-sm font-normal">
-          Yo, this is your wallet! 💸
+          This is your wallet! 💸
         </h1>
       </header>
 

@@ -72,6 +72,7 @@ export default function Tickets() {
 
   const renderActions = (_row: TicketProp) => {
     const handleEditAction = () => {
+      if (isEventPublished === null) return handleOpenClose("infoModal");
       if (isEventPublished) {
         if (_row?.category.toLocaleLowerCase() !== "paid") {
           navigate(`/app/tickets/edit/${_row?.ticketTypeId}`, {
@@ -88,6 +89,7 @@ export default function Tickets() {
 
       return null;
     };
+
     return (
       <div className="flex space-x-2">
         <button

@@ -19,6 +19,7 @@ export interface apiUrlsType {
   TICKET_TYPE_URL: string;
   TICKET_VALIDATION_URL: string;
   EVENT_TICKET_SALES_URL: string;
+  PROFILE_URL: string;
 }
 
 export interface ButtonProps {
@@ -127,6 +128,7 @@ export type OTPVerifyProps = {
   nextPath?: string;
   transactionType: any;
   handleOpenClose: () => void;
+  handleNextFunction?: () => void;
   email?: string | null;
   showCancelButton?: boolean;
   allowResendOTPOnRender?: boolean;

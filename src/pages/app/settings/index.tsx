@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import {
-  ArrowRight,
-  Lock1,
-  // NotificationBing,
-  Profile2User,
-} from "iconsax-react";
+import { ArrowRight, Lock1, Profile2User } from "iconsax-react";
 
 export default function Settings() {
   const { pathname } = useLocation();
@@ -22,12 +17,6 @@ export default function Settings() {
       route: "/app/settings/password",
       icon: <Lock1 size="20" color="#A30162" />,
     },
-    // {
-    //   title: "Notification",
-    //   key: "notification",
-    //   route: "/app/settings/notification",
-    //   icon: <NotificationBing size="20" color="#A30162" />,
-    // },
   ]);
 
   return (

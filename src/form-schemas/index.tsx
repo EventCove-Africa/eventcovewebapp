@@ -55,13 +55,13 @@ export const signupResetPasswordSchema = Yup.object().shape({
 });
 
 export const resetPasswordSchema = Yup.object().shape({
-  old_password: Yup.string().required("Password is required"),
-  password: Yup.string()
+  oldPassword: Yup.string().required("Old Password is required"),
+  newPassword: Yup.string()
     .min(8, "Too Short!")
     .max(50, "Too Long!")
-    .required("Password is required"),
+    .required("New Password is required"),
   confirm_password: Yup.string()
-    .oneOf([Yup.ref("password")], "Passwords must match")
+    .oneOf([Yup.ref("newPassword")], "Passwords must match")
     .required("Confirm password is required...."),
 });
 
@@ -202,12 +202,15 @@ export const withdrawalsSchema = (maxValue: number) =>
         (value) =>
           value !== undefined &&
           parseInt(value.replace(/,/g, ""), 10) <= maxValue
-      )
-      ,
+      ),
     transaction_pin: Yup.string()
       .min(6, "Too Short!")
       .max(6, "PIN must be 6 digits!")
       .required("PIN is required"),
+    transaction_otp: Yup.string()
+      .min(6, "Too Short!")
+      .max(6, "OTP must be 6 digits!")
+      .required("OTP is required"),
   });
 
 export const ticketValidationSchema = Yup.object().shape({
