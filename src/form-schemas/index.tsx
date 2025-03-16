@@ -120,6 +120,7 @@ export const addTicketSchema = Yup.object().shape({
       return schema.notRequired();
     }
   ),
+
   // sales_end_date_time: Yup.date().when(
   //   "ticket_details",
   //   (ticketDetails, schema) =>
@@ -149,6 +150,7 @@ export const editTicketSchema = Yup.object().shape({
     }
     return schema.notRequired();
   }),
+
   sales_end_date_time: Yup.date().nullable(), // Optional field
   sales_start_date_time: Yup.date().nullable(), // Optional field
   perks: Yup.string().nullable(), // Optional field
