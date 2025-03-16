@@ -107,6 +107,7 @@ export const addTicketSchema = Yup.object().shape({
   colour: Yup.string(),
   all_values: Yup.mixed(),
   ticket_details: Yup.boolean(), // Must be defined as a boolean
+  transferTransactionFeeToBuyer: Yup.boolean(), // Must be defined as a boolean
   price: Yup.string().when(
     ["category", "all_values"],
     ([category, all_values], schema) => {
@@ -141,6 +142,7 @@ export const editTicketSchema = Yup.object().shape({
   colour: Yup.string(),
   all_values: Yup.mixed(),
   ticket_details: Yup.boolean(), // Must be defined as a boolean
+  transferTransactionFeeToBuyer: Yup.boolean(), // Must be defined as a boolean
   price: Yup.string().when(["category"], ([category], schema) => {
     if (category && category?.toLowerCase() !== "free") {
       return schema.required("Price is required");

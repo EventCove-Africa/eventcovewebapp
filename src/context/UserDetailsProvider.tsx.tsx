@@ -93,6 +93,7 @@ function UserDetailsProvider({ children }: UserDetailsProviderProps) {
     } catch (error: any) {
       const err_message = _handleThrowErrorMessage(error?.data?.message);
       toast.error(err_message);
+      _handleClearCookiesAndSession("access_token", "token_type", "email");
       navigate("/auth/login");
     } finally {
       setLoadingDetails(false);

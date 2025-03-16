@@ -40,6 +40,7 @@ type TicketProp = {
   reservedSeats: string;
   colour: string;
   capacity: string;
+  transferTransactionFeeToBuyer: boolean;
   actions: any;
 };
 
@@ -62,7 +63,7 @@ export default function Tickets() {
       Cell: ({ row }: any) => renderActions(row.original), // Return JSX here
     },
   ];
-  const [ticketData, setTicketData] = useState<TicketProp[]>([]);
+  const [ticketData , setTicketData] = useState<TicketProp[]>([]);
   const [allEventsData, setAllEventsData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { isOpenModal, handleOpenClose } = useOpenCloseModals();
@@ -145,6 +146,7 @@ export default function Tickets() {
             confirmedSeats: element?.confirmedSeats || "N/A",
             purchaseLimit: element?.purchaseLimit || "N/A",
             groupTicketLimit: element?.groupTicketLimit || "N/A",
+            transferTransactionFeeToBuyer: element?.transferTransactionFeeToBuyer,
           });
         }
         setTicketData(() => [...record]);

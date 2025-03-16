@@ -565,8 +565,8 @@ export default function AddEvents() {
         <SignupSuccess
           text={
             event_id
-              ? "Woohoo! You just edited an event! 🎊✨"
-              : "Woohoo! You just created an event! 🎊✨"
+              ? "Event Edited Successfully 🎊✨"
+              : "Event Created Successfully🎊✨"
           }
           buttonText={
             event_id && allEventDetails?.hasTicketType
