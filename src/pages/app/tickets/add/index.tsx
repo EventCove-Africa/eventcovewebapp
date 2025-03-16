@@ -24,6 +24,7 @@ import { api } from "../../../../services/api";
 import { appUrls } from "../../../../services/urls";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import ToggleSwitch from "../../../../components/ToggleSwitch";
 
 type ticketTypesProps = {
   perks: string;
@@ -47,8 +48,8 @@ type AddTicketProps = {
 };
 
 export default function AddTickets() {
-  const { isOpenModal, handleOpenClose } = useOpenCloseModal();
   const navigate = useNavigate();
+  const { isOpenModal, handleOpenClose } = useOpenCloseModal();
   const { eventId } = useParams();
 
   const _handleCreateTicketForEvent = async (
@@ -89,6 +90,7 @@ export default function AddTickets() {
             sales_start_date_time: null,
             all_values: [],
             ticket_details: true,
+            transferTransactionFeeToBuyer: false,
           }}
           enableReinitialize
           onSubmit={(values, actions) => {
@@ -292,6 +294,26 @@ export default function AddTickets() {
                           />
                         </div>
                       )}
+                      {/* Toogle button goes here  */}
+                      <div className="w-full flex flex-col items-start">
+                        <ToggleSwitch
+                          labelName="Transfer Charges"
+                          name="transferTransactionFeeToBuyer"
+                          checked={values?.transferTransactionFeeToBuyer}
+                          onChange={(checked) =>
+                            setFieldValue(
+                              "transferTransactionFeeToBuyer",
+                              checked
+                            )
+                          }
+                        />
+                        <span
+                          className={`text-xs text-dark_200 leading-5 flex gap-1 items-center my-1`}
+                        >
+                         NB: Please note, if the toggle button is switched
+                          Off the event organizer bears the cost of the charges
+                        </span>
+                      </div>
                       <div
                         onClick={() =>
                           setFieldValue(
@@ -413,14 +435,16 @@ export default function AddTickets() {
                               : "Create Ticket"}
                           </button>
                         )}
-                        <button
-                          type="button"
-                          className="bg-primary_300 px-3 py-2 flex items-center gap-2 text-primary_100 text-xs rounded-md"
-                          onClick={resetOptionalValues}
-                        >
-                          <Add size="16" color="#A30162" />
-                          Add another ticket
-                        </button>
+                        {!isSubmitting && (
+                          <button
+                            type="button"
+                            className="bg-primary_300 px-3 py-2 flex items-center gap-2 text-primary_100 text-xs rounded-md"
+                            onClick={resetOptionalValues}
+                          >
+                            <Add size="16" color="#A30162" />
+                            Add another ticket
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -509,7 +533,7 @@ export default function AddTickets() {
       </div>
       <ModalPopup isOpen={isOpenModal}>
         <SignupSuccess
-          text="You just created your ticket! 🎊✨"
+          text="Ticket Creation Successful 🎊✨"
           buttonText="Proceed to event details"
           handleOpenClose={handleOpenClose}
           handleFunction={() => navigate(`/app/events/${eventId}`)}

@@ -20,6 +20,7 @@ import { api } from "../../../../services/api";
 import { appUrls } from "../../../../services/urls";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import ToggleSwitch from "../../../../components/ToggleSwitch";
 
 export default function EditTicket() {
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
@@ -70,6 +71,9 @@ export default function EditTicket() {
             purchaseLimit:
               state?.purchaseLimit !== "N/A" ? state?.purchaseLimit : "",
             perks: state?.perks !== "N/A" ? state?.perks : "",
+            transferTransactionFeeToBuyer: state?.transferTransactionFeeToBuyer
+              ? true
+              : false,
             sales_end_date_time,
             sales_start_date_time,
             ticket_details: true,
@@ -82,11 +86,15 @@ export default function EditTicket() {
               price,
               ...rest
             } = values;
-            const { startDate: salesStartDate, endDate: salesEndDate, startTime: salesStartTime, endTime: salesEndTime }: any =
-              convertDateTimeRangeForEventCreation(
-                sales_start_date_time,
-                sales_end_date_time
-              );
+            const {
+              startDate: salesStartDate,
+              endDate: salesEndDate,
+              startTime: salesStartTime,
+              endTime: salesEndTime,
+            }: any = convertDateTimeRangeForEventCreation(
+              sales_start_date_time,
+              sales_end_date_time
+            );
             const payload = {
               ticketTypeId: ticketId,
               eventId,
@@ -189,6 +197,23 @@ export default function EditTicket() {
                       />
                     </div>
                   )}
+                  {/* Toogle button goes here  */}
+                  <div className="w-full flex flex-col items-start">
+                    <ToggleSwitch
+                      labelName="Transfer Charges"
+                      name="transferTransactionFeeToBuyer"
+                      checked={values?.transferTransactionFeeToBuyer}
+                      onChange={(checked) =>
+                        setFieldValue("transferTransactionFeeToBuyer", checked)
+                      }
+                    />
+                    <span
+                      className={`text-xs text-dark_200 flex gap-1 items-center my-1`}
+                    >
+                      NB: Please note, if the toggle button is switched Off
+                      the event organizer bears the cost of the charges
+                    </span>
+                  </div>
                   <div
                     onClick={() =>
                       setFieldValue("ticket_details", !values.ticket_details)
@@ -289,7 +314,7 @@ export default function EditTicket() {
                           minDate={new Date()}
                           errors={errors?.sales_end_date_time}
                           touched={touched?.sales_end_date_time}
-                           tooltipContent="Defaults to Event End date if left empty"
+                          tooltipContent="Defaults to Event End date if left empty"
                         />
                       </div>
                     </div>
