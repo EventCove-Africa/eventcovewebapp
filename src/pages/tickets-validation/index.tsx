@@ -86,8 +86,6 @@ export default function TicketsValidation() {
       const res = await api.post(appUrls.TICKET_VALIDATION_URL, payload);
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
-        const message = res?.data?.data;
-        toast.success(message);
         handleOpenClose();
         actions.resetForm();
       }
@@ -189,7 +187,11 @@ export default function TicketsValidation() {
           </div>
         </div>
         {validationType === "scan" && (
-          <QRscan handleOpenClose={handleOpenClose} />
+          <QRscan
+            eventReference={eventId}
+            email={user_email}
+            handleOpenClose={handleOpenClose}
+          />
         )}
         {validationType === "ticket_id_entry" && (
           <TicketIdEntry
@@ -201,7 +203,7 @@ export default function TicketsValidation() {
       </div>
       <ModalPopup isOpen={isOpenModal}>
         <SignupSuccess
-          text="Congrats, you’re all set! 🎉 Time to vibe. 🚀"
+          text="Ticket validation successful 🚀"
           handleOpenClose={handleOpenClose}
           handleFunction={handleOpenClose}
           buttonText="Proceed"
