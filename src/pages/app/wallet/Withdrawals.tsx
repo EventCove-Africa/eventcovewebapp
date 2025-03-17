@@ -27,8 +27,7 @@ export default function Withdrawals({
       const res = await api.post(appUrls.WALLET_URL + "/payout", payload);
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
-        const message = res?.data?.data ?? null;
-        toast.success(message);
+        toast.success("Withdrawal Successful !");
         actions.resetForm();
         handleOpenClose();
       }
@@ -166,7 +165,7 @@ export default function Withdrawals({
                 errors={errors?.transaction_otp}
                 touched={touched?.transaction_otp}
               />
-              <h2 className="text-xs font-semibold mt-1 text-dark_300">
+              <h2 className="md:text-sm text-xs font-semibold mt-2 text-dark_300">
                 Note: Please{" "}
                 <span
                   onClick={handleResendOTP}
