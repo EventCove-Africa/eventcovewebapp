@@ -28,9 +28,8 @@ export default function EventDetails() {
     eventTeamMembers,
     eventTeamMembersUrl,
   } = useEventHook();
-  const isEventPublised = allEventDetails?.published
-  const isReadyForPublish =
-    allEventDetails?.hasTicketType && !isEventPublised;
+  const isEventPublised = allEventDetails?.published;
+  const isReadyForPublish = allEventDetails?.hasTicketType && !isEventPublised;
   const NOT_COMPLETED = allEventDetails?.status !== "completed";
   const isShowDeleteButton =
     !allEventDetails?.soldTicket &&
@@ -268,16 +267,18 @@ export default function EventDetails() {
               }
             />
           )}
-          <Button
-            title="Edit Event"
-            type="button"
-            backgroundColor="bg-primary_300"
-            textColor="text-primary_100"
-            className="border border-dark_100"
-            onClick={() =>
-              navigate(`/app/events/edit/${allEventDetails?.eventId}`)
-            }
-          />
+          {["upcoming"].includes(allEventDetails?.status) && (
+            <Button
+              title="Edit Event"
+              type="button"
+              backgroundColor="bg-primary_300"
+              textColor="text-primary_100"
+              className="border border-dark_100"
+              onClick={() =>
+                navigate(`/app/events/edit/${allEventDetails?.eventId}`)
+              }
+            />
+          )}
         </div>
       )}
     </div>
