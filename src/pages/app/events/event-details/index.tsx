@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import DescriptionBar from "../../../../components/DescriptionBar";
-import { _handleThrowErrorMessage, isArrayEmpty } from "../../../../utils";
+import { _handleThrowErrorMessage, isArrayEmpty, isObjectEmpty } from "../../../../utils";
 import { Export, Trash } from "iconsax-react";
 import Button from "../../../../components/FormComponents/Button";
 import toast from "react-hot-toast";
@@ -31,7 +31,7 @@ export default function EventDetails() {
   const isEventPublised = allEventDetails?.published;
   const isReadyForPublish = allEventDetails?.hasTicketType && !isEventPublised;
   const NOT_COMPLETED = allEventDetails?.status !== "completed";
-  const isShowDeleteButton =
+  const isShowDeleteButton = !isObjectEmpty(allEventDetails) &&
     !allEventDetails?.soldTicket &&
     !allEventDetails?.deleted &&
     !loadingEventDetails?.event &&
