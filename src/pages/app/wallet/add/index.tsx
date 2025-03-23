@@ -70,6 +70,7 @@ export default function AddWallet() {
           handleOpenClose={handleOpenClose}
           nextPath="/app/wallet"
           allowResendOTPOnRender={true}
+          showCancelButton={false}
         />
       </ModalPopup>
     </main>

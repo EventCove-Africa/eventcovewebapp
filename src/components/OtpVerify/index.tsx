@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
@@ -11,7 +12,6 @@ import { api } from "../../services/api";
 import { appUrls } from "../../services/urls";
 import { _handleThrowErrorMessage, setAuthCookies } from "../../utils";
 import toast from "react-hot-toast";
-import { useEffect, useState } from "react";
 import { OTPVerifyProps, useUserProps } from "../../types";
 import { useUser } from "../../context/UserDetailsProvider.tsx";
 
@@ -28,9 +28,10 @@ export default function OTPVerify({
   showCancelButton = true,
   allowResendOTPOnRender = false,
 }: OTPVerifyProps) {
+  const navigate = useNavigate();
+  const hasRun = useRef(false);
   const { userDetails } = useUser() as useUserProps;
   const [isResending, setIsResending] = useState(false);
-  const navigate = useNavigate();
   const otpSchema = Yup.object().shape({
     otp: Yup.string()
       .required("OTP is Required")
@@ -44,6 +45,7 @@ export default function OTPVerify({
       transactionType,
     };
     setIsResending(true);
+    console.log("triggerResend..");
     try {
       const res = await api.post(appUrls.OTP_URL, payload);
       const status_code = [200, 201].includes(res?.status);
@@ -86,16 +88,10 @@ export default function OTPVerify({
   };
 
   useEffect(() => {
-    let mounted = false;
-    (async () => {
-      mounted = true;
-      if (mounted && allowResendOTPOnRender) {
-        handleResendOTP();
-      }
-    })();
-    return () => {
-      mounted = false;
-    };
+    if (!hasRun.current && allowResendOTPOnRender) {
+      handleResendOTP();
+      hasRun.current = true; // Mark as executed
+    }
   }, []);
 
   return (
@@ -184,7 +180,7 @@ export default function OTPVerify({
                     : "text-primary_100 cursor-pointer hover:underline hover:text-primary_80"
                 }`}
               >
-                {isResending ? "Resending..." : "Resend"}
+                {isResending ? "Pleast wait..." : "Resend"}
               </span>
             </h3>
           </Form>
