@@ -166,9 +166,12 @@ export default function EditTicket() {
                   <CustomSelect
                     label="Ticket Category"
                     name="category"
-                    onChange={(event) =>
-                      setFieldValue("category", event?.value)
-                    }
+                    onChange={(event) => {
+                      if (event?.value.toLowerCase() === "free") {
+                        setFieldValue("transferTransactionFeeToBuyer", false);
+                      }
+                      setFieldValue("category", event?.value);
+                    }}
                     options={[
                       { label: "Paid", value: "Paid" },
                       { label: "Free", value: "Free" },
@@ -210,8 +213,8 @@ export default function EditTicket() {
                     <span
                       className={`text-xs text-dark_200 flex gap-1 items-center my-1`}
                     >
-                      NB: Please note, if the toggle button is switched Off
-                      the event organizer bears the cost of the charges
+                      NB: Please note, if the toggle button is switched Off the
+                      event organizer bears the cost of the charges
                     </span>
                   </div>
                   <div

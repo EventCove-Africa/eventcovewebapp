@@ -264,9 +264,12 @@ export default function AddTickets() {
                       <CustomSelect
                         label="Ticket Category"
                         name="category"
-                        onChange={(event) =>
-                          setFieldValue("category", event?.value)
-                        }
+                        onChange={(event) => {
+                          if(event?.value.toLowerCase() === 'free') {
+                            setFieldValue("transferTransactionFeeToBuyer", false);
+                          }
+                          setFieldValue("category", event?.value);
+                        }}
                         options={[
                           { label: "Paid", value: "Paid" },
                           { label: "Free", value: "Free" },
