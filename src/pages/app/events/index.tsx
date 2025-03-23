@@ -10,10 +10,10 @@ export default function Events() {
   const eventType = getParam("eventType");
 
   const events = [
-    { label: "All Events", type: "all" },
-    { label: "Upcoming Events", type: "upcoming" },
-    { label: "Completed Events", type: "completed" },
-    { label: "Cancelled Events", type: "deleted" },
+    { label: "All", type: "all" },
+    { label: "Upcoming", type: "upcoming" },
+    { label: "Completed", type: "completed" },
+    { label: "Cancelled", type: "deleted" },
   ];
 
   return (

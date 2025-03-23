@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { motion } from "framer-motion";
 import { routeConfig } from "./routesConfig";
 import logo from "./assets/icons/logo.svg";
+import ScrollToTop from "./components/ScrollToTop";
 
 const LoadingFlicker = () => {
   return (
@@ -59,6 +60,7 @@ function App() {
   return (
     <main className="scroll-smooth w-full h-full">
       <Suspense fallback={<FallbackLoader />}>
+        <ScrollToTop />
         <Routes>
           {routeConfig.map((route) => (
             <Route key={route.path} path={route.path} element={route.element}>

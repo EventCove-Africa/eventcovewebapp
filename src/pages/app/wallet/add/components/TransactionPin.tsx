@@ -53,7 +53,7 @@ export default function TransactionPin({
       exit="hidden" // Optional for exit animations
     >
       <div className="w-full h-full">
-        <DescriptionBar text="👀 Hold up, bestie! Enter your Transaction PIN to keep it 💯 secure. 🔒" />
+        <DescriptionBar text="Enter your 6 digits Transaction PIN to keep your wallet 💯 secure. 🔒" />
         <div className="lg:w-2/5 w-full p-3 bg-white min-h-auto h-auto rounded-xl shadow">
           <Formik
             validationSchema={createPinSchema}
