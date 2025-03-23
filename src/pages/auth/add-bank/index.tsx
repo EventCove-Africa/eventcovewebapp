@@ -91,6 +91,8 @@ export default function AddBank() {
                 options={banks}
                 errors={errors?.bankName}
                 touched={touched?.bankName}
+                defaultValue={values?.bankName}
+                value={values?.bankName}
               />
             </div>
             <div className="mb-3">

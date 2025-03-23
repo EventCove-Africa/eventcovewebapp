@@ -48,7 +48,7 @@ export default function Tickets() {
   const { userDetails } = useUser() as useUserProps;
   const navigate = useNavigate();
   const getParam = useQueryParams();
-  const event_id = getParam("event_id");
+  const event_id = getParam("event_id") || "";
   const columns: Column<TicketProp>[] = [
     { Header: "Seat Name", accessor: "name" },
     { Header: "Price", accessor: "price" },
@@ -63,13 +63,14 @@ export default function Tickets() {
       Cell: ({ row }: any) => renderActions(row.original), // Return JSX here
     },
   ];
-  const [ticketData , setTicketData] = useState<TicketProp[]>([]);
+  const [ticketData, setTicketData] = useState<TicketProp[]>([]);
   const [allEventsData, setAllEventsData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { isOpenModal, handleOpenClose } = useOpenCloseModals();
   const [isEventPublished, setIsEventPublished] = useState<boolean | null>(
     null
   );
+  const [selectedEvent, setSelectedEvent] = useState<any>("");
 
   const renderActions = (_row: TicketProp) => {
     const handleEditAction = () => {
@@ -146,7 +147,8 @@ export default function Tickets() {
             confirmedSeats: element?.confirmedSeats || "N/A",
             purchaseLimit: element?.purchaseLimit || "N/A",
             groupTicketLimit: element?.groupTicketLimit || "N/A",
-            transferTransactionFeeToBuyer: element?.transferTransactionFeeToBuyer,
+            transferTransactionFeeToBuyer:
+              element?.transferTransactionFeeToBuyer,
           });
         }
         setTicketData(() => [...record]);
@@ -169,13 +171,20 @@ export default function Tickets() {
         const record = [] as any;
         for (let index = 0; index < results.length; index++) {
           const element = results[index];
+          const eventId = element?.eventId;
+          const published = element?.published;
+          const eventName = element?.eventName;
           record.push({
-            label: element?.eventName,
+            label: eventName,
             value: {
-              eventId: element?.eventId,
-              published: element?.published,
+              eventId,
+              published,
             },
           });
+          if (event_id && event_id === eventId) {
+            setIsEventPublished(published);
+            setSelectedEvent(eventName)
+          }
         }
         setAllEventsData(() => [...record]);
       }
@@ -222,11 +231,14 @@ export default function Tickets() {
           label=" Select an event:"
           name="event"
           onChange={(event) => {
+            setSelectedEvent(event?.label);
             setIsEventPublished(event?.value?.published);
             navigate(`/app/tickets?event_id=${event?.value?.eventId}`);
           }}
           className="md:w-[300px] w-full"
           options={allEventsData}
+          value={selectedEvent}
+          defaultValue={selectedEvent}
         />
       </div>
       <TableComponent

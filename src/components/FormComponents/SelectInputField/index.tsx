@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Select, { Props as ReactSelectProps, GroupBase } from "react-select";
+import Select, {
+  Props as ReactSelectProps,
+  GroupBase,
+  PropsValue,
+} from "react-select";
 import CustomOption from "./CustomOption";
 
 // Define the type for options
@@ -38,11 +42,17 @@ const CustomSelect = <
   defaultInputValue,
   ...props
 }: CustomSelectProps<OptionType, IsMulti>) => {
-  // Find the corresponding option object for the given defaultValue string
-  const computedDefaultValue = options.find(
-    (opt: any) => opt.value === defaultValue
-  );
+  // Ensure value is an object from the options array
+  const selectedValue: PropsValue<OptionType> =
+    typeof value === "object"
+      ? value
+      : options.find((opt: any) => opt.label === value) || null;
 
+  // Ensure defaultValue is an object from the options array
+  const computedDefaultValue: PropsValue<OptionType> =
+    typeof defaultValue === "object"
+      ? defaultValue
+      : options.find((opt: any) => opt.value === defaultValue) || null;
   return (
     <div>
       {label && (
@@ -52,7 +62,8 @@ const CustomSelect = <
         options={options}
         isMulti={isMulti}
         name={name}
-        value={value || computedDefaultValue} // Use computed default value when value is not provided
+        value={selectedValue} // Ensure value is an option object
+        defaultValue={computedDefaultValue} // Ensure defaultValue is an option object
         components={{ Option: CustomOption }}
         styles={{
           control: (baseStyles, state) => ({

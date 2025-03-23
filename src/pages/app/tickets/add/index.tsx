@@ -13,7 +13,7 @@ import DateTimePicker from "../../../../components/FormComponents/DateTimePicker
 import {
   _handleThrowErrorMessage,
   convertDateTimeRangeForEventCreation,
-  formatDateTime,
+  // formatDateTime,
   handleNumberInput,
   isArrayEmpty,
   isValidOptionalDetails,
@@ -90,7 +90,7 @@ export default function AddTickets() {
             sales_start_date_time: null,
             all_values: [],
             ticket_details: true,
-            transferTransactionFeeToBuyer: false,
+            transferTransactionFeeToBuyer: true,
           }}
           enableReinitialize
           onSubmit={(values, actions) => {
@@ -274,6 +274,7 @@ export default function AddTickets() {
                         errors={errors?.category}
                         touched={touched?.category}
                         defaultValue={values?.category}
+                        value={values?.category}
                       />
                       {values?.category === "Paid" && (
                         <div className="mb-2">
@@ -310,8 +311,8 @@ export default function AddTickets() {
                         <span
                           className={`text-xs text-dark_200 leading-5 flex gap-1 items-center my-1`}
                         >
-                         NB: Please note, if the toggle button is switched
-                          Off the event organizer bears the cost of the charges
+                          NB: Please note, if the toggle button is switched Off
+                          the event organizer bears the cost of the charges
                         </span>
                       </div>
                       <div
@@ -454,7 +455,6 @@ export default function AddTickets() {
                         const fields = [
                           { label: "Seat Name", value: list?.name },
                           { label: "Price", value: list?.price },
-                          { label: "Capacity", value: list?.capacity },
                           {
                             label: "Classification",
                             value: list?.classification,
@@ -463,21 +463,22 @@ export default function AddTickets() {
                             label: "Group Limit",
                             value: list?.groupTicketLimit,
                           },
-                          { label: "Ticket Perk", value: list?.perks },
-                          { label: "Colour", value: list?.colour },
-                          { label: "Category", value: list?.category },
-                          {
-                            label: "Purchase Limit",
-                            value: list?.purchaseLimit,
-                          },
-                          {
-                            label: "Sale Start Date & Time",
-                            value: formatDateTime(list?.sales_start_date_time),
-                          },
-                          {
-                            label: "Sale End Date & Time",
-                            value: formatDateTime(list?.sales_end_date_time),
-                          },
+                          // { label: "Capacity", value: list?.capacity },
+                          // { label: "Ticket Perk", value: list?.perks },
+                          // { label: "Colour", value: list?.colour },
+                          // { label: "Category", value: list?.category },
+                          // {
+                          //   label: "Purchase Limit",
+                          //   value: list?.purchaseLimit,
+                          // },
+                          // {
+                          //   label: "Sale Start Date & Time",
+                          //   value: formatDateTime(list?.sales_start_date_time),
+                          // },
+                          // {
+                          //   label: "Sale End Date & Time",
+                          //   value: formatDateTime(list?.sales_end_date_time),
+                          // },
                         ];
                         return (
                           <div
