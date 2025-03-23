@@ -194,7 +194,7 @@ export default function AddEvents() {
     <div className="w-full h-full">
       <DescriptionBar text=" Event vibes loading—fill out the form to get started! 🌟" />
       <Formik
-        validationSchema={!event_id && addEventSchema}
+        validationSchema={addEventSchema}
         initialValues={{
           eventImageUrl: imageSrc || null,
           eventName: allEventDetails?.eventName || "",
@@ -352,6 +352,7 @@ export default function AddEvents() {
                       errors={errors?.eventVenueType}
                       touched={touched?.eventVenueType}
                       defaultValue={values?.eventVenueType}
+                      value={values?.eventVenueType}
                     />
                   </div>
                   <div className="mb-2 w-full">
@@ -365,6 +366,7 @@ export default function AddEvents() {
                       errors={errors?.eventVenueType}
                       touched={touched?.eventVenueType}
                       defaultValue={values?.eventCategory}
+                      value={values?.eventCategory}
                     />
                   </div>
                 </div>
@@ -378,6 +380,7 @@ export default function AddEvents() {
                       errors={errors?.city}
                       touched={touched?.city}
                       defaultValue={values?.city}
+                      value={values?.city}
                     />
                   </div>
                 )}
@@ -443,6 +446,7 @@ export default function AddEvents() {
                     errors={errors?.eventPrivacy}
                     touched={touched?.eventPrivacy}
                     defaultValue={values.eventPrivacy}
+                    value={values.eventPrivacy}
                   />
                 </div>
                 <div className="mb-2">

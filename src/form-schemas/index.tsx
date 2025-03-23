@@ -16,8 +16,12 @@ export const signupAddBankSchema = Yup.object().shape({
 });
 
 export const addBvnNinSchema = Yup.object().shape({
-  bvn: Yup.string().required("Bvn is required"),
-  nin: Yup.string().required("Nin is required"),
+  bvn: Yup.string()
+    .matches(/^\d{11}$/, "BVN must be exactly 11 digits and contain only numbers")
+    .required("BVN is required"),
+  nin: Yup.string()
+    .matches(/^\d{11}$/, "NIN must be exactly 11 digits and contain only numbers")
+    .required("NIN is required"),
 });
 
 export const signupSchema = Yup.object().shape({

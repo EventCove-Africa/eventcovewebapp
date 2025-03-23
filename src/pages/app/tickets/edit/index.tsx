@@ -71,9 +71,7 @@ export default function EditTicket() {
             purchaseLimit:
               state?.purchaseLimit !== "N/A" ? state?.purchaseLimit : "",
             perks: state?.perks !== "N/A" ? state?.perks : "",
-            transferTransactionFeeToBuyer: state?.transferTransactionFeeToBuyer
-              ? true
-              : false,
+            transferTransactionFeeToBuyer: state?.transferTransactionFeeToBuyer,
             sales_end_date_time,
             sales_start_date_time,
             ticket_details: true,
@@ -147,6 +145,7 @@ export default function EditTicket() {
                     errors={errors?.classification}
                     touched={touched?.classification}
                     defaultValue={values?.classification}
+                    value={values?.classification}
                   />
 
                   {values?.classification === "Group" && (
@@ -177,6 +176,7 @@ export default function EditTicket() {
                     errors={errors?.category}
                     touched={touched?.category}
                     defaultValue={values?.category}
+                    value={values?.category}
                   />
                   {values?.category === "Paid" && (
                     <div className="mb-2">
