@@ -46,9 +46,12 @@ export default function SignUp() {
       exit="hidden"
       className="w-full h-full"
     >
-      <h3 className="text-dark_200 font-bold lg:text-3xl text-xl">
-        Let’s kick things off in style! 💅 Drop your deets and let’s gooo! 🎉
+      <h3 className="self-start text-dark_200 font-bold lg:text-2xl text-xl mb-1">
+        Create an account
       </h3>
+      <p className="text-dark_200 lg:text-base text-sm self-start">
+        Creating an account with eventcove is free, get started today!
+      </p>
       <Formik
         initialValues={{
           firstName: "",

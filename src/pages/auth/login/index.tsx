@@ -33,9 +33,12 @@ export default function Login() {
       animate="visible"
       exit="hidden" // Optional for exit animations
     >
-      <h3 className="text-dark_200 font-bold lg:text-3xl text-xl">
-        Welcome back, we missed ya! 💖 Let’s pick up where we left off. 🙌
+      <h3 className="self-start text-dark_200 font-bold lg:text-2xl text-xl mb-1">
+        Welcome back 🙌
       </h3>
+      <p className="text-dark_200 lg:text-base text-sm self-start">
+        Please proceed with the email address used to register your account.
+      </p>
       <Formik
         initialValues={{
           email: "",
