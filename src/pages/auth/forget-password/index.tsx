@@ -22,7 +22,7 @@ type ForgetPasswordProps = {
 export default function ForgetPassword() {
   const navigate = useNavigate();
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
-    const [successText, setSuccessText] = useState("");
+  const [successText, setSuccessText] = useState("");
 
   const handleForgetPassword = async (
     payload: ForgetPasswordProps,
@@ -53,9 +53,12 @@ export default function ForgetPassword() {
       animate="visible"
       exit="hidden" // Optional for exit animations
     >
-      <h3 className="self-start text-dark_200 font-bold lg:text-3xl text-xl">
-        Slide in your email 📨
+      <h3 className="self-start text-dark_200 font-bold lg:text-2xl text-xl mb-1">
+        FORGET PASSWORD 📨
       </h3>
+      <p className="text-dark_200 lg:text-base text-sm self-start">
+        Please provide the email address used to create your account
+      </p>
       <Formik
         initialValues={{
           email: "",

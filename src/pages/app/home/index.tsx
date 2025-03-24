@@ -30,7 +30,8 @@ export default function Home() {
       <header className="w-full flex flex-col md:flex-row gap-3 md:items-center justify-between">
         <div className="w-full flex flex-col gap-3">
           <h1 className="text-grey_100 md:text-base text-sm font-normal">
-            Hey, welcome to Event Cove! 🌊 Tap Create Event to get started!
+            Hey, welcome to Event Cove! 🌊{" "}
+            {`${!stats?.totalEvents ? "Tap Create Event to get started!" : ''}`}
           </h1>
           <div className="w-full flex flex-wrap justify-between items-center gap-2">
             <Button
@@ -44,7 +45,7 @@ export default function Home() {
 
       {/* Statistics Section */}
       <section className="lg:h-[236.92px] h-auto w-full flex lg:flex-row flex-col md:gap-3 gap-3 my-8">
-        <Statistics details={stats} loading={loading}  />
+        <Statistics details={stats} loading={loading} />
       </section>
 
       {/* Upcoming Events Section */}

@@ -35,7 +35,6 @@ export default function ResetPassword() {
       const res = await api.post(appUrls.RESET_PASSWORD_URL, payload);
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
-        // const message = res?.data?.data ?? null;
         setSuccessText("Password Reset Successful");
         handleOpenClose();
         actions.resetForm();
@@ -56,8 +55,8 @@ export default function ResetPassword() {
       exit="hidden" // Optional for exit animations
       className="w-full h-full flex flex-col md:justify-center items-center"
     >
-      <h3 className="text-dark_200 font-bold md:text-3xl text-xl self-start lg:mr-24 mr-0">
-        Secure the vibe—new password please! 🔐
+      <h3 className="self-start text-dark_200 font-bold lg:text-2xl text-xl mb-1">
+        Reset Password 🔐
       </h3>
       <Formik
         initialValues={{
