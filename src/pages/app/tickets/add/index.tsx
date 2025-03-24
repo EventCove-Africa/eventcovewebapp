@@ -168,7 +168,7 @@ export default function AddTickets() {
                 price: values?.price,
                 capacity: values?.capacity,
                 colour: values?.colour,
-                purchaseLimit: values?.purchaseLimit,
+                purchaseLimit: values?.purchaseLimit || 0,
                 classification: values?.classification,
                 category: values?.category,
                 groupTicketLimit: values?.groupTicketLimit,

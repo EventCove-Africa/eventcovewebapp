@@ -6,6 +6,7 @@ export interface apiUrlsType {
   LOGIN_URL: string;
   CREATE_ORGANIZER_ACCOUNT_URL: string;
   GET_USER_DETAILS_URL: string;
+  GET_USER_STATISTICS_URL: string;
   OTP_URL: string;
   GET_BANK_LIST_URL: string;
   WALLET_URL: string;

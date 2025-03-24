@@ -95,7 +95,7 @@ const TableComponent = <T extends object>({
                     {row.cells.map((cell: any) => (
                       <td
                         {...cell.getCellProps()}
-                        className="py-2 px-4 text-left text-dark_300 font-normal text-xs sm:text-sm"
+                        className="py-2 px-4 text-left text-dark_300 font-normal text-xs"
                       >
                         {cell.render("Cell")}
                       </td>
