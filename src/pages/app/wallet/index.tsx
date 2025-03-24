@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { Edit, Eye, EyeSlash } from "iconsax-react";
-import { convertToAsterisks, formatToNaira } from "../../../utils";
+import { convertToAsterisks, formatToNairaShortenFigure } from "../../../utils";
 import Button from "../../../components/FormComponents/Button";
 import CopyToClipboard from "../../../components/CopyToClipboard";
 import ModalPopup from "../../../components/ModalPopup";
@@ -54,9 +54,9 @@ export default function Wallet() {
                   <h5 className="flex items-center gap-2 text-xl font-bold text-white md:text-2xl">
                     {isAmountVisible
                       ? convertToAsterisks(
-                          formatToNaira(walletDetails?.balance || 0)
+                          formatToNairaShortenFigure(walletDetails?.balance || 0)
                         )
-                      : formatToNaira(walletDetails?.balance || 0)}
+                      : formatToNairaShortenFigure(walletDetails?.balance || 0)}
                     <button
                       aria-label={
                         isAmountVisible ? "Hide balance" : "Show balance"

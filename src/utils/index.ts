@@ -30,6 +30,20 @@ export function formatToNaira(amount: number): string {
   return `₦${amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 }
 
+export function formatToNairaShortenFigure(amount: number): string {
+  if (isNaN(amount)) {
+    throw new Error("Invalid amount provided. Please provide a valid number.");
+  }
+  if (amount >= 1_000_000_000) {
+    return `₦${(amount / 1_000_000_000).toFixed(1).replace(/\.0$/, "")}B`;
+  } else if (amount >= 1_000_000) {
+    return `₦${(amount / 1_000_000).toFixed(1).replace(/\.0$/, "")}M`;
+  } else if (amount >= 10000) {
+    return `₦${(amount / 10000).toFixed(1).replace(/\.0$/, "")}k`;
+  }
+  return `₦${amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+}
+
 export const eventTypeStyles: Record<string, string> = {
   upcoming: "bg-yellow_100 text-yellow_200",
   completed: "bg-green_300 text-green_200",

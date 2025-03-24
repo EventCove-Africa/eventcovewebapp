@@ -7,7 +7,7 @@ import { CardReceive, CardSend } from "iconsax-react";
 import {
   _handleThrowErrorMessage,
   formatTimeToshowAmPm,
-  formatToNaira,
+  formatToNairaShortenFigure,
   isArrayEmpty,
 } from "../../../utils";
 import Pagination from "../../../components/Pagination";
@@ -153,7 +153,7 @@ export default function TransactionHistory({
                     </div>
                   </div>
                   <h4 className="text-dark_200 text-xs md:text-sm font-normal">
-                    {formatToNaira(amount)}
+                    {formatToNairaShortenFigure(amount)}
                   </h4>
                 </div>
               )
