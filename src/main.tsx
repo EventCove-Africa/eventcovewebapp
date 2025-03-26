@@ -12,7 +12,9 @@ import "react-tooltip/dist/react-tooltip.css";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <HashRouter>
-      <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
+      <GoogleOAuthProvider
+        clientId={import.meta.env.VITE_EVENTCOVE_GOOGLE_CLIENT_ID}
+      >
         <UserDetailsProvider>
           <App />
         </UserDetailsProvider>

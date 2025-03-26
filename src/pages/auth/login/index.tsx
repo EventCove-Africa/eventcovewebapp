@@ -5,24 +5,47 @@ import Button from "../../../components/FormComponents/Button";
 import TextInputField from "../../../components/FormComponents/InputField";
 import PasswordInputField from "../../../components/FormComponents/PasswordField";
 import GoogleAuth from "../../../components/GoogleAuth";
-import { animationVariants } from "../../../utils";
+import { _handleThrowErrorMessage, animationVariants } from "../../../utils";
 import { loginSchema } from "../../../form-schemas";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../../../context/UserDetailsProvider.tsx";
 import { LoginData, useUserProps } from "../../../types/generalTypes.tsx";
 import useQueryParams from "../../../hooks/useQueryParams.tsx";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Login() {
   const location = useLocation();
   const getParam = useQueryParams();
   const navigate = useNavigate();
-  const { login } = useUser() as useUserProps;
+  const { login, handleAuthWithGoogle } = useUser() as useUserProps;
   const eventId = getParam("eventId") || null;
+  const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
   const from = location.state?.from?.pathname || "/app/home";
 
-  const loginGoogle = useGoogleLogin({
-    onSuccess: (response) => console.log("Login Success:", response),
-    onError: (error) => console.error("Login Failed:", error),
+  const handleFunctionGoogleAuth = useGoogleLogin({
+    onSuccess: async (response) => {
+      const userInfo = await fetch(
+        "https://www.googleapis.com/oauth2/v3/userinfo",
+        {
+          headers: {
+            Authorization: `Bearer ${response.access_token}`,
+          },
+        }
+      ).then((res) => res.json());
+      const payload = {
+        firstName: userInfo?.given_name || "",
+        lastName: userInfo?.family_name || "",
+        email: userInfo?.email || "",
+      };
+      handleAuthWithGoogle({ payload, setIsLoadingGoogle });
+    },
+    onError: (error) => {
+      const err_message = _handleThrowErrorMessage("Login Failed!");
+      toast.error(err_message);
+      console.error("Login Failed:", error);
+      setIsLoadingGoogle(false);
+    },
   });
 
   return (
@@ -90,33 +113,43 @@ export default function Login() {
                 touched={touched?.password}
               />
             </div>
-            <h4
-              onClick={() => navigate("/auth/forget-password")}
-              className="text-xs font-normal text-secondary_300 cursor-pointer hover:underline"
-            >
-              Forget Password
-            </h4>
+            {!values?.eventId && (
+              <h4
+                onClick={() => navigate("/auth/forget-password")}
+                className="text-xs font-normal text-secondary_300 cursor-pointer hover:underline"
+              >
+                Forget Password
+              </h4>
+            )}
             <Button
               title="Sign In"
               className="w-full h-[40px] text-center my-6 border border-dark_200"
               type="submit"
-              isLoading={isSubmitting}
+              isLoading={isSubmitting || isLoadingGoogle}
             />
             {!values?.eventId && (
               <GoogleAuth
-                text="Sign In with Google"
-                handleFunction={loginGoogle}
+                text={`${
+                  isLoadingGoogle ? "Loading....." : "Sign In with Google"
+                }`}
+                handleFunction={() => {
+                  setIsLoadingGoogle(true);
+                  handleFunctionGoogleAuth();
+                }}
+                loading={isSubmitting || isLoadingGoogle}
               />
             )}
-            <h4 className="text-sm font-semibold text-grey_100">
-              Don’t have an account?{" "}
-              <span
-                onClick={() => navigate("/auth/signup")}
-                className="text-secondary_300 cursor-pointer font-bold hover:underline"
-              >
-                Create one
-              </span>
-            </h4>
+            {!values?.eventId && (
+              <h4 className="text-sm font-semibold text-grey_100">
+                Don’t have an account?{" "}
+                <span
+                  onClick={() => navigate("/auth/signup")}
+                  className="text-secondary_300 cursor-pointer font-bold hover:underline"
+                >
+                  Create one
+                </span>
+              </h4>
+            )}
           </Form>
         )}
       </Formik>

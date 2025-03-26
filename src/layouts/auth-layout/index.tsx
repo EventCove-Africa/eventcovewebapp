@@ -48,7 +48,7 @@ export default function AuthLayout() {
               position={
                 isMobile
                   ? { top: "1rem", left: "1rem" }
-                  : { top: "1rem", left: "-5rem" }
+                  : { top: "5rem", left: "-5rem" }
               }
               animationClass="animate-bounce-up"
             />

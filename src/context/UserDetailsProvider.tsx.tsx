@@ -6,7 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { appUrls } from "../services/urls";
 import { toast } from "react-hot-toast";
 import { api } from "../services/api";
-import { LoginProps, SignupProps, UserDetailsProviderProps } from "../types";
+import {
+  LoginProps,
+  SignupProps,
+  UserDetailsProviderProps,
+  googleAuthProps,
+} from "../types";
 import {
   _handleClearCookiesAndSession,
   _handleThrowErrorMessage,
@@ -81,6 +86,39 @@ function UserDetailsProvider({ children }: UserDetailsProviderProps) {
     }
   };
 
+  const handleAuthWithGoogle = async ({
+    payload,
+    handleOpenClose,
+    setIsLoadingGoogle,
+  }: googleAuthProps) => {
+    try {
+      const res = await api.post(appUrls.GOOGLE_USER_URL, payload);
+      const status_code = [200, 201].includes(res?.status);
+      if (status_code) {
+        const { emailVerified, bankVerified, access_token, token_type } =
+          res?.data?.data ?? null;
+        setAuthCookies({ access_token, token_type });
+        if (!emailVerified) {
+          handleOpenClose?.();
+        } else if (!bankVerified) {
+          navigate(`/auth/signup/add-bank`, {
+            replace: true,
+          });
+          toast.success("Account created successfully");
+        } else if (emailVerified && bankVerified) {
+          navigate(`/app/home`, {
+            replace: true,
+          });
+        } else return null;
+      }
+    } catch (error: any) {
+      const err_message = _handleThrowErrorMessage(error?.data?.message);
+      toast.error(err_message);
+    } finally {
+      setIsLoadingGoogle(false);
+    }
+  };
+
   const handleGetUserDetails = async () => {
     setLoadingDetails(true);
     try {
@@ -115,6 +153,7 @@ function UserDetailsProvider({ children }: UserDetailsProviderProps) {
       handleGetUserDetails,
       logout,
       signup,
+      handleAuthWithGoogle,
       loadingDetails,
     }),
     [userDetails, loadingDetails, login, handleGetUserDetails, logout, signup]

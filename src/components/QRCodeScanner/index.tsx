@@ -67,7 +67,8 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
           selectedCamera, // Use selected camera ID instead of facingMode
           {
             fps: 10,
-            qrbox: { width: 250, height: 250 },
+            qrbox: 250,
+            // qrbox: { width: 250, height: 250 },
             videoConstraints: {
               width: { ideal: 640 },
               height: { ideal: 680 },

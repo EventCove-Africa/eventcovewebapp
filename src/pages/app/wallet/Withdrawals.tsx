@@ -15,6 +15,7 @@ export default function Withdrawals({
   handleOpenClose,
   walletDetails,
   userDetails,
+  refetch,
 }: any) {
   const validationSchema = withdrawalsSchema(walletDetails.balance);
   const [isResending, setIsResending] = useState(false);
@@ -27,8 +28,9 @@ export default function Withdrawals({
       const res = await api.post(appUrls.WALLET_URL + "/payout", payload);
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
-        toast.success("Withdrawal Successful !");
+        toast.success("Withdrawal Successful!");
         actions.resetForm();
+        refetch()
         handleOpenClose();
       }
     } catch (error: any) {
