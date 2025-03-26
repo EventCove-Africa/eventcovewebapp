@@ -20,7 +20,7 @@ export default function Wallet() {
   const { userDetails } = useUser() as useUserProps;
   const { isOpenModal, handleOpenClose } = useOpenCloseModals();
   const [isAmountVisible, setIsAmountVisible] = useState(false);
-  const { walletDetails, loading } = useFetchWalletDetails();
+  const { walletDetails, loading, refetch } = useFetchWalletDetails();
   const toggleAmountVisibility = () => setIsAmountVisible(!isAmountVisible);
 
   const handleCheckIfNinBvnPINIsSet = () => {
@@ -154,6 +154,7 @@ export default function Wallet() {
           walletDetails={walletDetails}
           userDetails={userDetails}
           handleOpenClose={() => handleOpenClose("withdrawals")}
+          refetch={refetch}
         />
       </ModalPopup>
     </main>

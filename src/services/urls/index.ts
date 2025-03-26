@@ -6,6 +6,7 @@ export const appUrls: apiUrlsType = {
   LOGIN_URL: "/auth",
   CREATE_ORGANIZER_ACCOUNT_URL: USER_PATH,
   GET_USER_DETAILS_URL: `${USER_PATH}/details`,
+  GOOGLE_USER_URL: `${USER_PATH}/google`,
   GET_USER_STATISTICS_URL: "/organizer/events",
   OTP_URL: `${USER_PATH}/otp`,
   GET_BANK_LIST_URL: "/banks",

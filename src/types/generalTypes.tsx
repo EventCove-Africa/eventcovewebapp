@@ -6,6 +6,7 @@ export interface apiUrlsType {
   LOGIN_URL: string;
   CREATE_ORGANIZER_ACCOUNT_URL: string;
   GET_USER_DETAILS_URL: string;
+  GOOGLE_USER_URL: string;
   GET_USER_STATISTICS_URL: string;
   OTP_URL: string;
   GET_BANK_LIST_URL: string;
@@ -94,7 +95,7 @@ export type SignUpData = {
   email: string;
   firstName: string;
   lastName: string;
-  password: string;
+  password?: string;
 };
 
 export type LoginProps = {
@@ -116,9 +117,16 @@ export type SignupProps = {
   handleOpenClose?: () => void;
 };
 
+export type googleAuthProps = {
+  payload: SignUpData;
+  setIsLoadingGoogle: (props: boolean) => void;
+  handleOpenClose?: () => void;
+};
+
 export interface useUserProps {
   login: (props: LoginProps) => void;
   signup: (props: SignupProps) => void;
+  handleAuthWithGoogle: (props: googleAuthProps) => void;
   handleGetUserDetails: () => any;
   loadingDetails: boolean;
   userDetails: userDetailsProps;
