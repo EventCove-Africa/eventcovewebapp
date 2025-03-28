@@ -280,3 +280,15 @@ export const formatDateArrayToString = (
   const formattedDay = day.toString().padStart(2, "0"); // Ensure 2 digits
   return `${formattedMonth}/${formattedDay}/${year}`;
 };
+
+export function checkUppercase(str: string) {
+  return [...str].some((char) => /[A-Z]/.test(char));
+}
+
+export function checkLowercase(str: string) {
+  return [...str].some((char) => /[a-z]/.test(char));
+}
+
+export function containsNumber(str: string) {
+  return /\d/.test(str);
+}

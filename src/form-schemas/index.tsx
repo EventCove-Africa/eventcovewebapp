@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as Yup from "yup";
+import { checkLowercase, checkUppercase, containsNumber } from "../utils";
 
 export const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -17,27 +19,73 @@ export const signupAddBankSchema = Yup.object().shape({
 
 export const addBvnNinSchema = Yup.object().shape({
   bvn: Yup.string()
-    .matches(/^\d{11}$/, "BVN must be exactly 11 digits and contain only numbers")
+    .matches(
+      /^\d{11}$/,
+      "BVN must be exactly 11 digits and contain only numbers"
+    )
     .required("BVN is required"),
   nin: Yup.string()
-    .matches(/^\d{11}$/, "NIN must be exactly 11 digits and contain only numbers")
+    .matches(
+      /^\d{11}$/,
+      "NIN must be exactly 11 digits and contain only numbers"
+    )
     .required("NIN is required"),
 });
 
-export const signupSchema = Yup.object().shape({
-  lastName: Yup.string().required("Lastname is required"),
-  firstName: Yup.string().required("Firstname is required"),
-  email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
-  password: Yup.string()
-    .min(8, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Password is required"),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password")], "Passwords must match")
-    .required("Confirm password is required...."),
-});
+export const signupSchema = (setPasswordCharacterCheck: any) =>
+  Yup.object().shape({
+    lastName: Yup.string().required("Lastname is required"),
+    firstName: Yup.string().required("Firstname is required"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string()
+      .min(8, "Too Short!")
+      .max(50, "Too Long!")
+      .required("Password is required")
+      .test("password", "", function (password) {
+        if (!password?.trim())
+          return this.createError({ message: "Password is required" });
+        const isLengthValid = password.length >= 8;
+        const hasUppercase = checkUppercase(password);
+        const hasLowercase = checkLowercase(password);
+        const hasNumber = containsNumber(password);
+        const hasSpecialChar = /\W/.test(password);
+        setPasswordCharacterCheck((prev: any) => ({
+          ...prev,
+          password_length: isLengthValid,
+          contains_uppercase: hasUppercase,
+          contains_lowercase: hasLowercase,
+          contains_number: hasNumber,
+          unique_character: hasSpecialChar,
+        }));
+
+        if (!isLengthValid)
+          return this.createError({
+            message: "Password must be at least 8 characters long",
+          });
+        if (!hasUppercase)
+          return this.createError({
+            message: "Password must contain at least one uppercase letter",
+          });
+        if (!hasLowercase)
+          return this.createError({
+            message: "Password must contain at least one lowercase letter",
+          });
+        if (!hasNumber)
+          return this.createError({
+            message: "Password must contain at least one number",
+          });
+        if (!hasSpecialChar)
+          return this.createError({
+            message: "Password must contain at least one special character",
+          });
+        return true; // Passes validation
+      }),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password")], "Passwords must match")
+      .required("Confirm password is required...."),
+  });
 
 export const updateProfileSchema = Yup.object().shape({
   lastName: Yup.string().required("Lastname is required"),
@@ -48,15 +96,55 @@ export const updateProfileSchema = Yup.object().shape({
     .required("Email is required"),
 });
 
-export const signupResetPasswordSchema = Yup.object().shape({
-  password: Yup.string()
-    .min(8, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Password is required"),
-  confirm_password: Yup.string()
-    .oneOf([Yup.ref("password")], "Passwords must match")
-    .required("Confirm password is required...."),
-});
+export const signupResetPasswordSchema = (setPasswordCharacterCheck: any) =>
+  Yup.object().shape({
+    password: Yup.string()
+      .min(8, "Too Short!")
+      .max(50, "Too Long!")
+      .required("Password is required")
+      .test("password", "", function (password) {
+        if (!password?.trim())
+          return this.createError({ message: "Password is required" });
+        const isLengthValid = password.length >= 8;
+        const hasUppercase = checkUppercase(password);
+        const hasLowercase = checkLowercase(password);
+        const hasNumber = containsNumber(password);
+        const hasSpecialChar = /\W/.test(password);
+        setPasswordCharacterCheck((prev: any) => ({
+          ...prev,
+          password_length: isLengthValid,
+          contains_uppercase: hasUppercase,
+          contains_lowercase: hasLowercase,
+          contains_number: hasNumber,
+          unique_character: hasSpecialChar,
+        }));
+
+        if (!isLengthValid)
+          return this.createError({
+            message: "Password must be at least 8 characters long",
+          });
+        if (!hasUppercase)
+          return this.createError({
+            message: "Password must contain at least one uppercase letter",
+          });
+        if (!hasLowercase)
+          return this.createError({
+            message: "Password must contain at least one lowercase letter",
+          });
+        if (!hasNumber)
+          return this.createError({
+            message: "Password must contain at least one number",
+          });
+        if (!hasSpecialChar)
+          return this.createError({
+            message: "Password must contain at least one special character",
+          });
+        return true; // Passes validation
+      }),
+    confirm_password: Yup.string()
+      .oneOf([Yup.ref("password")], "Passwords must match")
+      .required("Confirm password is required...."),
+  });
 
 export const resetPasswordSchema = Yup.object().shape({
   oldPassword: Yup.string().required("Old Password is required"),

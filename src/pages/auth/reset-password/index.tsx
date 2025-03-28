@@ -14,6 +14,8 @@ import { signupResetPasswordSchema } from "../../../form-schemas";
 import useQueryParams from "../../../hooks/useQueryParams";
 import { appUrls } from "../../../services/urls";
 import { api } from "../../../services/api";
+import { PasswordCharacterCheck } from "../../../types";
+import { CloseCircle, TickCircle } from "iconsax-react";
 
 type ResetPasswordProps = {
   code: string | null;
@@ -26,6 +28,21 @@ export default function ResetPassword() {
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
   const getParam = useQueryParams();
   const code = getParam("code");
+  const [passwordCharacterCheck, setPasswordCharacterCheck] = useState({
+    password_length: false,
+    contains_uppercase: false,
+    contains_lowercase: false,
+    contains_number: false,
+    unique_character: false,
+  });
+  const validationSchema = signupResetPasswordSchema(setPasswordCharacterCheck);
+  const passwordRules: { key: keyof PasswordCharacterCheck; text: string }[] = [
+    { key: "password_length", text: "Minimum of 8 characters" },
+    { key: "contains_uppercase", text: "One UPPERCASE character" },
+    { key: "contains_lowercase", text: "One lowercase character" },
+    { key: "contains_number", text: "One number" },
+    { key: "unique_character", text: "One unique character (e.g !@#$%&*)?>" },
+  ];
 
   const handleResetPassword = async (
     payload: ResetPasswordProps,
@@ -63,7 +80,7 @@ export default function ResetPassword() {
           password: "",
           confirm_password: "",
         }}
-        validationSchema={signupResetPasswordSchema}
+        validationSchema={validationSchema}
         enableReinitialize
         onSubmit={(values, actions) => {
           const payload = {
@@ -104,6 +121,21 @@ export default function ResetPassword() {
                 touched={touched?.confirm_password}
               />
             </div>
+            <ul className="flex flex-col gap-1">
+              {passwordRules.map(({ key, text }) => {
+                const isValid = passwordCharacterCheck?.[key];
+                return (
+                  <li key={key} className="flex items-center text-xs gap-1">
+                    {isValid ? (
+                      <TickCircle size="12" color="#4CAF50" />
+                    ) : (
+                      <CloseCircle size="12" color="#F44336" />
+                    )}
+                    {text}
+                  </li>
+                );
+              })}
+            </ul>
             <Button
               title="Proceed"
               className="w-full h-[40px] text-center my-6 border border-dark_200"
