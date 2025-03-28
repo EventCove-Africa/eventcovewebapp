@@ -309,7 +309,7 @@ export default function AddEvents() {
                           Drag or drop image
                         </h3>
                         <h3 className="text-dark_200 text-xs leading-4 font-normal text-center">
-                          Recommended dimension: 930px x 1163px
+                          Recommended dimension: 1200px x 600px
                         </h3>
                         <h3 className="text-dark_200 text-xs leading-4 font-normal text-center">
                           Max file size: 1mb
