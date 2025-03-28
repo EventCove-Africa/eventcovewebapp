@@ -158,3 +158,11 @@ export type eventSalesStatsProps = {
   totalTicketSold: number;
   totalTicketValidated: number;
 };
+
+export interface PasswordCharacterCheck {
+  password_length: boolean;
+  contains_uppercase: boolean;
+  contains_lowercase: boolean;
+  contains_number: boolean;
+  unique_character: boolean;
+}

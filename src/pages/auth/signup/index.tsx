@@ -1,6 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Form, Formik, FormikHelpers } from "formik";
 import { motion } from "framer-motion";
+import { CloseCircle, TickCircle } from "iconsax-react";
+import { useNavigate } from "react-router-dom";
+import { useGoogleLogin } from "@react-oauth/google";
 import Button from "../../../components/FormComponents/Button";
 import TextInputField from "../../../components/FormComponents/InputField";
 import PasswordInputField from "../../../components/FormComponents/PasswordField";
@@ -12,11 +15,9 @@ import toast from "react-hot-toast";
 import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
 import { signupSchema } from "../../../form-schemas";
 import { useUser } from "../../../context/UserDetailsProvider.tsx";
-import { SignUpData, useUserProps } from "../../../types/generalTypes.tsx";
+import { PasswordCharacterCheck, SignUpData, useUserProps } from "../../../types/generalTypes.tsx";
 import { useEffect, useState } from "react";
 import useQueryParams from "../../../hooks/useQueryParams.tsx";
-import { useNavigate } from "react-router-dom";
-import { useGoogleLogin } from "@react-oauth/google";
 
 type GoogleUserInfoProp = {
   sub: string;
@@ -31,13 +32,28 @@ type GoogleUserInfoProp = {
 export default function SignUp() {
   const navigate = useNavigate();
   const getParam = useQueryParams();
+  const { signup, handleAuthWithGoogle } = useUser() as useUserProps;
   const verifyOTPEmailFromLogin = getParam("verifyOTP");
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
   const [userDetailsFromGoogle, setUserDetailsFromGoogle] =
     useState<GoogleUserInfoProp>();
   const [email, setEmail] = useState("");
   const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
-  const { signup, handleAuthWithGoogle } = useUser() as useUserProps;
+  const [passwordCharacterCheck, setPasswordCharacterCheck] = useState({
+    password_length: false,
+    contains_uppercase: false,
+    contains_lowercase: false,
+    contains_number: false,
+    unique_character: false,
+  });
+  const validationSchema = signupSchema(setPasswordCharacterCheck);
+  const passwordRules: { key: keyof PasswordCharacterCheck; text: string }[] = [
+    { key: "password_length", text: "Minimum of 8 characters" },
+    { key: "contains_uppercase", text: "One UPPERCASE character" },
+    { key: "contains_lowercase", text: "One lowercase character" },
+    { key: "contains_number", text: "One number" },
+    { key: "unique_character", text: "One unique character (e.g !@#$%&*)?>" },
+  ];
 
   const handleFunctionGoogleAuth = useGoogleLogin({
     onSuccess: async (response) => {
@@ -112,7 +128,7 @@ export default function SignUp() {
           password: "",
           confirmPassword: "",
         }}
-        validationSchema={signupSchema}
+        validationSchema={validationSchema}
         enableReinitialize
         onSubmit={(values, actions) => {
           signup({
@@ -131,7 +147,7 @@ export default function SignUp() {
           errors,
           isSubmitting,
         }) => {
-          const isLoading = isSubmitting || isLoadingGoogle
+          const isLoading = isSubmitting || isLoadingGoogle;
           return (
             <Form onSubmit={handleSubmit} className="w-full lg:pr-16 mt-1">
               <div className="mb-3">
@@ -192,6 +208,21 @@ export default function SignUp() {
                   touched={touched?.confirmPassword}
                 />
               </div>
+              <ul className="flex flex-col gap-1">
+                {passwordRules.map(({ key, text }) => {
+                  const isValid = passwordCharacterCheck?.[key];
+                  return (
+                    <li key={key} className="flex items-center text-xs gap-1">
+                      {isValid ? (
+                        <TickCircle size="12" color="#4CAF50" />
+                      ) : (
+                        <CloseCircle size="12" color="#F44336" />
+                      )}
+                      {text}
+                    </li>
+                  );
+                })}
+              </ul>
               <Button
                 title="Sign Up"
                 className="w-full h-[40px] text-center my-6 border border-dark_200"
