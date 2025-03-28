@@ -71,8 +71,12 @@ export default function Login() {
         validationSchema={loginSchema}
         enableReinitialize
         onSubmit={(values, actions) => {
+          const payload = {
+            ...values,
+            email: values?.email?.toLowerCase(),
+          };
           login({
-            payload: values,
+            payload,
             actions: actions as FormikHelpers<LoginData>,
             from:
               values?.eventId !== null

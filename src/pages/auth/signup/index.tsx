@@ -140,8 +140,12 @@ export default function SignUp() {
         validationSchema={validationSchema}
         enableReinitialize
         onSubmit={(values, actions) => {
+          const payload = {
+            ...values,
+            email: values?.email?.toLowerCase(),
+          };
           signup({
-            payload: values,
+            payload,
             handleOpenClose,
             actions: actions as FormikHelpers<SignUpData>,
           });
