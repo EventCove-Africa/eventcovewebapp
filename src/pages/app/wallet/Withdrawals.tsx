@@ -126,9 +126,9 @@ export default function Withdrawals({
                 value={values?.accountNumber}
                 readOnly
               />
-              <span className="text-secondary_300 flex justify-end text-xs font-normal">
+              {/* <span className="text-secondary_300 flex justify-end text-xs font-normal">
                 EventCove Africa
-              </span>
+              </span> */}
             </div>
             <div className="mb-3">
               <TextInputField

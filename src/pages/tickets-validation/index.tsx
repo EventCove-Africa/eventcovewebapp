@@ -165,11 +165,15 @@ export default function TicketsValidation() {
                 : "text-dark_200";
               return (
                 <div
-                  onClick={() =>
-                    navigate(
-                      `/tickets-validation/${eventId}?validation-type=${d?.key}`
-                    )
-                  }
+                  onClick={() => {
+                    if (d?.key !== "scan") {
+                      navigate(
+                        `/tickets-validation/${eventId}?validation-type=${d?.key}`
+                      );
+                    } else {
+                      toast.success("COMING SOON....");
+                    }
+                  }}
                   key={i}
                   className={`${
                     is_active
