@@ -125,7 +125,7 @@ export default function ResetPassword() {
               {passwordRules.map(({ key, text }) => {
                 const isValid = passwordCharacterCheck?.[key];
                 return (
-                  <li key={key} className="flex items-center text-xs gap-1">
+                  <li key={key} className="flex items-center text-xs text-dark_300 gap-1">
                     {isValid ? (
                       <TickCircle size="12" color="#4CAF50" />
                     ) : (

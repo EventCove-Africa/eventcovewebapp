@@ -7,8 +7,18 @@ import { userDetailsProps } from "../types";
 import { api } from "../services/api";
 import { appUrls } from "../services/urls";
 
+export const legalUrl = "https://eventcove-africa.gitbook.io/legal";
+
 export const openNewTabWithUrl = (url: string) => {
-  window.open(url, "_blank", "noopener,noreferrer");
+  const newWindow = window.open(url, "_blank");
+  if (
+    !newWindow ||
+    newWindow.closed ||
+    typeof newWindow.closed === "undefined"
+  ) {
+    // Fallback: Open in the same tab if blocked
+    window.location.href = url;
+  }
 };
 
 export function redirectUrls(route: string) {
