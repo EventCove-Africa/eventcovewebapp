@@ -8,14 +8,23 @@ import Button from "../../../components/FormComponents/Button";
 import TextInputField from "../../../components/FormComponents/InputField";
 import PasswordInputField from "../../../components/FormComponents/PasswordField";
 import GoogleAuth from "../../../components/GoogleAuth";
-import { _handleThrowErrorMessage, animationVariants } from "../../../utils";
+import {
+  _handleThrowErrorMessage,
+  animationVariants,
+  legalUrl,
+  openNewTabWithUrl,
+} from "../../../utils";
 import ModalPopup from "../../../components/ModalPopup";
 import OTPVerify from "../../../components/OtpVerify";
 import toast from "react-hot-toast";
 import useOpenCloseModal from "../../../hooks/useOpenCloseModal";
 import { signupSchema } from "../../../form-schemas";
 import { useUser } from "../../../context/UserDetailsProvider.tsx";
-import { PasswordCharacterCheck, SignUpData, useUserProps } from "../../../types/generalTypes.tsx";
+import {
+  PasswordCharacterCheck,
+  SignUpData,
+  useUserProps,
+} from "../../../types/generalTypes.tsx";
 import { useEffect, useState } from "react";
 import useQueryParams from "../../../hooks/useQueryParams.tsx";
 
@@ -212,7 +221,10 @@ export default function SignUp() {
                 {passwordRules.map(({ key, text }) => {
                   const isValid = passwordCharacterCheck?.[key];
                   return (
-                    <li key={key} className="flex items-center text-xs gap-1">
+                    <li
+                      key={key}
+                      className="flex items-center text-dark_300 text-xs gap-1"
+                    >
                       {isValid ? (
                         <TickCircle size="12" color="#4CAF50" />
                       ) : (
@@ -252,7 +264,7 @@ export default function SignUp() {
                 By continuing, you agree to EventCove's Terms and{" "}
                 <span
                   onClick={() => {
-                    toast.success("COMING SOON...", { duration: 3000 });
+                    openNewTabWithUrl(`${legalUrl}/eventcove-privacy-policy`);
                   }}
                   className="text-secondary_300 cursor-pointer font-bold hover:underline"
                 >
