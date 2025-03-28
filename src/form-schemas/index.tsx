@@ -35,14 +35,15 @@ export const addBvnNinSchema = Yup.object().shape({
 export const signupSchema = (setPasswordCharacterCheck: any) =>
   Yup.object().shape({
     lastName: Yup.string().required("Lastname is required"),
-    firstName: Yup.string().required("Firstname is required"),
-    email: Yup.string()
-      .trim()
-      .email("Invalid email address")
-      .matches(
-        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-        "Invalid email format"
-      )
+    firstName: Yup.string()
+      .required("Firstname is required")
+      // email: Yup.string()
+      //   .trim()
+      //   .email("Invalid email address")
+      //   .matches(
+      //     /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      //     "Invalid email format"
+      //   )
       .required("Email is required"),
     password: Yup.string()
       .min(8, "Too Short!")
