@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { toast } from "react-hot-toast";
@@ -205,8 +204,9 @@ export const handleImageUpload = async (payload: any) => {
       const image_url = res?.data?.data;
       return image_url;
     }
-  } catch (error) {
-    toast.error("Upload failed");
+  } catch (error: any) {
+    const err_message = _handleThrowErrorMessage(error?.data?.message);
+    toast.error(err_message || "Upload Failed!");
   }
 };
 
