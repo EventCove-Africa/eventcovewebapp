@@ -192,7 +192,7 @@ export default function SignUp() {
                   labelName="Email"
                   name="email"
                   handleChange={handleChange}
-                  type="text"
+                  type="email"
                   placeholder=""
                   value={values.email}
                   errors={errors?.email}
