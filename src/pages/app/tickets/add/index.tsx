@@ -73,7 +73,7 @@ export default function AddTickets() {
   return (
     <>
       <div className="w-full h-full">
-        <DescriptionBar text="✨Let's make your ticket real quick." />
+        <DescriptionBar text="✨Let's Create your tickets real quick." />
         <Formik
           validationSchema={addTicketSchema}
           initialValues={{

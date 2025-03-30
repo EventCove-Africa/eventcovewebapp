@@ -256,7 +256,14 @@ export const editTicketSchema = Yup.object().shape({
 });
 
 export const addEventSchema = Yup.object().shape({
-  eventImageUrl: Yup.mixed().required("Image is required"),
+  eventImageUrl: Yup.mixed()
+    .required("Image is required")
+    .test("fileSize", "Image size should not exceed 1MB", (value) => {
+      if (value instanceof File) {
+        return value.size <= 1 * 1024 * 1024; // 1MB limit, Adjust if needed
+      }
+      return false; // If value is not a File, validation fails
+    }),
   eventName: Yup.string().required("Name is required"),
   eventVenueType: Yup.string().required("Venue type is required"),
   city: Yup.string().when("eventVenueType", ([eventVenueType], schema) => {
@@ -272,7 +279,15 @@ export const addEventSchema = Yup.object().shape({
     .required("Start date and time is required"),
   end_date_time: Yup.date()
     .min(new Date(), "Date cannot be in the past")
-    .required("End date and time is required"),
+    .required("End date and time is required")
+    .test(
+      "is-greater",
+      "End date and time must be after start date and time",
+      function (value) {
+        const { start_date_time } = this.parent;
+        return value && start_date_time ? value > start_date_time : true;
+      }
+    ),
   eventPrivacy: Yup.string().required("Event privacy is required"),
   eventDescription: Yup.string().required("Event description is required"),
   phoneNumber: Yup.string()
