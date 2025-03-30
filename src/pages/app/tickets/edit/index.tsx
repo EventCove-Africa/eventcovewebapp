@@ -55,7 +55,7 @@ export default function EditTicket() {
   return (
     <>
       <div className="w-full h-full">
-        <DescriptionBar text="✨Let's edit your ticket real quick" />
+        <DescriptionBar text="✨Let's Edit your ticket real quick" />
         <Formik
           validationSchema={editTicketSchema}
           initialValues={{

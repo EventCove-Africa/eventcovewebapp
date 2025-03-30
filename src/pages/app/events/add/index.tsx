@@ -192,7 +192,7 @@ export default function AddEvents() {
 
   return (
     <div className="w-full h-full">
-      <DescriptionBar text=" Event vibes loading—fill out the form to get started! 🌟" />
+      <DescriptionBar text="Fill out the form to get started! 🌟" />
       <Formik
         validationSchema={addEventSchema}
         initialValues={{
@@ -312,13 +312,13 @@ export default function AddEvents() {
                           Recommended dimension: 1200px x 600px
                         </h3>
                         <h3 className="text-dark_200 text-xs leading-4 font-normal text-center">
-                          Max file size: 1mb
+                          Note: Max file size: 1mb
                         </h3>
                       </div>
                     )}
                   </label>
                   {errors.eventImageUrl && touched.eventImageUrl ? (
-                    <div className="text-xs text-red_100">
+                    <div className="text-xs text-red_100 flex justify-end">
                       {errors.eventImageUrl}
                     </div>
                   ) : null}

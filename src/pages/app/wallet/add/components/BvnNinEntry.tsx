@@ -42,7 +42,7 @@ export default function BvnNinEntry({
   
   return (
     <div className="w-full h-full">
-      <DescriptionBar text="We promise it’s safe—just keeping things legit! 🔒✨" />
+      <DescriptionBar text="Enter Your BVN and NIN for Verification 🔒✨" />
       <div className="lg:w-2/5 w-full p-3 bg-white min-h-auto h-auto rounded-xl shadow">
         <Formik
           validationSchema={addBvnNinSchema}
