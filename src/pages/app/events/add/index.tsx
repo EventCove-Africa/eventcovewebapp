@@ -312,7 +312,7 @@ export default function AddEvents() {
                           Recommended dimension: 1200px x 600px
                         </h3>
                         <h3 className="text-dark_200 text-xs leading-4 font-normal text-center">
-                          Note: Max file size: 1mb
+                          Note: Max file size: 3mb
                         </h3>
                       </div>
                     )}

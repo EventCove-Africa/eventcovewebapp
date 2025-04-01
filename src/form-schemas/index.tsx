@@ -258,9 +258,9 @@ export const editTicketSchema = Yup.object().shape({
 export const addEventSchema = Yup.object().shape({
   eventImageUrl: Yup.mixed()
     .required("Image is required")
-    .test("fileSize", "Image size should not exceed 1MB", (value) => {
+    .test("fileSize", "Image size should not exceed 3MB", (value) => {
       if (value instanceof File) {
-        return value.size <= 1 * 1024 * 1024; // 1MB limit, Adjust if needed
+        return value.size <= 3 * 1024 * 1024; // 3MB limit, Adjust if needed
       }
       return false; // If value is not a File, validation fails
     }),
