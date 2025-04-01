@@ -107,7 +107,7 @@ export default function Wallet() {
                           })
                     }
                   />
-                  {handleCheckIfNinBvnPINIsSet() && (
+                  {!handleCheckIfNinBvnPINIsSet() && (
                     <motion.div
                       className="flex justify-center items-center"
                       animate={{ y: [-5, 5, -5] }}
