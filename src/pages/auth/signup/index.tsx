@@ -210,17 +210,6 @@ export default function SignUp() {
                   touched={touched?.password}
                 />
               </div>
-              <div className="mb-1">
-                <PasswordInputField
-                  labelName="Confirm Password"
-                  name="confirmPassword"
-                  handleChange={handleChange}
-                  placeholder="**********"
-                  value={values.confirmPassword}
-                  errors={errors?.confirmPassword}
-                  touched={touched?.confirmPassword}
-                />
-              </div>
               <ul className="flex flex-col gap-1">
                 {passwordRules.map(({ key, text }) => {
                   const isValid = passwordCharacterCheck?.[key];
@@ -239,6 +228,18 @@ export default function SignUp() {
                   );
                 })}
               </ul>
+              <div className="mb-1">
+                <PasswordInputField
+                  labelName="Confirm Password"
+                  name="confirmPassword"
+                  handleChange={handleChange}
+                  placeholder="**********"
+                  value={values.confirmPassword}
+                  errors={errors?.confirmPassword}
+                  touched={touched?.confirmPassword}
+                />
+              </div>
+
               <Button
                 title="Sign Up"
                 className="w-full h-[40px] text-center my-6 border border-dark_200"

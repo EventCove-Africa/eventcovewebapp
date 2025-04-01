@@ -110,6 +110,24 @@ export default function ResetPassword() {
                 touched={touched?.password}
               />
             </div>
+            <ul className="flex flex-col gap-1">
+              {passwordRules.map(({ key, text }) => {
+                const isValid = passwordCharacterCheck?.[key];
+                return (
+                  <li
+                    key={key}
+                    className="flex items-center text-xs text-dark_300 gap-1"
+                  >
+                    {isValid ? (
+                      <TickCircle size="12" color="#4CAF50" />
+                    ) : (
+                      <CloseCircle size="12" color="#F44336" />
+                    )}
+                    {text}
+                  </li>
+                );
+              })}
+            </ul>
             <div className="mb-1">
               <PasswordInputField
                 labelName="Confirm Password"
@@ -121,21 +139,7 @@ export default function ResetPassword() {
                 touched={touched?.confirm_password}
               />
             </div>
-            <ul className="flex flex-col gap-1">
-              {passwordRules.map(({ key, text }) => {
-                const isValid = passwordCharacterCheck?.[key];
-                return (
-                  <li key={key} className="flex items-center text-xs text-dark_300 gap-1">
-                    {isValid ? (
-                      <TickCircle size="12" color="#4CAF50" />
-                    ) : (
-                      <CloseCircle size="12" color="#F44336" />
-                    )}
-                    {text}
-                  </li>
-                );
-              })}
-            </ul>
+
             <Button
               title="Proceed"
               className="w-full h-[40px] text-center my-6 border border-dark_200"
