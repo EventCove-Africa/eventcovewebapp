@@ -63,6 +63,7 @@ export interface TextInputFieldProps {
   style?: any;
   props?: any;
   readOnly?: boolean;
+  isRequired?: boolean;
   checked?: boolean;
   onKeyPress?: any;
 }

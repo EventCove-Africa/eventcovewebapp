@@ -149,7 +149,7 @@ export const validateUserDetails = (user: userDetailsProps): boolean => {
 };
 
 export const isObjectEmpty = (obj: Record<string, unknown>): boolean => {
-  return Object?.keys(obj)?.length === 0;
+  return Object?.keys?.(obj)?.length === 0;
 };
 
 export const isArrayEmpty = (arr: any[]): boolean => arr.length === 0;

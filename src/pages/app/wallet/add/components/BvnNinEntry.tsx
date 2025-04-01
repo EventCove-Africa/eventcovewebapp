@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Form, Formik, FormikHelpers } from "formik";
 import DescriptionBar from "../../../../../components/DescriptionBar";
@@ -9,6 +10,8 @@ import { _handleThrowErrorMessage } from "../../../../../utils";
 import { appUrls } from "../../../../../services/urls";
 import { api } from "../../../../../services/api";
 import { AddBankWalletProps } from "../../../../../types";
+import useFetchWalletDetails from "../../../../../hooks/useFetchWalletDetails";
+import { useEffect } from "react";
 
 type BvnNinEntryProps = {
   handleChangeStep: (nextPath: "bvn_nin" | "transaction_pin") => void;
@@ -19,6 +22,9 @@ export default function BvnNinEntry({
   handleChangeStep,
   walletDetails,
 }: BvnNinEntryProps) {
+  const { walletDetails: details, fetchWalletDetails } =
+    useFetchWalletDetails();
+
   const handleUpdateBankWallet = async (
     payload: AddBankWalletProps,
     actions: FormikHelpers<any>
@@ -39,7 +45,20 @@ export default function BvnNinEntry({
       actions.setSubmitting(false);
     }
   };
-  
+
+  useEffect(() => {
+    let mounted = false;
+    (async () => {
+      mounted = true;
+      if (mounted && !walletDetails?.walletId) {
+        fetchWalletDetails();
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <div className="w-full h-full">
       <DescriptionBar text="Enter Your BVN and NIN for Verification 🔒✨" />
@@ -55,9 +74,10 @@ export default function BvnNinEntry({
             const payload = {
               bvn: values?.bvn,
               nin: values?.nin,
-              walletId: walletDetails?.walletId,
-              bankName: walletDetails?.bankName,
-              accountNumber: walletDetails?.accountNumber,
+              walletId: walletDetails?.walletId || details?.walletId,
+              bankName: walletDetails?.bankName || details?.bankName,
+              accountNumber:
+                walletDetails?.accountNumber || details?.accountNumber,
             };
             handleUpdateBankWallet(payload, actions);
           }}

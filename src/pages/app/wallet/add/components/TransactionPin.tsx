@@ -31,8 +31,6 @@ export default function TransactionPin({
       const res = await api.post(appUrls.WALLET_URL + "/pin", payload);
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
-        const message = res?.data?.data ?? null;
-        toast.success(message);
         actions.resetForm();
         handleOpenClose();
       }

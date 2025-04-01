@@ -1,4 +1,4 @@
-import { Framer, Personalcard, UserTag } from "iconsax-react";
+import { Bank, Framer, Personalcard, UserTag } from "iconsax-react";
 
 type WalletInfoProps = {
   icon: JSX.Element;
@@ -24,6 +24,10 @@ export default function SetUpWalletList() {
           What you need to set up your bank
         </h4>
         <div className="flex flex-col gap-3 mt-4">
+          <WalletInfo
+            icon={<Bank size="16" className="text-primary_100" />}
+            label="Your Bank Account details"
+          />
           <WalletInfo
             icon={<Personalcard size="16" className="text-primary_100" />}
             label="National Identification Number (NIN)"

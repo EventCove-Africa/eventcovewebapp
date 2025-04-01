@@ -7,18 +7,22 @@ import OTPVerify from "../../../../components/OtpVerify";
 import useOpenCloseModal from "../../../../hooks/useOpenCloseModal";
 import { useLocation, useNavigate } from "react-router-dom";
 import { isObjectEmpty } from "../../../../utils";
+import AddBankDetails from "./components/AddBankDetails";
 
 export default function AddWallet() {
   const navigate = useNavigate();
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
   const { state } = useLocation();
-  const [curStep, setCurStep] = useState<"bvn_nin" | "transaction_pin">(
-    "bvn_nin"
-  );
+  const [curStep, setCurStep] = useState<
+    "bvn_nin" | "transaction_pin" | "bankVerified"
+  >("bankVerified");
 
   const handleCheckIfNinBvnPINIsSet = () => {
     if (!state) return;
-    const { nin, bvn, pinAdded } = state;
+    const { nin, bvn, pinAdded, bankVerified } = state;
+    if (!bankVerified) {
+      return handleChangeStep("bankVerified");
+    }
     if (!nin || !bvn) {
       return handleChangeStep("bvn_nin");
     }
@@ -28,12 +32,20 @@ export default function AddWallet() {
     navigate("/app/wallet");
   };
 
-  const handleChangeStep = (nextPath: "bvn_nin" | "transaction_pin") => {
+  const handleChangeStep = (
+    nextPath: "bvn_nin" | "transaction_pin" | "bankVerified"
+  ) => {
     setCurStep(nextPath);
   };
 
   const renderCurrentStep = () => {
     switch (curStep) {
+      case "bankVerified":
+        return (
+          <AddBankDetails
+            handleChangeStep={handleChangeStep}
+          />
+        );
       case "bvn_nin":
         return (
           <BvnNinEntry
