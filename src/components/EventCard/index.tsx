@@ -56,7 +56,7 @@ export default function EventCard({ eventType }: any) {
     let mounted = false;
     (async () => {
       mounted = true;
-      if (mounted) {
+      if (mounted && eventType) {
         handleGetFilteredEvents(eventType);
       }
     })();

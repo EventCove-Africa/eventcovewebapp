@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { api } from "../services/api";
 import { _handleThrowErrorMessage } from "../utils";
 import toast from "react-hot-toast";
@@ -29,20 +29,7 @@ const useFetchWalletDetails = () => {
     }
   }, []);
 
-  useEffect(() => {
-    let mounted = false;
-    (async () => {
-      mounted = true;
-      if (mounted) {
-        fetchWalletDetails();
-      }
-    })();
-    return () => {
-      mounted = false;
-    };
-  }, [fetchWalletDetails]);
-
-  return { walletDetails, loading, hasAmount, refetch: fetchWalletDetails };
+  return { walletDetails, loading, hasAmount, fetchWalletDetails };
 };
 
 export default useFetchWalletDetails;

@@ -21,6 +21,7 @@ export default function TextInputField({
   style,
   onKeyPress,
   readOnly = false,
+  isRequired = false,
   tooltipContent = "",
   ...props
 }: TextInputFieldProps) {
@@ -30,9 +31,10 @@ export default function TextInputField({
         {labelName && (
           <label
             htmlFor={htmlFor}
-            className={`text-xs text-dark_200 leading-5 ${labelStyle} flex gap-1 items-center`}
+            className={`text-xs text-dark_200 leading-5 ${labelStyle} flex items-center`}
           >
             {labelName}
+            {isRequired && <span className="text-red_100 text-lg mr-1">*</span>}
             {tooltipContent && (
               <CustomTooltip
                 dataTooltipId={tooltipContent}

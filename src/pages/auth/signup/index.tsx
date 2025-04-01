@@ -284,11 +284,12 @@ export default function SignUp() {
         <OTPVerify
           handleOpenClose={handleOpenClose}
           transactionType="create-account"
-          nextPath="/auth/signup/add-bank"
+          nextPath="/app/home"
           email={email || verifyOTPEmailFromLogin}
           showCancelButton={false}
         />
       </ModalPopup>
     </motion.main>
+    
   );
 }

@@ -33,16 +33,16 @@ function UserDetailsProvider({ children }: UserDetailsProviderProps) {
       const res = await api.post(login_url, payload);
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
-        const { access_token, token_type, emailVerified, bankVerified, email } =
+        const { access_token, token_type, emailVerified, email } =
           res?.data?.data ?? null;
         if (!isTeamMember) {
-          if (!emailVerified)
-            return navigate(`/auth/signup?verifyOTP=${email}`, {
+          if (!emailVerified) {
+            navigate(`/auth/signup?verifyOTP=${email}`, {
               replace: true,
             });
-          if (!bankVerified) {
+          } else {
             setAuthCookies({ access_token, token_type });
-            navigate(`/auth/signup/add-bank`, {
+            navigate(from, {
               replace: true,
             });
             return;
@@ -65,19 +65,19 @@ function UserDetailsProvider({ children }: UserDetailsProviderProps) {
       const res = await api.post(appUrls.CREATE_ORGANIZER_ACCOUNT_URL, payload);
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
-        const { emailVerified, bankVerified, access_token, token_type } =
+        const { emailVerified, access_token, token_type } =
           res?.data?.data ?? null;
         if (!emailVerified) {
+          toast.success("Account created successfully");
           handleOpenClose?.();
-        } else if (!bankVerified) {
+        } else {
           setAuthCookies({ access_token, token_type });
-          navigate(`/auth/signup/add-bank`, {
+          navigate("/app/home", {
             replace: true,
           });
-        } else return null;
+        }
         actions.resetForm();
         actions.setSubmitting(false);
-        toast.success("Account created successfully");
       }
     } catch (error: any) {
       const err_message = _handleThrowErrorMessage(error?.data?.message);
@@ -95,21 +95,16 @@ function UserDetailsProvider({ children }: UserDetailsProviderProps) {
       const res = await api.post(appUrls.GOOGLE_USER_URL, payload);
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
-        const { emailVerified, bankVerified, access_token, token_type } =
+        const { emailVerified, access_token, token_type } =
           res?.data?.data ?? null;
-        setAuthCookies({ access_token, token_type });
         if (!emailVerified) {
           handleOpenClose?.();
-        } else if (!bankVerified) {
-          navigate(`/auth/signup/add-bank`, {
+        } else {
+          setAuthCookies({ access_token, token_type });
+          navigate("/app/home", {
             replace: true,
           });
-          toast.success("Account created successfully");
-        } else if (emailVerified && bankVerified) {
-          navigate(`/app/home`, {
-            replace: true,
-          });
-        } else return null;
+        }
       }
     } catch (error: any) {
       const err_message = _handleThrowErrorMessage(error?.data?.message);

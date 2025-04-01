@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useNavigate } from "react-router-dom";
 import Button from "../../../components/FormComponents/Button";
 import EventCard from "../../../components/EventCard";
 import useQueryParams from "../../../hooks/useQueryParams";
+import { useEffect } from "react";
 
 export default function Events() {
   const navigate = useNavigate();
@@ -15,6 +17,19 @@ export default function Events() {
     { label: "Completed", type: "completed" },
     { label: "Cancelled", type: "deleted" },
   ];
+
+  useEffect(() => {
+    let mounted = false;
+    (async () => {
+      mounted = true;
+      if (mounted && !eventType) {
+        navigate("/app/events?eventType=all");
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <div className="w-full h-full">

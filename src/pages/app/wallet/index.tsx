@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import Skeleton from "react-loading-skeleton";
-import { Edit, Eye, EyeSlash } from "iconsax-react";
+import { ArrowUp, Edit, Eye, EyeSlash } from "iconsax-react";
 import { convertToAsterisks, formatToNairaShortenFigure } from "../../../utils";
 import Button from "../../../components/FormComponents/Button";
 import CopyToClipboard from "../../../components/CopyToClipboard";
@@ -20,15 +21,29 @@ export default function Wallet() {
   const { userDetails } = useUser() as useUserProps;
   const { isOpenModal, handleOpenClose } = useOpenCloseModals();
   const [isAmountVisible, setIsAmountVisible] = useState(false);
-  const { walletDetails, loading, refetch } = useFetchWalletDetails();
+  const { walletDetails, loading, fetchWalletDetails } =
+    useFetchWalletDetails();
   const toggleAmountVisibility = () => setIsAmountVisible(!isAmountVisible);
 
   const handleCheckIfNinBvnPINIsSet = () => {
-    const { nin, bvn, pinAdded } = walletDetails;
+    const { nin, bvn, pinAdded, bankVerified } = walletDetails;
     if (!walletDetails) return;
-    if (!nin || !bvn || !pinAdded) return false;
+    if (!nin || !bvn || !pinAdded || !bankVerified) return false;
     return true;
   };
+
+  useEffect(() => {
+    let mounted = false;
+    (async () => {
+      mounted = true;
+      if (mounted) {
+        fetchWalletDetails();
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [fetchWalletDetails]);
 
   return (
     <main className="w-full h-full">
@@ -54,7 +69,9 @@ export default function Wallet() {
                   <h5 className="flex items-center gap-2 text-xl font-bold text-white md:text-2xl">
                     {isAmountVisible
                       ? convertToAsterisks(
-                          formatToNairaShortenFigure(walletDetails?.balance || 0)
+                          formatToNairaShortenFigure(
+                            walletDetails?.balance || 0
+                          )
                         )
                       : formatToNairaShortenFigure(walletDetails?.balance || 0)}
                     <button
@@ -72,23 +89,38 @@ export default function Wallet() {
                     </button>
                   </h5>
                 </div>
-                <Button
-                  backgroundColor="bg-primary_300"
-                  textColor="text-primary_100"
-                  title={
-                    handleCheckIfNinBvnPINIsSet()
-                      ? "Withdrawal"
-                      : "Set Up Wallet"
-                  }
-                  type="button"
-                  onClick={() =>
-                    handleCheckIfNinBvnPINIsSet()
-                      ? handleOpenClose("withdrawals")
-                      : navigate("/app/wallet/update", {
-                          state: walletDetails,
-                        })
-                  }
-                />
+                <div className="flex flex-col items-center gap-5">
+                  <Button
+                    backgroundColor="bg-primary_300"
+                    textColor="text-primary_100"
+                    title={
+                      handleCheckIfNinBvnPINIsSet()
+                        ? "Withdrawal"
+                        : "Set Up Wallet"
+                    }
+                    type="button"
+                    onClick={() =>
+                      handleCheckIfNinBvnPINIsSet()
+                        ? handleOpenClose("withdrawals")
+                        : navigate("/app/wallet/update", {
+                            state: walletDetails,
+                          })
+                    }
+                  />
+                  {handleCheckIfNinBvnPINIsSet() && (
+                    <motion.div
+                      className="flex justify-center items-center"
+                      animate={{ y: [-5, 5, -5] }}
+                      transition={{
+                        repeat: Infinity,
+                        duration: 0.8,
+                        ease: "easeInOut",
+                      }}
+                    >
+                      <ArrowUp size="20" color="#FFFFFF" variant="Bold" />
+                    </motion.div>
+                  )}
+                </div>
               </div>
             </div>
           )}
@@ -154,7 +186,7 @@ export default function Wallet() {
           walletDetails={walletDetails}
           userDetails={userDetails}
           handleOpenClose={() => handleOpenClose("withdrawals")}
-          refetch={refetch}
+          refetch={fetchWalletDetails}
         />
       </ModalPopup>
     </main>

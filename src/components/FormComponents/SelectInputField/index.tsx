@@ -22,6 +22,7 @@ export interface CustomSelectProps<
   errors?: any;
   value?: any;
   defaultValue?: any;
+  isRequired?: boolean;
   touched?: any;
   name?: string;
 }
@@ -40,6 +41,7 @@ const CustomSelect = <
   value,
   defaultValue,
   defaultInputValue,
+  isRequired,
   ...props
 }: CustomSelectProps<OptionType, IsMulti>) => {
   // Ensure value is an object from the options array
@@ -56,7 +58,12 @@ const CustomSelect = <
   return (
     <div>
       {label && (
-        <label className="text-xs text-dark_200 leading-5">{label}</label>
+        <label
+          className={`text-xs text-dark_200 leading-5 flex items-center`}
+        >
+          {label}
+          {isRequired && <span className="text-red_100 mr-1 text-lg">*</span>}
+        </label>
       )}
       <Select
         options={options}

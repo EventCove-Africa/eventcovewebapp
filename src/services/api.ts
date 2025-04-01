@@ -42,7 +42,7 @@ const apiResource = () => {
       const _error_code_403 = status_code === 403;
       if (_error_code_403) {
         _handleClearCookiesAndSession();
-        // window.location.href = "/auth/login";
+        window.location.href = "/auth/login";
       } else if (_error_code_401) {
         if (originalConfig.url !== `${appUrls.LOGIN_URL}`) {
           window.location.href = "/auth/login";

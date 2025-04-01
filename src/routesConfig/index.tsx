@@ -69,11 +69,6 @@ export const ResetPassword = lazyLoad(
   () => import("../pages/auth/reset-password"),
   "ResetPassword"
 );
-export const AddBank = lazyLoad(
-  () => import("../pages/auth/add-bank"),
-  "AddBank"
-);
-
 // App Pages
 export const Home = lazyLoad(() => import("../pages/app/home"), "Home");
 export const Events = lazyLoad(() => import("../pages/app/events"), "Events");
@@ -134,10 +129,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { loadingDetails, handleGetUserDetails, userDetails } =
     useUser() as useUserProps;
   const access_token = Cookies.get("access_token");
-  // const email
-  // setAuthCookies({'email'})
   const location = useLocation();
-
   useEffect(() => {
     let mounted = true;
     if (access_token && mounted) {
@@ -176,8 +168,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const access_token = Cookies.get("access_token");
   const location = useLocation();
-  const excludePath = ["/auth/signup/add-bank"].includes(location.pathname);
-  const ProtectedAuthRoutes = !excludePath && access_token;
+  const ProtectedAuthRoutes = access_token;
   return ProtectedAuthRoutes ? (
     <Navigate to={APP_ROUTES.HOME} state={{ from: location }} replace />
   ) : (
@@ -216,7 +207,6 @@ export const routeConfig = [
     children: [
       { path: APP_ROUTES.LOGIN, element: <Login /> },
       { path: APP_ROUTES.SIGNUP, element: <SignUp /> },
-      { path: APP_ROUTES.ADD_BANK, element: <AddBank /> },
       {
         path: APP_ROUTES.FORGET_PW,
         element: <ForgetPassword />,

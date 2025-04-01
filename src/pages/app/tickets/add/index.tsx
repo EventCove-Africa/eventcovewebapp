@@ -1,7 +1,8 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Form, Formik, FormikHelpers } from "formik";
-import { Add, ArrowUp2, Trash } from "iconsax-react";
+import { motion } from "framer-motion";
+import { Add, ArrowRight, ArrowUp2, Trash } from "iconsax-react";
 import DescriptionBar from "../../../../components/DescriptionBar";
 import ModalPopup from "../../../../components/ModalPopup";
 import SignupSuccess from "../../../components/SignupSuccess";
@@ -89,7 +90,7 @@ export default function AddTickets() {
             sales_end_date_time: null,
             sales_start_date_time: null,
             all_values: [],
-            ticket_details: true,
+            ticket_details: false,
             transferTransactionFeeToBuyer: true,
           }}
           enableReinitialize
@@ -223,6 +224,7 @@ export default function AddTickets() {
                           handleChange={handleChange}
                           type="text"
                           placeholder=""
+                          isRequired
                           value={values.name}
                           errors={errors?.name}
                           touched={touched?.name}
@@ -231,6 +233,7 @@ export default function AddTickets() {
                       <CustomSelect
                         label="Ticket Classification"
                         name="classification"
+                        isRequired
                         onChange={(event) => {
                           const isGroup =
                             event?.value.toLowerCase() === "group";
@@ -264,9 +267,13 @@ export default function AddTickets() {
                       <CustomSelect
                         label="Ticket Category"
                         name="category"
+                        isRequired
                         onChange={(event) => {
-                          if(event?.value.toLowerCase() === 'free') {
-                            setFieldValue("transferTransactionFeeToBuyer", false);
+                          if (event?.value.toLowerCase() === "free") {
+                            setFieldValue(
+                              "transferTransactionFeeToBuyer",
+                              false
+                            );
                           }
                           setFieldValue("category", event?.value);
                         }}
@@ -284,6 +291,7 @@ export default function AddTickets() {
                           <TextInputField
                             labelName="Price"
                             name="price"
+                            isRequired
                             handleChange={(e: any) =>
                               setFieldValue(
                                 "price",
@@ -328,9 +336,22 @@ export default function AddTickets() {
                         className="w-full p-3 bg-pink_100 flex justify-between items-center rounded-md cursor-pointer"
                       >
                         <h3 className="text-dark_200 font-medium text-sm">
-                          Other Details (optional)
+                         Click here to fill Other Details (optional)
                         </h3>
-                        <ArrowUp2 size="16" color="#767779" variant="Bold" />
+                        <div className="flex gap-3 items-center">
+                          <motion.div
+                            className="flex justify-center items-center"
+                            animate={{ x: [-5, 5, -5] }}
+                            transition={{
+                              repeat: Infinity,
+                              duration: 0.8,
+                              ease: "easeInOut",
+                            }}
+                          >
+                            <ArrowRight size="20" color="#767779" variant="Bold"  />
+                          </motion.div>
+                          <ArrowUp2 size="20" color="#767779" variant="Bold" />
+                        </div>
                       </div>
                       {values.ticket_details && (
                         <div className="w-full">
