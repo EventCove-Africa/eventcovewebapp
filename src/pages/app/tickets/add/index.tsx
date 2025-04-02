@@ -255,6 +255,7 @@ export default function AddTickets() {
                         errors={errors?.classification}
                         touched={touched?.classification}
                         defaultValue={values?.classification}
+                        value={values?.classification}
                       />
 
                       {values?.classification === "Group" && (
