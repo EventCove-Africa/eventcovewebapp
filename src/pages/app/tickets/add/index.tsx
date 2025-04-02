@@ -17,6 +17,7 @@ import {
   // formatDateTime,
   handleNumberInput,
   isArrayEmpty,
+  isValidGroupFields,
   isValidOptionalDetails,
   parseNumber,
 } from "../../../../utils";
@@ -67,6 +68,7 @@ export default function AddTickets() {
     } catch (error: any) {
       const err_message = _handleThrowErrorMessage(error?.data?.message);
       toast.error(err_message);
+    } finally {
       actions.setSubmitting(false);
     }
   };
@@ -107,12 +109,42 @@ export default function AddTickets() {
                 sales_start_date_time,
                 sales_end_date_time
               );
+            let requiredFields = ["name", "classification", "category"];
+            if (values?.category.toLocaleLowerCase() === "paid") {
+              requiredFields.push("price");
+            }
+            const fieldsToCheck = {
+              name: rest?.name,
+              classification: rest?.classification,
+              category: rest?.category,
+              price: price ? parseNumber(price) : "",
+              startDate,
+              endDate,
+              startTime,
+              endTime,
+              capacity: rest?.capacity,
+              colour: rest?.colour,
+              groupTicketLimit: rest?.groupTicketLimit,
+              purchaseLimit: rest?.purchaseLimit,
+              perks: rest?.perks,
+              transferTransactionFeeToBuyer:
+                rest?.transferTransactionFeeToBuyer,
+            };
             const ticketTypes: any = [];
             const payload = {
               eventId,
               ticketTypes,
             };
             if (!isArrayEmpty(all_values)) {
+              const isValid = isValidGroupFields(fieldsToCheck, requiredFields);
+              if (isValid !== "All fields are empty") {
+                if (isValid) {
+                  ticketTypes.push(fieldsToCheck);
+                } else {
+                  actions.setSubmitting(false);
+                  return;
+                }
+              }
               all_values.forEach((ticket: any) => {
                 const formated_sales_start_date_time =
                   ticket?.sales_start_date_time;
@@ -211,6 +243,10 @@ export default function AddTickets() {
                   block: "start",
                 });
               }
+              setFieldValue(
+                "ticket_details",
+                !values.ticket_details
+              )
             };
 
             const removeItemFromAllValues = (idToRemove: number) => {
@@ -283,6 +319,11 @@ export default function AddTickets() {
                               "transferTransactionFeeToBuyer",
                               false
                             );
+                          } else {
+                            setFieldValue(
+                              "transferTransactionFeeToBuyer",
+                              true
+                            );
                           }
                           setFieldValue("category", event?.value);
                         }}
@@ -316,25 +357,28 @@ export default function AddTickets() {
                         </div>
                       )}
                       {/* Toogle button goes here  */}
-                      <div className="w-full flex flex-col items-start">
-                        <ToggleSwitch
-                          labelName="Transfer Charges"
-                          name="transferTransactionFeeToBuyer"
-                          checked={values?.transferTransactionFeeToBuyer}
-                          onChange={(checked) =>
-                            setFieldValue(
-                              "transferTransactionFeeToBuyer",
-                              checked
-                            )
-                          }
-                        />
-                        <span
-                          className={`text-xs text-dark_200 leading-5 flex gap-1 items-center my-1`}
-                        >
-                          NB: Please note, if the toggle button is switched Off
-                          the event organizer bears the cost of the charges
-                        </span>
-                      </div>
+                      {values?.category === "Paid" && (
+                        <div className="w-full flex flex-col items-start">
+                          <ToggleSwitch
+                            labelName="Transfer Charges"
+                            name="transferTransactionFeeToBuyer"
+                            checked={values?.transferTransactionFeeToBuyer}
+                            onChange={(checked) =>
+                              setFieldValue(
+                                "transferTransactionFeeToBuyer",
+                                checked
+                              )
+                            }
+                          />
+                          <span
+                            className={`text-xs text-dark_200 leading-5 flex gap-1 items-center my-1`}
+                          >
+                            NB: Please note, if the toggle button is switched
+                            Off the event organizer bears the cost of the
+                            charges
+                          </span>
+                        </div>
+                      )}
                       <div
                         onClick={() =>
                           setFieldValue(
@@ -492,14 +536,14 @@ export default function AddTickets() {
                         const fields = [
                           { label: "Seat Name", value: list?.name },
                           { label: "Price", value: list?.price },
-                          {
-                            label: "Classification",
-                            value: list?.classification,
-                          },
-                          {
-                            label: "Group Limit",
-                            value: list?.groupTicketLimit,
-                          },
+                          // {
+                          //   label: "Classification",
+                          //   value: list?.classification,
+                          // },
+                          // {
+                          //   label: "Group Limit",
+                          //   value: list?.groupTicketLimit,
+                          // },
                           // { label: "Capacity", value: list?.capacity },
                           // { label: "Ticket Perk", value: list?.perks },
                           // { label: "Colour", value: list?.colour },
