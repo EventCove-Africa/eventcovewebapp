@@ -170,6 +170,8 @@ export default function EditTicket() {
                     onChange={(event) => {
                       if (event?.value.toLowerCase() === "free") {
                         setFieldValue("transferTransactionFeeToBuyer", false);
+                      } else {
+                        setFieldValue("transferTransactionFeeToBuyer", true);
                       }
                       setFieldValue("category", event?.value);
                     }}
@@ -202,53 +204,51 @@ export default function EditTicket() {
                     </div>
                   )}
                   {/* Toogle button goes here  */}
-                  <div className="w-full flex flex-col items-start">
-                    <ToggleSwitch
-                      labelName="Transfer Charges"
-                      name="transferTransactionFeeToBuyer"
-                      checked={values?.transferTransactionFeeToBuyer}
-                      onChange={(checked) =>
-                        setFieldValue("transferTransactionFeeToBuyer", checked)
-                      }
-                    />
-                    <span
-                      className={`text-xs text-dark_200 flex gap-1 items-center my-1`}
-                    >
-                      NB: Please note, if the toggle button is switched Off the
-                      event organizer bears the cost of the charges
-                    </span>
-                  </div>
-                  <div
-                        onClick={() =>
+                  {values?.category === "Paid" && (
+                    <div className="w-full flex flex-col items-start">
+                      <ToggleSwitch
+                        labelName="Transfer Charges"
+                        name="transferTransactionFeeToBuyer"
+                        checked={values?.transferTransactionFeeToBuyer}
+                        onChange={(checked) =>
                           setFieldValue(
-                            "ticket_details",
-                            !values.ticket_details
+                            "transferTransactionFeeToBuyer",
+                            checked
                           )
                         }
-                        className="w-full p-3 bg-pink_100 flex justify-between items-center rounded-md cursor-pointer"
+                      />
+                      <span
+                        className={`text-xs text-dark_200 flex gap-1 items-center my-1`}
                       >
-                        <h3 className="text-dark_200 font-medium text-sm">
-                          Click here to fill Other Details (optional)
-                        </h3>
-                        <div className="flex gap-3 items-center">
-                          <motion.div
-                            className="flex justify-center items-center"
-                            animate={{ x: [-5, 5, -5] }}
-                            transition={{
-                              repeat: Infinity,
-                              duration: 0.8,
-                              ease: "easeInOut",
-                            }}
-                          >
-                            <ArrowRight
-                              size="20"
-                              color="#767779"
-                              variant="Bold"
-                            />
-                          </motion.div>
-                          <ArrowUp2 size="20" color="#767779" variant="Bold" />
-                        </div>
-                      </div>
+                        NB: Please note, if the toggle button is switched Off
+                        the event organizer bears the cost of the charges
+                      </span>
+                    </div>
+                  )}
+                  <div
+                    onClick={() =>
+                      setFieldValue("ticket_details", !values.ticket_details)
+                    }
+                    className="w-full p-3 bg-pink_100 flex justify-between items-center rounded-md cursor-pointer"
+                  >
+                    <h3 className="text-dark_200 font-medium text-sm">
+                      Click here to fill Other Details (optional)
+                    </h3>
+                    <div className="flex gap-3 items-center">
+                      <motion.div
+                        className="flex justify-center items-center"
+                        animate={{ x: [-5, 5, -5] }}
+                        transition={{
+                          repeat: Infinity,
+                          duration: 0.8,
+                          ease: "easeInOut",
+                        }}
+                      >
+                        <ArrowRight size="20" color="#767779" variant="Bold" />
+                      </motion.div>
+                      <ArrowUp2 size="20" color="#767779" variant="Bold" />
+                    </div>
+                  </div>
                   {values.ticket_details && (
                     <div className="w-full">
                       <div className="mb-2">

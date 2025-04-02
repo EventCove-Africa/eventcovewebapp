@@ -122,6 +122,43 @@ export const isValidOptionalDetails = (
   return true;
 };
 
+export const isValidGroupFields = (
+  details: Record<string, any>,
+  requiredFields: string[]
+): boolean | string => {
+  // Check if all required fields are empty
+  const allFieldsEmpty = requiredFields.every(
+    (field) =>
+      details[field] === "" ||
+      details[field] === null ||
+      details[field] === undefined
+  );
+  if (allFieldsEmpty) {
+    return "All fields are empty";
+  }
+  // Find the first missing field in the order they appear
+  const firstEmptyField = requiredFields.find(
+    (field) =>
+      details[field] === "" ||
+      details[field] === null ||
+      details[field] === undefined
+  );
+  // Find if at least one field is filled
+  const hasFilledFields = requiredFields.some(
+    (field) =>
+      details[field] !== "" &&
+      details[field] !== null &&
+      details[field] !== undefined
+  );
+  // If some fields are filled but the first required field is missing, show error
+  if (hasFilledFields && firstEmptyField) {
+    toast.error(`${firstEmptyField.replace(/_/g, " ")} is required`);
+    return false;
+  }
+
+  return true;
+};
+
 export function _handleThrowErrorMessage(message: string) {
   const err = message || "Something went wrong, please try again later";
   return err;
