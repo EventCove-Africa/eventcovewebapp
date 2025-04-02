@@ -203,6 +203,14 @@ export default function AddTickets() {
                   )
                 );
               }
+
+              const ticketElement = document.getElementById("create-ticket");
+              if (ticketElement) {
+                ticketElement.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }
             };
 
             const removeItemFromAllValues = (idToRemove: number) => {
@@ -215,7 +223,7 @@ export default function AddTickets() {
             return (
               <Form onSubmit={handleSubmit} className="w-full">
                 <div className="w-full h-fit flex gap-3 md:flex-row flex-col-reverse">
-                  <div className="h-fit w-full">
+                  <div id="create-ticket" className="h-fit w-full">
                     <div className="w-full px-3 pb-6 pt-3 bg-white h-fit rounded-xl shadow flex flex-col gap-3">
                       <div className="mb-2">
                         <TextInputField
