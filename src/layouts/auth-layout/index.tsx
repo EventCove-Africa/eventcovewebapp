@@ -6,6 +6,7 @@ import ticket from "../../assets/icons/ticket.svg";
 import payment from "../../assets/icons/payment.svg";
 import AuthTooltip from "../../components/AuthTooltip";
 import logo from "../../assets/icons/logo.svg";
+import { redirectUrls } from "../../utils";
 
 export default function AuthLayout() {
   // Detect screen size
@@ -22,7 +23,7 @@ export default function AuthLayout() {
           loading="lazy"
           aria-hidden="true"
           onClick={() =>
-            (window.location.href = "https://www.eventcove.africa")
+            redirectUrls("https://www.eventcove.africa")
           }
         />
       </header>
