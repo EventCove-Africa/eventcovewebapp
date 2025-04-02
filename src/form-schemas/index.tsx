@@ -95,7 +95,11 @@ export const signupSchema = (setPasswordCharacterCheck: any) =>
 export const updateProfileSchema = Yup.object().shape({
   lastName: Yup.string().required("Lastname is required"),
   firstName: Yup.string().required("Firstname is required"),
-  phoneNumber: Yup.string().required("Phone number is required"),
+  phoneNumber: Yup.string()
+    .matches(/^\d+$/, "Phone number must contain only digits") // Ensures only digits
+    .min(11, "Phone number must be at least 11 digits") // Adjust as needed
+    .max(11, "Phone number cannot exceed 11 digits") // Adjust as needed
+    .required("Phone number is required"), // Required field
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
@@ -292,8 +296,8 @@ export const addEventSchema = Yup.object().shape({
   eventDescription: Yup.string().required("Event description is required"),
   phoneNumber: Yup.string()
     .matches(/^\d+$/, "Phone number must contain only digits") // Ensures only digits
-    .min(11, "Phone number must be at least 10 digits") // Adjust as needed
-    .max(15, "Phone number cannot exceed 15 digits") // Adjust as needed
+    .min(11, "Phone number must be at least 11 digits") // Adjust as needed
+    .max(11, "Phone number cannot exceed 11 digits") // Adjust as needed
     .required("Phone number is required"), // Required field
 });
 
