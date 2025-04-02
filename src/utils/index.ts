@@ -47,8 +47,9 @@ export function formatToNairaShortenFigure(amount: number): string {
     return `₦${(amount / 1_000_000_000).toFixed(1).replace(/\.0$/, "")}B`;
   } else if (amount >= 1_000_000) {
     return `₦${(amount / 1_000_000).toFixed(1).replace(/\.0$/, "")}M`;
-  } else if (amount >= 10000) {
-    return `₦${(amount / 10000).toFixed(1).replace(/\.0$/, "")}k`;
+  } else if (amount >= 1_000) {
+    // Fix applied here
+    return `₦${(amount / 1_000).toFixed(1).replace(/\.0$/, "")}k`;
   }
   return `₦${amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 }
