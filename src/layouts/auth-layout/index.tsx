@@ -21,6 +21,9 @@ export default function AuthLayout() {
           className="h-8 cursor-pointer"
           loading="lazy"
           aria-hidden="true"
+          onClick={() =>
+            (window.location.href = "https://www.eventcove.africa")
+          }
         />
       </header>
       {/* Main Content */}

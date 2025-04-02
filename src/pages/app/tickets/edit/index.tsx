@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Form, Formik, FormikHelpers } from "formik";
-import { ArrowUp2, Edit } from "iconsax-react";
+import { motion } from "framer-motion";
+import { ArrowRight, ArrowUp2, Edit } from "iconsax-react";
 import DescriptionBar from "../../../../components/DescriptionBar";
 import ModalPopup from "../../../../components/ModalPopup";
 import SignupSuccess from "../../../components/SignupSuccess";
@@ -74,7 +75,7 @@ export default function EditTicket() {
             transferTransactionFeeToBuyer: state?.transferTransactionFeeToBuyer,
             sales_end_date_time,
             sales_start_date_time,
-            ticket_details: true,
+            ticket_details: false,
           }}
           enableReinitialize
           onSubmit={(values, actions) => {
@@ -218,16 +219,36 @@ export default function EditTicket() {
                     </span>
                   </div>
                   <div
-                    onClick={() =>
-                      setFieldValue("ticket_details", !values.ticket_details)
-                    }
-                    className="w-full p-3 bg-pink_100 flex justify-between items-center rounded-md cursor-pointer"
-                  >
-                    <h3 className="text-dark_200 font-medium text-sm">
-                      Other Details (optional)
-                    </h3>
-                    <ArrowUp2 size="16" color="#767779" variant="Bold" />
-                  </div>
+                        onClick={() =>
+                          setFieldValue(
+                            "ticket_details",
+                            !values.ticket_details
+                          )
+                        }
+                        className="w-full p-3 bg-pink_100 flex justify-between items-center rounded-md cursor-pointer"
+                      >
+                        <h3 className="text-dark_200 font-medium text-sm">
+                          Click here to fill Other Details (optional)
+                        </h3>
+                        <div className="flex gap-3 items-center">
+                          <motion.div
+                            className="flex justify-center items-center"
+                            animate={{ x: [-5, 5, -5] }}
+                            transition={{
+                              repeat: Infinity,
+                              duration: 0.8,
+                              ease: "easeInOut",
+                            }}
+                          >
+                            <ArrowRight
+                              size="20"
+                              color="#767779"
+                              variant="Bold"
+                            />
+                          </motion.div>
+                          <ArrowUp2 size="20" color="#767779" variant="Bold" />
+                        </div>
+                      </div>
                   {values.ticket_details && (
                     <div className="w-full">
                       <div className="mb-2">
