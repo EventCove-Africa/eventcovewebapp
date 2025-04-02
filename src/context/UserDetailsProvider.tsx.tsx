@@ -47,6 +47,7 @@ function UserDetailsProvider({ children }: UserDetailsProviderProps) {
             });
             return;
           }
+          return;
         }
         if (access_token) {
           setAuthCookies({ access_token, token_type, email });

@@ -214,7 +214,7 @@ export default function AddTickets() {
             const selectedValues = values?.all_values || [];
             return (
               <Form onSubmit={handleSubmit} className="w-full">
-                <div className="w-full h-fit flex gap-3 md:flex-row flex-col">
+                <div className="w-full h-fit flex gap-3 md:flex-row flex-col-reverse">
                   <div className="h-fit w-full">
                     <div className="w-full px-3 pb-6 pt-3 bg-white h-fit rounded-xl shadow flex flex-col gap-3">
                       <div className="mb-2">
@@ -336,7 +336,7 @@ export default function AddTickets() {
                         className="w-full p-3 bg-pink_100 flex justify-between items-center rounded-md cursor-pointer"
                       >
                         <h3 className="text-dark_200 font-medium text-sm">
-                         Click here to fill Other Details (optional)
+                          Click here to fill Other Details (optional)
                         </h3>
                         <div className="flex gap-3 items-center">
                           <motion.div
@@ -348,7 +348,11 @@ export default function AddTickets() {
                               ease: "easeInOut",
                             }}
                           >
-                            <ArrowRight size="20" color="#767779" variant="Bold"  />
+                            <ArrowRight
+                              size="20"
+                              color="#767779"
+                              variant="Bold"
+                            />
                           </motion.div>
                           <ArrowUp2 size="20" color="#767779" variant="Bold" />
                         </div>
