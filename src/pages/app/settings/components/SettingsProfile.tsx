@@ -110,7 +110,7 @@ export default function SettingsProfile() {
               name="phoneNumber"
               handleChange={handleChange}
               type="tel"
-              placeholder=""
+              placeholder="080XXXXXXXX"
               value={values.phoneNumber}
               errors={errors?.phoneNumber}
               touched={touched?.phoneNumber}
