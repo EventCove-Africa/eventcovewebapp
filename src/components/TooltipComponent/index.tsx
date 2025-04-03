@@ -16,7 +16,7 @@ const CustomTooltip: React.FC<TooltipProps> = ({
         size="12"
         color="#A30162"
         data-tooltip-id={dataTooltipId}
-        className="cursor-pointer text-primary_100"
+        className="cursor-pointer text-primary_100 ml-1"
       />
       <Tooltip
         style={{ boxShadow: "5px 5px 15px rgba(0, 0, 0, 0.3)" }}

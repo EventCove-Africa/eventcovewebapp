@@ -216,11 +216,23 @@ export const addTicketSchema = Yup.object().shape({
         return schema.notRequired();
       }
       if (category && category?.toLowerCase() !== "free") {
-        return schema.required("Price is required");
+        return schema
+          .required("Price is required")
+          .transform((value) => {
+            const cleanedValue = value.replace(/,/g, ""); // Remove commas
+            const numValue = parseFloat(cleanedValue);   // Convert to number
+            return isNaN(numValue) ? cleanedValue : cleanedValue; // Return the cleaned string if it's valid
+          })
+          .test(
+            'min-price',
+            'Price must be at least 500',
+            (value) => parseFloat(value.replace(/,/g, "")) >= 500 // Check if the cleaned value is >= 500
+          );
       }
       return schema.notRequired();
     }
   ),
+  
 
   // sales_end_date_time: Yup.date().when(
   //   "ticket_details",
