@@ -204,7 +204,13 @@ export const addTicketSchema = Yup.object().shape({
     }
     return schema.required("Seat name is required");
   }),
-  groupTicketLimit: Yup.string(),
+  groupTicketLimit: Yup.string()
+    .test("max-limit", "Group ticket limit cannot exceed 10", (value) => {
+      if (!value) return true; // Allow empty values (handled by required)
+      const numValue = Number(value);
+      return !isNaN(numValue) && numValue <= 10;
+    })
+    .required("Group ticket limit is required"),
   colour: Yup.string(),
   all_values: Yup.mixed(),
   ticket_details: Yup.boolean(), // Must be defined as a boolean
@@ -220,19 +226,18 @@ export const addTicketSchema = Yup.object().shape({
           .required("Price is required")
           .transform((value) => {
             const cleanedValue = value.replace(/,/g, ""); // Remove commas
-            const numValue = parseFloat(cleanedValue);   // Convert to number
+            const numValue = parseFloat(cleanedValue); // Convert to number
             return isNaN(numValue) ? cleanedValue : cleanedValue; // Return the cleaned string if it's valid
           })
           .test(
-            'min-price',
-            'Price must be at least 500',
+            "min-price",
+            "Price must be at least 500",
             (value) => parseFloat(value.replace(/,/g, "")) >= 500 // Check if the cleaned value is >= 500
           );
       }
       return schema.notRequired();
     }
   ),
-  
 
   // sales_end_date_time: Yup.date().when(
   //   "ticket_details",
@@ -252,7 +257,13 @@ export const editTicketSchema = Yup.object().shape({
   classification: Yup.mixed().required("Classification is required"),
   category: Yup.string().required("Category is required"),
   name: Yup.string().required("Seat name is required"),
-  groupTicketLimit: Yup.string(),
+  groupTicketLimit: Yup.string()
+    .test("max-limit", "Group ticket limit cannot exceed 10", (value) => {
+      if (!value) return true; // Allow empty values (handled by required)
+      const numValue = Number(value);
+      return !isNaN(numValue) && numValue <= 10;
+    })
+    .required("Group ticket limit is required"),
   colour: Yup.string(),
   all_values: Yup.mixed(),
   ticket_details: Yup.boolean(), // Must be defined as a boolean
