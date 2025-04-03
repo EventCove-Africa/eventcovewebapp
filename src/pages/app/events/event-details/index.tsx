@@ -1,7 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import DescriptionBar from "../../../../components/DescriptionBar";
-import { _handleThrowErrorMessage, isArrayEmpty, isObjectEmpty } from "../../../../utils";
+import {
+  _handleThrowErrorMessage,
+  isArrayEmpty,
+  isObjectEmpty,
+} from "../../../../utils";
 import { Export, Trash } from "iconsax-react";
 import Button from "../../../../components/FormComponents/Button";
 import toast from "react-hot-toast";
@@ -31,7 +35,8 @@ export default function EventDetails() {
   const isEventPublised = allEventDetails?.published;
   const isReadyForPublish = allEventDetails?.hasTicketType && !isEventPublised;
   const NOT_COMPLETED = allEventDetails?.status !== "completed";
-  const isShowDeleteButton = !isObjectEmpty(allEventDetails) &&
+  const isShowDeleteButton =
+    !isObjectEmpty(allEventDetails) &&
     !allEventDetails?.soldTicket &&
     !allEventDetails?.deleted &&
     !loadingEventDetails?.event &&
@@ -233,8 +238,11 @@ export default function EventDetails() {
                   <h3 className="text-grey_100 font-normal text-xs">
                     Share the login link with your team members!
                   </h3>
+
                   <div className="w-full h-auto rounded-lg bg-primary_300 p-3 flex justify-between items-center border border-dotted border-grey_100 text-primary_100 mt-2 font-normal text-sm flex-wrap">
-                    {eventTeamMembersUrl}
+                    <div className="flex-1 break-all">
+                      {eventTeamMembersUrl}
+                    </div>
                     <CopyToClipboard
                       text={eventTeamMembersUrl}
                       size="20"
