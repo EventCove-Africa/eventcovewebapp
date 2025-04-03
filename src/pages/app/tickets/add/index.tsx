@@ -294,7 +294,7 @@ export default function AddTickets() {
                       {values?.classification.toLocaleLowerCase() === "group" && (
                         <div className="mb-2">
                           <TextInputField
-                            labelName="Available seats"
+                            labelName="Available Seats for Ticket"
                             name="groupTicketLimit"
                             handleChange={handleChange}
                             type="text"

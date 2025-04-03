@@ -49,7 +49,9 @@ export default function RenderEventDetails({
               allEventDetails?.city}
           </p>
         </div>
-        {["private"]?.includes(allEventDetails?.eventPrivacy?.toLowerCase()) && (
+        {["private"]?.includes(
+          allEventDetails?.eventPrivacy?.toLowerCase()
+        ) && (
           <div className="w-full font-semibold justify-end flex items-center gap-2 md:text-sm text-xs">
             Passcode:
             <span className="font-bold">{allEventDetails?.passCode}</span>
@@ -126,7 +128,7 @@ export default function RenderEventDetails({
             Share the event link with others!
           </h3>
           <div className="w-full h-auto rounded-lg bg-primary_300 p-3 flex justify-between items-center border border-dotted border-grey_100 text-primary_100 mt-2 font-normal text-sm flex-wrap">
-            {allEventDetails?.eventUrl}
+            <div className="flex-1 break-all">{allEventDetails?.eventUrl}</div>
             <CopyToClipboard
               text={allEventDetails?.eventUrl}
               size="20"
