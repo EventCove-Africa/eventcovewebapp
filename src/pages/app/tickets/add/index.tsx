@@ -243,10 +243,7 @@ export default function AddTickets() {
                   block: "start",
                 });
               }
-              setFieldValue(
-                "ticket_details",
-                !values.ticket_details
-              )
+              setFieldValue("ticket_details", !values.ticket_details);
             };
 
             const removeItemFromAllValues = (idToRemove: number) => {
@@ -294,10 +291,10 @@ export default function AddTickets() {
                         value={values?.classification}
                       />
 
-                      {values?.classification === "Group" && (
+                      {values?.classification.toLocaleLowerCase() === "group" && (
                         <div className="mb-2">
                           <TextInputField
-                            labelName="Group limit"
+                            labelName="Available seats"
                             name="groupTicketLimit"
                             handleChange={handleChange}
                             type="text"
@@ -305,7 +302,7 @@ export default function AddTickets() {
                             value={values.groupTicketLimit}
                             errors={errors?.groupTicketLimit}
                             touched={touched?.groupTicketLimit}
-                            tooltipContent="Group limit by default is 2 persons"
+                            tooltipContent="Available seats by default is 2 persons, feel free to set your limit"
                           />
                         </div>
                       )}
@@ -441,18 +438,20 @@ export default function AddTickets() {
                               touched={touched?.colour}
                             />
                           </div>
-                          <div className="mb-2">
-                            <TextInputField
-                              labelName="Purchase Limit Per User (optional)"
-                              name="purchaseLimit"
-                              handleChange={handleChange}
-                              type="text"
-                              placeholder=""
-                              value={values.purchaseLimit}
-                              errors={errors?.purchaseLimit}
-                              touched={touched?.purchaseLimit}
-                            />
-                          </div>
+                          {values?.classification.toLocaleLowerCase() !== "group" && (
+                            <div className="mb-2">
+                              <TextInputField
+                                labelName="Purchase Limit Per User (optional)"
+                                name="purchaseLimit"
+                                handleChange={handleChange}
+                                type="text"
+                                placeholder=""
+                                value={values.purchaseLimit}
+                                errors={errors?.purchaseLimit}
+                                touched={touched?.purchaseLimit}
+                              />
+                            </div>
+                          )}
                           <div className="mb-2">
                             <TextInputField
                               labelName="Ticket Perks (optional)"
