@@ -49,14 +49,6 @@ export default function RenderEventDetails({
               allEventDetails?.city}
           </p>
         </div>
-        {["private"]?.includes(
-          allEventDetails?.eventPrivacy?.toLowerCase()
-        ) && (
-          <div className="w-full font-semibold justify-end flex items-center gap-2 md:text-sm text-xs">
-            Passcode:
-            <span className="font-bold">{allEventDetails?.passCode}</span>
-          </div>
-        )}
       </div>
       <div className={classNameGridEventDetails}>
         <div className="bg-grey_500 rounded-md p-2 flex gap-2 items-center">
@@ -123,10 +115,20 @@ export default function RenderEventDetails({
         </div>
       </div>
       {allEventDetails?.published && (
-        <div className="mt-2">
-          <h3 className="text-grey_100 font-normal text-xs">
-            Share the event link with others!
-          </h3>
+        <div className="mt-2 w-full">
+          <div className="w-full flex justify-between items-center">
+            <h3 className="text-grey_100 font-normal text-xs">
+              Share the event link with others!
+            </h3>
+            {["private"]?.includes(
+              allEventDetails?.eventPrivacy?.toLowerCase()
+            ) && (
+              <div className="self-end font-semibold gap-2 md:text-sm text-xs">
+                Passcode:{" "}
+                <span className="font-bold">{allEventDetails?.passCode}</span>
+              </div>
+            )}
+          </div>
           <div className="w-full h-auto rounded-lg bg-primary_300 p-3 flex justify-between items-center border border-dotted border-grey_100 text-primary_100 mt-2 font-normal text-sm flex-wrap">
             <div className="flex-1 break-all">{allEventDetails?.eventUrl}</div>
             <CopyToClipboard

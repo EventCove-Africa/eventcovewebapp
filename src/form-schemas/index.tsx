@@ -209,8 +209,8 @@ export const addTicketSchema = Yup.object().shape({
       if (!value) return true; // Allow empty values (handled by required)
       const numValue = Number(value);
       return !isNaN(numValue) && numValue <= 10;
-    })
-    .required("Group ticket limit is required"),
+    }),
+    // .required("Group ticket limit is required"),
   colour: Yup.string(),
   all_values: Yup.mixed(),
   ticket_details: Yup.boolean(), // Must be defined as a boolean
@@ -262,8 +262,8 @@ export const editTicketSchema = Yup.object().shape({
       if (!value) return true; // Allow empty values (handled by required)
       const numValue = Number(value);
       return !isNaN(numValue) && numValue <= 10;
-    })
-    .required("Group ticket limit is required"),
+    }),
+    // .required("Group ticket limit is required"),
   colour: Yup.string(),
   all_values: Yup.mixed(),
   ticket_details: Yup.boolean(), // Must be defined as a boolean
