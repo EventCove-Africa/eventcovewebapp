@@ -70,26 +70,20 @@ export default function Tickets() {
   const [isEventPublished, setIsEventPublished] = useState<boolean | null>(
     null
   );
+  const [isTicketSold, setIsTicketSold] = useState<boolean | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<any>("");
 
   const renderActions = (_row: TicketProp) => {
     const handleEditAction = () => {
-      if (isEventPublished === null) return handleOpenClose("infoModal");
-      if (isEventPublished) {
-        if (_row?.category.toLocaleLowerCase() !== "paid") {
-          navigate(`/app/tickets/edit/${_row?.ticketTypeId}`, {
-            state: _row,
-          });
-        } else {
-          handleOpenClose("infoModal");
-        }
-      } else {
-        return navigate(`/app/tickets/edit/${_row?.ticketTypeId}`, {
+      const isPaid = _row?.category.toLowerCase() === "paid";
+      const ticketId = _row?.ticketTypeId;
+      const canEdit = !isPaid || !isEventPublished || !isTicketSold;
+      if (canEdit) {
+        return navigate(`/app/tickets/edit/${ticketId}`, {
           state: _row,
         });
       }
-
-      return null;
+      return handleOpenClose("infoModal");
     };
 
     return (
@@ -139,6 +133,7 @@ export default function Tickets() {
             ticketTypeId: element?.ticketTypeId,
             eventId: element?.eventId,
             category: element?.category,
+
             classification: element?.classification,
             colour: element?.colour || "N/A",
             capacity: element?.capacity || "N/A",
@@ -174,16 +169,19 @@ export default function Tickets() {
           const eventId = element?.eventId;
           const published = element?.published;
           const eventName = element?.eventName;
+          const soldTicket = element?.soldTicket;
           record.push({
             label: eventName,
             value: {
               eventId,
               published,
+              soldTicket,
             },
           });
           if (event_id && event_id === eventId) {
             setIsEventPublished(published);
-            setSelectedEvent(eventName)
+            setSelectedEvent(eventName);
+            setIsTicketSold(soldTicket);
           }
         }
         setAllEventsData(() => [...record]);
@@ -233,6 +231,7 @@ export default function Tickets() {
           onChange={(event) => {
             setSelectedEvent(event?.label);
             setIsEventPublished(event?.value?.published);
+            setIsTicketSold(event?.value?.soldTicket);
             navigate(`/app/tickets?event_id=${event?.value?.eventId}`);
           }}
           className="md:w-[300px] w-full"
