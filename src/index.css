@@ -137,6 +137,10 @@ input[type="file"] {
   animation: zoom 3s infinite ease-in-out;
 }
 
+[contenteditable]:focus {
+  caret-color: transparent;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

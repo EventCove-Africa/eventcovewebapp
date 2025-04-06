@@ -86,14 +86,14 @@ export default function Header() {
           {userDetails?.fullName}
         </h4>
         <button
-          className="text-grey_100 text-xs font-normal flex gap-2 cursor-pointer"
+          className="text-grey_100 text-xs font-normal flex gap-2 cursor-pointer outline-none"
           onClick={handleMenuToggle}
           aria-haspopup="true"
           aria-expanded={isMenuOpen ? "true" : "false"}
           aria-label="Toggle user menu"
           ref={buttonRef} // Assigning buttonRef to the button
         >
-          <span>{userDetails?.email}</span>
+          <span className="outline-none">{userDetails?.email}</span>
           <ArrowDown2 size="16" color="#767779" />
         </button>
         {isMenuOpen && (
