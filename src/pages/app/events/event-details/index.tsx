@@ -47,13 +47,14 @@ export default function EventDetails() {
     const payload = {
       eventId: id,
     };
+    const pusblishUnpublish = isEventPublised ? "publish" : "unpublish";
     setLoadingEventDetails((prev) => ({
       ...prev,
       publish: !loadingEventDetails?.publish,
     }));
     try {
       const { status, data } = await api.post(
-        appUrls.EVENT_URL + "/publish",
+        appUrls.EVENT_URL + pusblishUnpublish,
         payload
       );
       const message = data?.data;
@@ -258,10 +259,18 @@ export default function EventDetails() {
         <div className="flex gap-2 items-center mt-4">
           {isReadyForPublish && (
             <Button
-              title="Publish Event"
+              title={`Publish Event`}
               type="button"
               isLoading={loadingEventDetails?.publish}
-              onClick={handlePublishEvent}
+              onClick={() => handlePublishEvent()}
+            />
+          )}
+          {isEventPublised && NOT_COMPLETED && (
+            <Button
+              title={`Unpublish Event`}
+              type="button"
+              isLoading={loadingEventDetails?.publish}
+              onClick={() => handlePublishEvent()}
             />
           )}
           {NOT_COMPLETED && (
