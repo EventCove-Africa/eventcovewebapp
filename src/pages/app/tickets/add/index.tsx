@@ -86,7 +86,7 @@ export default function AddTickets() {
             price: "",
             capacity: "",
             colour: "",
-            groupTicketLimit: "",
+            groupTicketLimit: "2",
             purchaseLimit: "",
             perks: "",
             sales_end_date_time: null,
@@ -260,7 +260,7 @@ export default function AddTickets() {
                     <div className="w-full px-3 pb-6 pt-3 bg-white h-fit rounded-xl shadow flex flex-col gap-3">
                       <div className="mb-2">
                         <TextInputField
-                          labelName="Seat Name"
+                          labelName="Ticket Name"
                           name="name"
                           handleChange={handleChange}
                           type="text"
@@ -269,6 +269,7 @@ export default function AddTickets() {
                           value={values.name}
                           errors={errors?.name}
                           touched={touched?.name}
+                          tooltipContent="Eg. Vip, regular"
                         />
                       </div>
                       <CustomSelect
@@ -291,7 +292,8 @@ export default function AddTickets() {
                         value={values?.classification}
                       />
 
-                      {values?.classification.toLocaleLowerCase() === "group" && (
+                      {values?.classification.toLocaleLowerCase() ===
+                        "group" && (
                         <div className="mb-2">
                           <TextInputField
                             labelName="Available Seats for Ticket"
@@ -438,7 +440,8 @@ export default function AddTickets() {
                               touched={touched?.colour}
                             />
                           </div>
-                          {values?.classification.toLocaleLowerCase() !== "group" && (
+                          {values?.classification.toLocaleLowerCase() !==
+                            "group" && (
                             <div className="mb-2">
                               <TextInputField
                                 labelName="Purchase Limit Per User (optional)"
