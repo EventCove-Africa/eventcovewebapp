@@ -129,7 +129,7 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
         </select>
       </div>
 
-      <div className="bg-grey_900 w-[250px] h-[250px] mb-20 mt-4">
+      <div className="bg-grey_900 w-[250px] h-[250px] mb-8 mt-4">
         <div id={scannerContainerId} />
       </div>
 
@@ -146,7 +146,7 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col w-full justify-center items-center gap-1">
+        <div className="flex flex-col w-full justify-center items-center gap-1 md:mt-0 mt-28">
           <h6 className="text-gray-400 text-xs md:text-sm">
             Click to stop scanning
           </h6>
