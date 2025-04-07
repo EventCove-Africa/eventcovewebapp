@@ -135,26 +135,26 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
 
       {!isScanning ? (
         <div className="flex flex-col w-full justify-center items-center gap-1">
+          <h6 className="text-gray-400 text-xs md:text-sm">
+            Click to start scanning
+          </h6>
           <div
             onClick={() => startScanning()}
             className="cursor-pointer animate-pulse rounded-full h-[50px] w-[50px] p-4 flex justify-center items-center"
           >
             <div className="bg-primary_100 rounded-full px-4 py-4" />
           </div>
-          <h6 className="text-gray-400 text-xs md:text-sm">
-            Click to start scanning
-          </h6>
         </div>
       ) : (
         <div className="flex flex-col w-full justify-center items-center gap-1">
+          <h6 className="text-gray-400 text-xs md:text-sm">
+            Click to stop scanning
+          </h6>
           <StopCircle
             size="48"
             className="text-primary_100 cursor-pointer"
             onClick={stopScanning}
           />
-          <h6 className="text-gray-400 text-xs md:text-sm">
-            Click to stop scanning
-          </h6>
         </div>
       )}
     </div>
