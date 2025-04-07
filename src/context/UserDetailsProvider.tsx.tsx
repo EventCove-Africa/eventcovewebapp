@@ -41,7 +41,7 @@ function UserDetailsProvider({ children }: UserDetailsProviderProps) {
               replace: true,
             });
           } else {
-            setAuthCookies({ access_token, token_type });
+            setAuthCookies({ access_token, token_type, email });
             navigate(from, {
               replace: true,
             });
@@ -66,13 +66,13 @@ function UserDetailsProvider({ children }: UserDetailsProviderProps) {
       const res = await api.post(appUrls.CREATE_ORGANIZER_ACCOUNT_URL, payload);
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
-        const { emailVerified, access_token, token_type } =
+        const { emailVerified, access_token, token_type, email } =
           res?.data?.data ?? null;
         if (!emailVerified) {
           toast.success("Account created successfully");
           handleOpenClose?.();
         } else {
-          setAuthCookies({ access_token, token_type });
+          setAuthCookies({ access_token, token_type, email });
           navigate("/app/home", {
             replace: true,
           });
@@ -96,12 +96,12 @@ function UserDetailsProvider({ children }: UserDetailsProviderProps) {
       const res = await api.post(appUrls.GOOGLE_USER_URL, payload);
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
-        const { emailVerified, access_token, token_type } =
+        const { emailVerified, access_token, token_type, email } =
           res?.data?.data ?? null;
         if (!emailVerified) {
           handleOpenClose?.();
         } else {
-          setAuthCookies({ access_token, token_type });
+          setAuthCookies({ access_token, token_type, email });
           navigate("/app/home", {
             replace: true,
           });
