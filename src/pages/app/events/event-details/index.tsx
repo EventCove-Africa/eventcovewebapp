@@ -139,6 +139,7 @@ export default function EventDetails() {
 
   const renderSkeletonLoaderForEventDetails = () => {
     if (!loadingEventDetails?.event) return null;
+
     return (
       <>
         <SkeletonLoader
@@ -236,10 +237,10 @@ export default function EventDetails() {
                   })}
                 </div>
                 <div className="mt-2">
-                  <h3 className="text-grey_100 font-normal text-xs">
-                    Share the login link with your team members!
+                  <h3 className="text-grey_100 font-normal text-sm">
+                    Share the login link with your team members for tickets
+                    validations!
                   </h3>
-
                   <div className="w-full h-auto rounded-lg bg-primary_300 p-3 flex justify-between items-center border border-dotted border-grey_100 text-primary_100 mt-2 font-normal text-sm flex-wrap">
                     <div className="flex-1 break-all">
                       {eventTeamMembersUrl}
@@ -249,6 +250,22 @@ export default function EventDetails() {
                       size="20"
                       color="text-primary_100"
                     />
+                  </div>
+                  <div className="mt-4">
+                    <h3 className="text-grey_100 font-normal text-sm">
+                      As an Event organizer you can validate tickets too. Click{" "}
+                      <span
+                        onClick={() =>
+                          navigate(`/tickets-validation/${id}`, {
+                            state: "EVENT_ORGANIZER",
+                          })
+                        }
+                        className="text-primary_100 cursor-pointer hover:border-b border-primary_100"
+                      >
+                        here{" "}
+                      </span>
+                      to validate tickets
+                    </h3>
                   </div>
                 </div>
               </>

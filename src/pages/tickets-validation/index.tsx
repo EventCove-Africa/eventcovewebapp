@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Cookies from "js-cookie";
-import { ArrowDown2, ArrowRight2, Logout, User } from "iconsax-react";
+import {
+  ArrowDown2,
+  ArrowLeft,
+  ArrowRight2,
+  Logout,
+  User,
+} from "iconsax-react";
 import logo from "../../assets/icons/logo.svg";
 import QRscan from "./components/QRscan";
 import TicketIdEntry from "./components/TicketIdEntry";
@@ -28,6 +34,7 @@ type TicketValidationProps = {
 export default function TicketsValidation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { state } = useLocation();
   const menuRef = useRef<HTMLDivElement | null>(null); // For the menu
   const buttonRef = useRef<HTMLButtonElement | null>(null); // For the button
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
@@ -115,6 +122,9 @@ export default function TicketsValidation() {
             aria-label="User Avatar"
           />
           <div className="flex flex-col gap-1">
+            <h4 className="text-dark_200 text-xs font-normal">
+              Tickets validation
+            </h4>
             <button
               className="text-grey_100 text-xs font-normal flex gap-2 cursor-pointer"
               onClick={handleMenuToggle}
@@ -148,62 +158,75 @@ export default function TicketsValidation() {
             )}
           </div>
         </div>
-      </header>
-      <div className="flex-1 h-full md:p-6 p-4 w-full flex lg:gap-16 gap-4 lg:flex-row flex-col justify-between gap">
-        <div className="lg:w-3/5 w-full flex flex-col gap-2">
-          <h4 className="text-dark_200 md:text-base text-sm font-bold">
-            Validate tickets using
-          </h4>
-          <h4 className="text-dark_200 md:text-sm text-xs font-normal">
-            Select any of the options below ✨
-          </h4>
-          <div className="flex flex-col w-full gap-4">
-            {options.map((d, i) => {
-              const is_active = d?.key === validationType;
-              const active_color = is_active
-                ? "text-primary_100"
-                : "text-dark_200";
-              return (
-                <div
-                  onClick={() => {
-                    if (d?.key !== "scan") {
-                      navigate(
-                        `/tickets-validation/${eventId}?validation-type=${d?.key}`
-                      );
-                    } else {
-                      toast.success("COMING SOON....");
-                    }
-                  }}
-                  key={i}
-                  className={`${
-                    is_active
-                      ? "bg-primary_300 border border-secondary_200"
-                      : "bg-white cursor-pointer"
-                  } flex justify-between items-center p-4 rounded-md`}
-                >
-                  <h4 className={`${active_color} text-sm font-normal`}>
-                    {d?.name}
-                  </h4>
-                  <ArrowRight2 size="16" className={`${active_color}`} />
-                </div>
-              );
-            })}
+      </header> 
+      <div className="md:px-6 px-4 w-full">
+        {state === "EVENT_ORGANIZER" && (
+          <div
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-1 mb-4 cursor-pointer"
+          >
+            <ArrowLeft size="16" color="#000000" />
+            <h4 className="text-dark_200 md:text-base text-sm font-bold">
+              Go Back to event details
+            </h4>
           </div>
+        )}
+        <div className="flex-1 h-full  flex lg:gap-16 gap-4 lg:flex-row flex-col justify-between gap">
+          <div className="lg:w-3/5 w-full flex flex-col gap-2">
+            <h4 className="text-dark_200 md:text-sm text-xs font-normal">
+              Select any of the options below ✨
+            </h4>
+            <div className="flex flex-col w-full gap-4">
+              {options.map((d, i) => {
+                const is_active = d?.key === validationType;
+                const active_color = is_active
+                  ? "text-primary_100"
+                  : "text-dark_200";
+                return (
+                  <div
+                    onClick={() => {
+                      if (d?.key !== "scan") {
+                        navigate(
+                          `/tickets-validation/${eventId}?validation-type=${d?.key}`,
+                          {
+                            state,
+                          }
+                        );
+                      } else {
+                        toast.success("COMING SOON....");
+                      }
+                    }}
+                    key={i}
+                    className={`${
+                      is_active
+                        ? "bg-primary_300 border border-secondary_200"
+                        : "bg-white cursor-pointer"
+                    } flex justify-between items-center p-4 rounded-md`}
+                  >
+                    <h4 className={`${active_color} text-sm font-normal`}>
+                      {d?.name}
+                    </h4>
+                    <ArrowRight2 size="16" className={`${active_color}`} />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          {validationType === "scan" && (
+            <QRscan
+              eventReference={eventId}
+              email={user_email}
+              handleOpenClose={handleOpenClose}
+            />
+          )}
+          {validationType === "ticket_id_entry" && (
+            <TicketIdEntry
+              eventReference={eventId}
+              email={user_email}
+              handleValidateTickets={handleValidateTickets}
+            />
+          )}
         </div>
-        {validationType === "scan" && (
-          <QRscan
-            eventReference={eventId}
-            email={user_email}
-            handleOpenClose={handleOpenClose}
-          />
-        )}
-        {validationType === "ticket_id_entry" && (
-          <TicketIdEntry
-            eventReference={eventId}
-            email={user_email}
-            handleValidateTickets={handleValidateTickets}
-          />
-        )}
       </div>
       <ModalPopup isOpen={isOpenModal}>
         <SignupSuccess
