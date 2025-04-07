@@ -129,8 +129,8 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
         </select>
       </div>
 
-      <div className="bg-grey_900 w-[250px] h-[250px] mb-8 mt-4">
-        <div id={scannerContainerId} />
+      <div className="bg-grey_900 w-[250px] h-[250px] mb-20 mt-4">
+        <div id={scannerContainerId} className="" />
       </div>
 
       {!isScanning ? (
