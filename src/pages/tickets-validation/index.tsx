@@ -158,14 +158,14 @@ export default function TicketsValidation() {
             )}
           </div>
         </div>
-      </header> 
+      </header>
       <div className="md:px-6 px-4 w-full">
         {state === "EVENT_ORGANIZER" && (
           <div
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(`/app/events/${eventId}`)}
             className="flex items-center gap-1 mb-4 cursor-pointer"
           >
-            <ArrowLeft size="16" color="#000000" />
+            <ArrowLeft size="24" color="#000000" />
             <h4 className="text-dark_200 md:text-base text-sm font-bold">
               Go Back to event details
             </h4>
@@ -185,16 +185,12 @@ export default function TicketsValidation() {
                 return (
                   <div
                     onClick={() => {
-                      if (d?.key !== "scan") {
-                        navigate(
-                          `/tickets-validation/${eventId}?validation-type=${d?.key}`,
-                          {
-                            state,
-                          }
-                        );
-                      } else {
-                        toast.success("COMING SOON....");
-                      }
+                      navigate(
+                        `/tickets-validation/${eventId}?validation-type=${d?.key}`,
+                        {
+                          state,
+                        }
+                      );
                     }}
                     key={i}
                     className={`${

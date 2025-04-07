@@ -8,12 +8,14 @@ interface QRCodeScannerProps {
   onError?: (error: string) => void;
 }
 
+type CameraDevice = { id: string; label: string };
+
 export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
   onScan,
   onError,
 }) => {
   const [isScanning, setIsScanning] = useState(false);
-  const [cameras, setCameras] = useState<{ id: string; label: string }[]>([]);
+  const [cameras, setCameras] = useState<CameraDevice[]>([]);
   const [selectedCamera, setSelectedCamera] = useState<string | null>(null);
   const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
   const scannerContainerId = "custom-qr-scanner";
@@ -21,36 +23,32 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
   useEffect(() => {
     // Fetch available cameras
     Html5Qrcode.getCameras()
-      .then((devices) => {
+      .then((devices: CameraDevice[]) => {
         if (devices?.length > 0) {
           setCameras(devices);
 
           // Prefer the back camera if available
-          const backCamera = devices?.find((device) =>
-            device?.label?.toLowerCase()?.includes("back")
+          const backCamera = devices.find((device) =>
+            device.label.toLowerCase().includes("back")
           );
 
-          setSelectedCamera(backCamera ? backCamera?.id : devices?.[0]?.id);
-          // console.log("Cameras initialized:", devices);
+          setSelectedCamera(backCamera ? backCamera.id : devices[0].id);
         } else {
-          // console.error("No cameras found");
-          if (onError) onError("No cameras found");
+          onError?.("No cameras found");
         }
       })
-      .catch((err) => {
-        // console.error("Error fetching cameras:", err);
-        if (onError) onError("Error fetching cameras: " + err?.message);
+      .catch((err: Error) => {
+        onError?.("Error fetching cameras: " + err.message);
       });
 
     return () => {
       stopScanning();
     };
-  }, [onError]);
+  }, []);
 
   const startScanning = () => {
     if (!selectedCamera) {
-      // console.error("No camera selected");
-      if (onError) onError("No camera selected");
+      onError?.("No camera selected");
       return;
     }
 
@@ -62,43 +60,46 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
     }
 
     setTimeout(() => {
-      html5QrCodeRef
-        ?.current!.start(
-          selectedCamera, // Use selected camera ID instead of facingMode
+      html5QrCodeRef.current
+        ?.start(
+          selectedCamera,
           {
             fps: 10,
             qrbox: 250,
-            // qrbox: { width: 250, height: 250 },
             videoConstraints: {
               width: { ideal: 640 },
               height: { ideal: 680 },
             },
           },
-          (decodedText) => {
+          (decodedText: string) => {
             onScan(decodedText);
             stopScanning();
           },
-          (errorMessage) => {
+          (errorMessage: string) => {
             console.warn("QR Code scan error:", errorMessage);
           }
         )
         .then(() => setIsScanning(true))
-        .catch((err) => {
-          // console.error("Failed to start scanning:", err);
-          if (onError) onError(err.message);
+        .catch((err: Error) => {
+          onError?.(err.message);
         });
     }, 500);
   };
 
   const stopScanning = () => {
-    if (html5QrCodeRef.current) {
-      html5QrCodeRef?.current
-        ?.stop()
-        ?.then(() => setIsScanning(false))
-        ?.catch((err) => {
-          // console.error("Failed to stop scanning:", err);
-          if (onError) onError(err?.message);
+    const scanner = html5QrCodeRef.current;
+    if (scanner && scanner.getState() === 2) {
+      // 2 = SCANNING, based on Html5QrcodeScannerState enum
+      scanner
+        .stop()
+        .then(() => setIsScanning(false))
+        .catch((err: Error) => {
+          console.warn("Failed to stop scanning:", err.message);
+          onError?.(err.message);
         });
+    } else {
+      // Safe fallback: it's already stopped or not initialized
+      setIsScanning(false);
     }
   };
 
@@ -106,7 +107,7 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
     setSelectedCamera(event.target.value);
     if (isScanning) {
       stopScanning();
-      setTimeout(startScanning, 500); // Restart scanning with the new camera
+      setTimeout(startScanning, 500); // Restart with new camera
     }
   };
 
@@ -130,6 +131,7 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
       <div className="bg-grey_900 w-[250px] h-[250px] mb-8 mt-4">
         <div id={scannerContainerId} />
       </div>
+
       {!isScanning ? (
         <div className="flex flex-col w-full justify-center items-center gap-1">
           <div
