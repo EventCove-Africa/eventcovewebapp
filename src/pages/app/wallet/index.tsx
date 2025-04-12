@@ -178,7 +178,7 @@ export default function Wallet() {
       <ModalPopup isOpen={isOpenModal("infoModal")}>
         <InfoModal
           handleOpenClose={() => handleOpenClose("infoModal")}
-          text="Please contact our support team on eventcoveafrica@gmail.com"
+          text="Please contact our support team on support@eventcove.africa"
         />
       </ModalPopup>
       <ModalPopup isOpen={isOpenModal("withdrawals")}>
