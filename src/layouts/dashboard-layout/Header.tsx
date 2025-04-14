@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useRef, useEffect, useCallback } from "react";
 import {
   ArrowDown2,
@@ -27,8 +28,8 @@ export const MenuItem: React.FC<MenuItemProps> = ({ icon, label, onClick }) => {
   );
 };
 
-export default function Header() {
-  const { logout, userDetails } = useUser() as useUserProps;
+export default function Header({ setLogoutConfirmation }: any) {
+  const { userDetails } = useUser() as useUserProps;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -61,7 +62,7 @@ export default function Header() {
 
   const handleLogout = () => {
     setIsMenuOpen(false);
-    logout();
+    setLogoutConfirmation(true);
   };
 
   return (

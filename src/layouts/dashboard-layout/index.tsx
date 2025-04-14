@@ -5,9 +5,12 @@ import Sidebar from "./Sidebar";
 import Footer from "./Footer";
 import MobileNavigation from "./MobileNavigation";
 import LogoutOnInactivity from "../../components/LogoutOnInactivity";
+import ModalPopup from "../../components/ModalPopup";
+import LogoutConfirm from "./LogoutConfirm";
 
 export default function DashboardLayout() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [logoutConfirmation, setLogoutConfirmation] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed((prevState) => !prevState);
@@ -31,7 +34,7 @@ export default function DashboardLayout() {
       <div className="flex flex-col flex-1 overflow-hidden">
         {/* Header */}
         <header className="h-[56px] bg-white flex-shrink-0 px-4">
-          <Header />
+          <Header setLogoutConfirmation={setLogoutConfirmation} />
         </header>
 
         {/* Main Content Area */}
@@ -49,6 +52,10 @@ export default function DashboardLayout() {
       </div>
 
       <LogoutOnInactivity />
+
+      <ModalPopup isOpen={logoutConfirmation}>
+        <LogoutConfirm setLogoutConfirmation={setLogoutConfirmation} />
+      </ModalPopup>
     </div>
   );
 }
