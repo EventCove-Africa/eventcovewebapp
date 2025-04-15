@@ -47,7 +47,7 @@ export default function EventDetails() {
     const payload = {
       eventId: id,
     };
-    const pusblishUnpublish = isEventPublised ? "publish" : "unpublish";
+    const pusblishUnpublish = isEventPublised ? "unpublish" : "publish";
     setLoadingEventDetails((prev) => ({
       ...prev,
       publish: !loadingEventDetails?.publish,
