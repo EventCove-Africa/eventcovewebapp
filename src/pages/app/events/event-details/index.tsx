@@ -54,7 +54,7 @@ export default function EventDetails() {
     }));
     try {
       const { status, data } = await api.post(
-        appUrls.EVENT_URL + pusblishUnpublish,
+        appUrls.EVENT_URL + `/${pusblishUnpublish}`,
         payload
       );
       const message = data?.data;
