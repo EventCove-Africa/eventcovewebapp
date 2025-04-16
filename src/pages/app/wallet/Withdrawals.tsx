@@ -68,7 +68,7 @@ export default function Withdrawals({
         <h4 className="text-dark_200 md:text-base text-sm font-bold">
           Withdrawal
         </h4>
-       
+
         <div className="flex justify-end">
           <img
             onClick={handleOpenClose}
@@ -79,10 +79,10 @@ export default function Withdrawals({
         </div>
       </div>
       <h4 className="text-dark_200 text-xs font-normal">
-          Payout requests are typically processed within 3 hours between 8:00 AM
-          and 5:00 PM. Requests made after this window may experience slight
-          delays but will be attended to as soon as possible.
-        </h4>
+        Payout requests are typically processed within 3 hours between 8:00 AM
+        and 5:00 PM. Requests made after this window may experience slight
+        delays but will be attended to as soon as possible.
+      </h4>
       <Formik
         initialValues={{
           transaction_pin: "",
