@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "iconsax-react";
 import Button from "../../../components/FormComponents/Button";
-
 import EventCard from "../../../components/EventCard";
 import { useEffect } from "react";
 import useGetOrganizerStats from "../../../hooks/useGetOrganizerStats";
@@ -31,7 +30,11 @@ export default function Home() {
         <div className="w-full flex flex-col gap-3">
           <h1 className="text-grey_100 md:text-base text-sm font-normal">
             Hey, welcome to Event Cove! 🌊{" "}
-            {`${!loading && !stats?.totalEvents ? "Tap Create Event to get started!" : ''}`}
+            {`${
+              !loading && !stats?.totalEvents
+                ? "Tap Create Event to get started!"
+                : ""
+            }`}
           </h1>
           <div className="w-full flex flex-wrap justify-between items-center gap-2">
             <Button
