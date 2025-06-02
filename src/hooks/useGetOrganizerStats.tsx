@@ -12,6 +12,7 @@ type statsProps = {
   totalEvents: number;
   totalSales: number;
   totalTicketsPurchase: number;
+  totalReferralCount: number;
 };
 
 const useGetOrganizerStats = () => {

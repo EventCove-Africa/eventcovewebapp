@@ -97,6 +97,7 @@ export type SignUpData = {
   firstName: string;
   lastName: string;
   password?: string;
+  referralCode?: any;
 };
 
 export type LoginProps = {
@@ -109,6 +110,7 @@ export type userDetailsProps = {
   fullName: string;
   email: string;
   id: string;
+  referralCode: string;
   eventId?: string | null;
 };
 

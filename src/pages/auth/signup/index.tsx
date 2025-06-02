@@ -43,6 +43,7 @@ export default function SignUp() {
   const getParam = useQueryParams();
   const { signup, handleAuthWithGoogle } = useUser() as useUserProps;
   const verifyOTPEmailFromLogin = getParam("verifyOTP");
+  const referralCode = getParam("referralCode");
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
   const [userDetailsFromGoogle, setUserDetailsFromGoogle] =
     useState<GoogleUserInfoProp>();
@@ -80,6 +81,7 @@ export default function SignUp() {
         firstName: userInfo?.given_name || "",
         lastName: userInfo?.family_name || "",
         email: userInfo?.email || "",
+        referralCode,
       };
       handleAuthWithGoogle({ payload, handleOpenClose, setIsLoadingGoogle });
     },
@@ -143,6 +145,7 @@ export default function SignUp() {
           const payload = {
             ...values,
             email: values?.email?.toLowerCase(),
+            referralCode,
           };
           signup({
             payload,
@@ -239,6 +242,22 @@ export default function SignUp() {
                   touched={touched?.confirmPassword}
                 />
               </div>
+              {referralCode && (
+                <div className="mt-3">
+                  <TextInputField
+                    labelName="Referral Code"
+                    name="confirmPassword"
+                    handleChange={handleChange}
+                    placeholder="**********"
+                    value={referralCode}
+                    readOnly
+                  />
+                  <p className="text-xs mt-1 text-primary_100">
+                    Please note: If the referral code is incorrect, the invitor
+                    will not receive their commission.
+                  </p>
+                </div>
+              )}
 
               <Button
                 title="Sign Up"
@@ -290,6 +309,5 @@ export default function SignUp() {
         />
       </ModalPopup>
     </motion.main>
-    
   );
 }

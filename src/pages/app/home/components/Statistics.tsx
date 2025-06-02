@@ -7,8 +7,12 @@ import event2 from "../../../../assets/icons/events2.svg";
 import guest from "../../../../assets/icons/guest.svg";
 import payment from "../../../../assets/icons/payment.svg";
 import ticket2 from "../../../../assets/icons/ticket2.svg";
+import { useUserProps } from "../../../../types";
+import { useUser } from "../../../../context/UserDetailsProvider.tsx";
+import CopyToClipboard from "../../../../components/CopyToClipboard";
 
 export default function Statistics({ details, loading }: any) {
+  const { userDetails } = useUser() as useUserProps;
   const [eventData, setEventData] = useState([
     {
       title: "Total Revenue",
@@ -34,6 +38,12 @@ export default function Statistics({ details, loading }: any) {
       key: "totalTicketsPurchase",
       value: 0,
       icon: ticket2,
+    },
+    {
+      title: "Total Referral Count",
+      key: "totalReferralCount",
+      value: 0,
+      icon: event2,
     },
   ]);
 
@@ -92,9 +102,20 @@ export default function Statistics({ details, loading }: any) {
                   className="w-6 h-6"
                 />
               </div>
-              <span className="text-dark_400 text-lg md:text-2xl font-bold md:mt-4 mt-2">
-                {item.value}
-              </span>
+              <div className="flex justify-between items-center">
+                <span className="text-dark_400 text-lg md:text-2xl font-bold md:mt-4 mt-2">
+                  {item.value || 0}
+                </span>
+                {["totalReferralCount"].includes(item?.key) && (
+                  <span className="text-primary_100 text-xs cursor-pointer font-bold md:mt-4 mt-2 flex items-center gap-1">
+                    Referral code
+                    <CopyToClipboard
+                      color="text-primary_100"
+                      text={`${window.location.origin}/#/auth/signup?referralCode=${userDetails?.referralCode}`}
+                    />
+                  </span>
+                )}
+              </div>
             </article>
           ))}
       </div>
