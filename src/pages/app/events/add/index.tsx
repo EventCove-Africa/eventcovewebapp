@@ -201,6 +201,7 @@ export default function AddEvents() {
           eventCategory: allEventDetails?.eventCategory || "",
           city: allEventDetails?.city || "Others",
           email: "",
+          slug: allEventDetails?.slug || "",
           email_list: [],
           eventVenueType: allEventDetails?.eventVenueType || "",
           location: allEventDetails?.location || "",
@@ -308,11 +309,11 @@ export default function AddEvents() {
                         <h3 className="text-grey_100 text-xs leading-4 font-normal text-center">
                           Drag or drop image
                         </h3>
-                        <h3 className="text-dark_200 text-xs leading-4 font-normal text-center">
+                        {/* <h3 className="text-dark_200 text-xs leading-4 font-normal text-center">
                           Recommended dimension: 1200px x 600px
-                        </h3>
+                        </h3> */}
                         <h3 className="text-dark_200 text-xs leading-4 font-normal text-center">
-                          Note: Max file size: 3mb
+                          Note: Max file size: 5mb
                         </h3>
                       </div>
                     )}
@@ -396,6 +397,48 @@ export default function AddEvents() {
                     touched={touched?.location}
                   />
                 </div>
+                <label
+                  htmlFor="slug"
+                  className={`text-xs text-dark_200 leading-5 flex items-center`}
+                >
+                  Use Custom URL
+                </label>
+                <div className={`flex border rounded-md overflow-hidden mb-3`}>
+                  <span className="bg-gray-100 text-gray-700 px-3 py-2 text-sm flex items-center whitespace-nowrap">
+                    eventcove.africa/events/
+                  </span>
+                  <TextInputField
+                    name="slug"
+                    handleChange={handleChange}
+                    type="text"
+                    placeholder=""
+                    value={values.slug}
+                    errors={errors?.slug}
+                    touched={touched?.slug}
+                    inputClassName="border-none"
+                  />
+                </div>
+                {/* <div className="mb-2 flex items-center">
+                  <TextInputField
+                    labelName="Use Custom URL"
+                    name=""
+                    handleChange={handleChange}
+                    type="text"
+                    placeholder=""
+                    value="eventcove.africa/events/"
+                  />
+                  <div className="w-full">
+                    <TextInputField
+                      name="slug"
+                      handleChange={handleChange}
+                      type="text"
+                      placeholder=""
+                      value={values.slug}
+                      errors={errors?.slug}
+                      touched={touched?.slug}
+                    />
+                  </div>
+                </div> */}
                 <div className="w-full flex gap-3 md:flex-row flex-col">
                   <div className="mb-2 w-full">
                     <DateTimePicker

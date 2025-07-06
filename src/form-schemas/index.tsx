@@ -204,13 +204,16 @@ export const addTicketSchema = Yup.object().shape({
     }
     return schema.required("Seat name is required");
   }),
-  groupTicketLimit: Yup.string()
-    .test("max-limit", "Group ticket limit cannot exceed 10", (value) => {
+  groupTicketLimit: Yup.string().test(
+    "max-limit",
+    "Group ticket limit cannot exceed 10",
+    (value) => {
       if (!value) return true; // Allow empty values (handled by required)
       const numValue = Number(value);
       return !isNaN(numValue) && numValue <= 10;
-    }),
-    // .required("Group ticket limit is required"),
+    }
+  ),
+  // .required("Group ticket limit is required"),
   colour: Yup.string(),
   all_values: Yup.mixed(),
   ticket_details: Yup.boolean(), // Must be defined as a boolean
@@ -257,13 +260,16 @@ export const editTicketSchema = Yup.object().shape({
   classification: Yup.mixed().required("Classification is required"),
   category: Yup.string().required("Category is required"),
   name: Yup.string().required("Seat name is required"),
-  groupTicketLimit: Yup.string()
-    .test("max-limit", "Group ticket limit cannot exceed 10", (value) => {
+  groupTicketLimit: Yup.string().test(
+    "max-limit",
+    "Group ticket limit cannot exceed 10",
+    (value) => {
       if (!value) return true; // Allow empty values (handled by required)
       const numValue = Number(value);
       return !isNaN(numValue) && numValue <= 10;
-    }),
-    // .required("Group ticket limit is required"),
+    }
+  ),
+  // .required("Group ticket limit is required"),
   colour: Yup.string(),
   all_values: Yup.mixed(),
   ticket_details: Yup.boolean(), // Must be defined as a boolean
@@ -292,6 +298,10 @@ export const addEventSchema = Yup.object().shape({
       return false; // If value is not a File, validation fails
     }),
   eventName: Yup.string().required("Name is required"),
+  slug: Yup.string().matches(
+    /^[a-zA-Z0-9]*$/,
+    "Custom URL cannot contain special characters"
+  ),
   eventVenueType: Yup.string().required("Venue type is required"),
   city: Yup.string().when("eventVenueType", ([eventVenueType], schema) => {
     if (eventVenueType === "Physical") {
