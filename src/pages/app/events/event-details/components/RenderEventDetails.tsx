@@ -130,9 +130,9 @@ export default function RenderEventDetails({
             )}
           </div>
           <div className="w-full h-auto rounded-lg bg-primary_300 p-3 flex justify-between items-center border border-dotted border-grey_100 text-primary_100 mt-2 font-normal text-sm flex-wrap">
-            <div className="flex-1 break-all">{allEventDetails?.eventUrl}</div>
+            <div className="flex-1 break-all">{allEventDetails?.customUrl || allEventDetails?.eventUrl}</div>
             <CopyToClipboard
-              text={allEventDetails?.eventUrl}
+              text={allEventDetails?.eventUrl || allEventDetails?.customUrl}
               size="20"
               color="text-primary_100"
             />
