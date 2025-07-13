@@ -3,7 +3,7 @@ import { Export } from "iconsax-react";
 
 type ExportButtonProp = {
   loadingEventDetails: { export: boolean };
-  handleExportEvent: (prop: string) => void;
+  handleExportEvent: (prop: "csv" | "pdf") => void;
 };
 
 export default function ExportButton({
