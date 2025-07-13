@@ -79,7 +79,7 @@ export default function EventDetails() {
     }));
     try {
       const { status, data } = await api.get(appUrls.EXPORT_URL + `/${id}`);
-      const message = data?.data?.data;
+      const message = data?.data;
       if ([200, 201].includes(status)) {
         toast.success(message);
       }
