@@ -6,7 +6,7 @@ import {
   isArrayEmpty,
   isObjectEmpty,
 } from "../../../../utils";
-import { Export, Trash } from "iconsax-react";
+import { Eye, Trash } from "iconsax-react";
 import Button from "../../../../components/FormComponents/Button";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
@@ -18,6 +18,7 @@ import RenderEventDetails from "./components/RenderEventDetails";
 import RenderTicketsStatForEvents from "./components/RenderTicketsStatForEvents";
 import useEventHook from "../../../../hooks/useEventHook";
 import CopyToClipboard from "../../../../components/CopyToClipboard";
+import ExportButton from "../../../../components/FormComponents/ExportButton";
 
 export default function EventDetails() {
   const navigate = useNavigate();
@@ -72,13 +73,15 @@ export default function EventDetails() {
     }
   };
 
-  const handleExportEvent = async () => {
+  const handleExportEvent = async (mediaType: string) => {
     setLoadingEventDetails((prev) => ({
       ...prev,
       export: !loadingEventDetails?.export,
     }));
     try {
-      const { status, data } = await api.get(appUrls.EXPORT_URL + `/${id}`);
+      const { status, data } = await api.get(
+        appUrls.EXPORT_URL + `/${id}?mediaType=${mediaType}`
+      );
       const message = data?.data;
       if ([200, 201].includes(status)) {
         toast.success(message);
@@ -171,27 +174,26 @@ export default function EventDetails() {
 
   return (
     <div className="w-full h-full">
-      <div className="w-full flex md:flex-row flex-col justify-between mb-3">
+      <div className="w-full flex lg:flex-row flex-col justify-between mb-3">
         <DescriptionBar text="Get the full picture of your event 🌟" />
-        <div className="flex items-center gap-3">
+        <div className="flex md:flex-row flex-col md:items-center items-start gap-3">
           <button
             type="button"
-            className="px-3 py-2 bg-primary_300 text-primary_100 rounded-md flex items-center justify-center self-end gap-1 text-sm"
+            className="px-3 py-2 bg-primary_300 text-primary_100 rounded-md flex items-center justify-center md:self-end gap-1 text-sm"
             aria-label="Export details"
-            onClick={handleExportEvent}
-            disabled={loadingEventDetails?.export}
+            onClick={() => navigate(`/app/events/attendees/${id}`)}
           >
-            <Export size={20} className="text-primary_100" />
-            <span>
-              {loadingEventDetails?.export
-                ? "Exporting....."
-                : "Export details"}
-            </span>
+            <Eye size={20} className="text-primary_100" />
+            View Attendees
           </button>
+          <ExportButton
+            handleExportEvent={handleExportEvent}
+            loadingEventDetails={loadingEventDetails}
+          />
           {isShowDeleteButton && (
             <button
               type="button"
-              className="px-3 py-2 bg-primary_300 text-primary_100 rounded-md flex items-center justify-center self-end gap-1 text-sm"
+              className="px-3 py-2 bg-primary_300 text-primary_100 rounded-md flex items-center justify-center md:self-end gap-1 text-sm"
               aria-label="Export details"
               onClick={handleCancelEvent}
               disabled={loadingEventDetails?.delete}

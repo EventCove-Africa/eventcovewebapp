@@ -43,6 +43,7 @@ const useEventHook = () => {
   });
   const [eventSalesStats, setEventSalesStats] =
     useState<eventSalesStatsProps>();
+  const [attendeesData, setAttendeesData] = useState([]);
   const [ticketTypes, setTicketTypes] = useState<ticketTypesProps | null>(null);
 
   const fetchEventCategories = useCallback(async () => {
@@ -179,7 +180,7 @@ const useEventHook = () => {
     }));
     try {
       const { status, data } = await api.get(
-        appUrls.EVENT_TICKET_SALES_URL + `/${event_id}`
+        appUrls.EVENT_TICKET_SALES_URL + `/${event_id}?page=${curPage - 1}&size=10`
       );
       const result = data?.data;
       if ([200, 201].includes(status)) {
@@ -188,6 +189,11 @@ const useEventHook = () => {
         const totalTicketSales = result?.totalTicketSales || 0;
         const totalTicketSold = result?.totalTicketSold || 0;
         const totalTicketValidated = result?.totalTicketValidated || 0;
+        const pageDto = result?.pageDto;
+        const attendees = pageDto?.data;
+        const total_Pages = pageDto?.totalPages;
+        setAttendeesData(attendees);
+        setTotalPages(total_Pages);
         setEventSalesStats({
           totalTicketBuyers,
           totalTicketNotValidated,
@@ -249,6 +255,7 @@ const useEventHook = () => {
     eventTeamMembersUrl,
     eventTeamMembers,
     allEventsData,
+    attendeesData,
     setCurPage,
     curPage,
     totalPages,

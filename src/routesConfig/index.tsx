@@ -25,6 +25,7 @@ export const APP_ROUTES = {
   ADD_EVENTS: "/app/events/add",
   EDIT_EVENTS: "/app/events/edit/:event_id",
   EVENT_DETAILS: "/app/events/:id",
+  VIEW_EVENT_ATTENDEES: "/app/events/attendees/:id",
   TICKETS: "/app/tickets",
   ADD_TICKETS: "/app/tickets/add/:eventId",
   EDIT_TICKETS: "/app/tickets/edit/:ticketId",
@@ -79,6 +80,10 @@ export const AddEvents = lazyLoad(
 export const EventDetails = lazyLoad(
   () => import("../pages/app/events/event-details"),
   "EventDetails"
+);
+export const ViewAttendees = lazyLoad(
+  () => import("../pages/app/events/event-details/ViewAttendees"),
+  "ViewAttendees"
 );
 export const Tickets = lazyLoad(
   () => import("../pages/app/tickets"),
@@ -254,6 +259,14 @@ export const routeConfig = [
         element: (
           <AnimatedRoute>
             <AddEvents />
+          </AnimatedRoute>
+        ),
+      },
+      {
+        path: APP_ROUTES.VIEW_EVENT_ATTENDEES,
+        element: (
+          <AnimatedRoute>
+            <ViewAttendees />
           </AnimatedRoute>
         ),
       },
