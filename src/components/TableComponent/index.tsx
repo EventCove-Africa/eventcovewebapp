@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
 import {
   useTable,
   usePagination,
@@ -19,6 +17,8 @@ type TableProps<T extends object> = {
   data: T[];
   showPagination?: boolean;
   isLoading?: boolean;
+  totalPages?: number;
+  setPage?: (props: number) => void;
   // onSearch?: (query: string) => Promise<T[]>;
 };
 
@@ -27,12 +27,13 @@ const TableComponent = <T extends object>({
   data,
   showPagination = true,
   isLoading,
+  totalPages,
+  setPage,
 }: TableProps<T>) => {
   // const [searchQuery, setSearchQuery] = useState("");
-  const [_currentPage, setCurrentPage] = useState(0);
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    setPage?.(page);
   };
 
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, page } =
@@ -95,7 +96,7 @@ const TableComponent = <T extends object>({
                     {row.cells.map((cell: any) => (
                       <td
                         {...cell.getCellProps()}
-                        className="py-2 px-4 text-left text-dark_300 font-normal text-xs"
+                        className="py-2 px-4 text-left text-dark_300 font-normal md:text-sm text-xs"
                       >
                         {cell.render("Cell")}
                       </td>
@@ -120,8 +121,8 @@ const TableComponent = <T extends object>({
         )}
       </div>
       {!isLoading && showPagination && (
-        <div className="w-full flex justify-center items-center mt-3">
-          <Pagination totalPages={1} onPageChange={handlePageChange} />
+        <div className="w-full flex justify-center items-center mt-8">
+          <Pagination totalPages={totalPages} onPageChange={handlePageChange} />
         </div>
       )}
     </>

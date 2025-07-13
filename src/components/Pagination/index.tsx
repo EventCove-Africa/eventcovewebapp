@@ -2,13 +2,13 @@ import { ArrowLeft2, ArrowRight2 } from "iconsax-react";
 import React, { useState } from "react";
 
 interface PaginationProps {
-  totalPages: number;
+  totalPages?: number;
   onPageChange: (page: number) => void;
   maxVisiblePages?: number;
 }
 
 const Pagination: React.FC<PaginationProps> = ({
-  totalPages,
+  totalPages = 1,
   onPageChange,
   maxVisiblePages = 3,
 }) => {
