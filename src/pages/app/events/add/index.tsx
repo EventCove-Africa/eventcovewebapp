@@ -403,7 +403,7 @@ export default function AddEvents() {
                 >
                   Use Custom URL
                 </label>
-                <div className={`flex border rounded-md overflow-hidden mb-3`}>
+                <div className={`flex border rounded-md overflow-hidden`}>
                   <span className="bg-gray-100 text-gray-700 px-3 py-2 text-sm flex items-center whitespace-nowrap">
                     eventcove.africa/events/
                   </span>
@@ -413,33 +413,19 @@ export default function AddEvents() {
                     type="text"
                     placeholder=""
                     value={values.slug}
-                    errors={errors?.slug}
-                    touched={touched?.slug}
                     inputClassName="border-none"
                   />
                 </div>
-                {/* <div className="mb-2 flex items-center">
-                  <TextInputField
-                    labelName="Use Custom URL"
-                    name=""
-                    handleChange={handleChange}
-                    type="text"
-                    placeholder=""
-                    value="eventcove.africa/events/"
-                  />
-                  <div className="w-full">
-                    <TextInputField
-                      name="slug"
-                      handleChange={handleChange}
-                      type="text"
-                      placeholder=""
-                      value={values.slug}
-                      errors={errors?.slug}
-                      touched={touched?.slug}
-                    />
+                {errors.slug && touched.slug ? (
+                  <div className="text-xs text-red font-medium text-red-500 mb-3">
+                    {typeof errors.slug === "string"
+                      ? errors.slug
+                      : Array.isArray(errors.slug)
+                      ? errors.slug.join(", ")
+                      : ""}
                   </div>
-                </div> */}
-                <div className="w-full flex gap-3 md:flex-row flex-col">
+                ) : null}
+                <div className="w-full flex gap-3 mt-3 md:flex-row flex-col">
                   <div className="mb-2 w-full">
                     <DateTimePicker
                       labelName="Start Date & Time"
