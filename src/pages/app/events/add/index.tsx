@@ -413,8 +413,6 @@ export default function AddEvents() {
                     type="text"
                     placeholder=""
                     value={values.slug}
-                    // errors={errors?.slug}
-                    // touched={touched?.slug}
                     inputClassName="border-none"
                   />
                 </div>
