@@ -111,6 +111,7 @@ export type userDetailsProps = {
   email: string;
   id: string;
   referralCode: string;
+  profileCompletionLevel: number | null;
   eventId?: string | null;
 };
 

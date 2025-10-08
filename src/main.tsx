@@ -22,7 +22,7 @@ createRoot(document.getElementById("root")!).render(
       <Toaster
         toastOptions={{
           duration: 4000,
-          className: "z-50",
+          className: "z-50 text-xs",
         }}
       />
     </HashRouter>
