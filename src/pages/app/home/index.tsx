@@ -118,7 +118,6 @@ export default function Home() {
             />
           </div>
         </div>
-
         {userDetails?.profileCompletionLevel !== 100 ? (
           <>
             <div className="flex gap-2 w-full md:justify-end justify-end items-center">
