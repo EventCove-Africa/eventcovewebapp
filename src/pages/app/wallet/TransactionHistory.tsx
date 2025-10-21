@@ -52,12 +52,12 @@ export default function TransactionHistory({
       activeType === "all"
         ? ""
         : activeType === "credit"
-        ? "transactionType=Credit"
-        : "transactionType=Debit";
+        ? "&transactionType=Credit"
+        : "&transactionType=Debit";
     try {
       const { status, data } = await api.get(
         appUrls.WALLET_URL +
-          `/filter/transactions?organizerId=${userDetails?.id}&page=${page - 1}&size=${8}&${transactionType}${transactionStatus}`
+          `/filter/transactions?organizerId=${userDetails?.id}&page=${page - 1}&size=${8}${transactionType}${transactionStatus}`
       );
       const result = data?.data;
       if ([200, 201].includes(status)) {
