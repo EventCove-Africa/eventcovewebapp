@@ -65,12 +65,12 @@ export default function TransactionHistory({
       if ([200, 201].includes(status)) {
         if (result?.data) {
           setTransactions(result?.data);
-          setPage(result?.currentPage);
           setTotalPages(result?.totalPages);
         }
       }
     } catch (error: any) {
       toast.error(_handleThrowErrorMessage(error?.data?.message));
+      setTransactions([])
     } finally {
       setIsLoading(false);
     }
