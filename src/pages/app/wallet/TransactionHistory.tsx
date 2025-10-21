@@ -6,7 +6,6 @@ import toast from "react-hot-toast";
 import { CardReceive, CardSend } from "iconsax-react";
 import {
   _handleThrowErrorMessage,
-  formatTimeToshowAmPm,
   formatToNairaShortenFigure,
   isArrayEmpty,
 } from "../../../utils";
@@ -41,7 +40,7 @@ export default function TransactionHistory({
   const [activeType, setActiveType] = useState("all");
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState<number>(1);
-  const [totalSize] = useState<number>(10);
+  const [totalPages, setTotalPages] = useState<number>(10);
 
   const links = [
     { name: "All", key: "all" },
@@ -60,13 +59,14 @@ export default function TransactionHistory({
     try {
       const { status, data } = await api.get(
         appUrls.WALLET_URL +
-          `/filter/transactions?organizerId=${userDetails?.id}&page=${page}&size=${totalSize}&${transactionType}${transactionStatus}`
+          `/filter/transactions?organizerId=${userDetails?.id}&page=${page}&size=${8}&${transactionType}${transactionStatus}`
       );
       const result = data?.data;
       if ([200, 201].includes(status)) {
         if (result?.data) {
           setTransactions(result?.data);
           setPage(result?.currentPage);
+          setTotalPages(result?.totalPages);
         }
       }
     } catch (error: any) {
@@ -148,7 +148,7 @@ export default function TransactionHistory({
                         {transactionDate}
                       </h4>
                       <h4 className="text-grey_700 font-normal text-xs md:text-sm">
-                        {formatTimeToshowAmPm(transactionTime)}
+                        {transactionTime}
                       </h4>
                     </div>
                   </div>
@@ -172,7 +172,7 @@ export default function TransactionHistory({
       {!isLoading && !isArrayEmpty(transactions) && (
         <div className="w-full flex justify-center items-center mt-3">
           <Pagination
-            totalPages={totalSize}
+            totalPages={totalPages}
             onPageChange={(page: number) => setPage(page)}
           />
         </div>
