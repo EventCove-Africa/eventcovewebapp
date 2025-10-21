@@ -1,8 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
+
+import { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
-// import SearchInput from "../../../components/FormComponents/SearchInput";
 import { CardReceive, CardSend } from "iconsax-react";
 import {
   _handleThrowErrorMessage,
@@ -48,7 +46,7 @@ export default function TransactionHistory({
     { name: "Debit", key: "debit" },
   ];
 
-  const handleTransactionHistory = async () => {
+  const handleTransactionHistory = useCallback(async () => {
     setIsLoading(true);
     const transactionType =
       activeType === "all"
@@ -68,13 +66,23 @@ export default function TransactionHistory({
           setTotalPages(result?.totalPages);
         }
       }
-    } catch (error: any) {
-      toast.error(_handleThrowErrorMessage(error?.data?.message));
-      setTransactions([])
+    } catch (error: unknown) {
+      let errMsg: string | undefined;
+      if (error instanceof Error) {
+        errMsg = error.message;
+      } else if (typeof error === "object" && error !== null) {
+        const errObj = error as Record<string, unknown>;
+        const response = errObj.response as Record<string, unknown> | undefined;
+        const data = (response?.data ?? errObj.data) as Record<string, unknown> | undefined;
+        if (data && typeof data.message === "string") {
+          errMsg = data.message;
+        }
+      }
+      toast.error(_handleThrowErrorMessage(errMsg));
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [page, activeType, transactionStatus, userDetails?.id]);
 
   useEffect(() => {
     let mounted = false;
@@ -87,7 +95,7 @@ export default function TransactionHistory({
     return () => {
       mounted = false;
     };
-  }, [page, activeType, transactionStatus]);
+  }, [handleTransactionHistory]);
 
   return (
     <article className="w-full h-fit bg-white rounded-xl p-4">
