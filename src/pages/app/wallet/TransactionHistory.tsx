@@ -59,7 +59,7 @@ export default function TransactionHistory({
     try {
       const { status, data } = await api.get(
         appUrls.WALLET_URL +
-          `/filter/transactions?organizerId=${userDetails?.id}&page=${page}&size=${8}&${transactionType}${transactionStatus}`
+          `/filter/transactions?organizerId=${userDetails?.id}&page=${page - 1}&size=${8}&${transactionType}${transactionStatus}`
       );
       const result = data?.data;
       if ([200, 201].includes(status)) {
