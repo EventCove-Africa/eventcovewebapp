@@ -159,7 +159,7 @@ export const isValidGroupFields = (
   return true;
 };
 
-export function _handleThrowErrorMessage(message: string) {
+export function _handleThrowErrorMessage(message?: string) {
   const err = message || "Something went wrong, please try again later";
   return err;
 }
