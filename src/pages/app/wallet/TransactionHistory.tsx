@@ -10,24 +10,12 @@ import {
 import Pagination from "../../../components/Pagination";
 import { appUrls } from "../../../services/urls";
 import { api } from "../../../services/api";
-import { userDetailsProps } from "../../../types";
+import { transactionsProps, userDetailsProps } from "../../../types";
 import SkeletonLoader from "../../../components/EventCard/components/SkeletonLoader";
 import SelectDropdown from "../../../components/FormComponents/SelectDropdown";
 
 type TransactionHistoryProps = {
   userDetails: userDetailsProps;
-};
-
-type transactionsProps = {
-  transactionId: string;
-  userId: string;
-  walletId: string;
-  transactionType: string;
-  transactionReference: string;
-  amount: number;
-  transactionStatus: string;
-  transactionDate: string;
-  transactionTime: string;
 };
 
 export default function TransactionHistory({
@@ -38,7 +26,7 @@ export default function TransactionHistory({
   const [activeType, setActiveType] = useState("all");
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(10);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
   const links = [
     { name: "All", key: "all" },

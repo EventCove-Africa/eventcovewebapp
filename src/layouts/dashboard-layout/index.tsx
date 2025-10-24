@@ -7,8 +7,11 @@ import MobileNavigation from "./MobileNavigation";
 import LogoutOnInactivity from "../../components/LogoutOnInactivity";
 import ModalPopup from "../../components/ModalPopup";
 import LogoutConfirm from "./LogoutConfirm";
+import { useUserProps } from "../../types";
+import { useUser } from "../../context/UserDetailsProvider.tsx";
 
 export default function DashboardLayout() {
+  const { userDetails } = useUser() as useUserProps;
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [logoutConfirmation, setLogoutConfirmation] = useState(false);
 
@@ -27,6 +30,7 @@ export default function DashboardLayout() {
         <Sidebar
           isCollapsed={isSidebarCollapsed}
           toggleSidebar={toggleSidebar}
+          userRole={userDetails.userRole}
         />
       </aside>
 
@@ -34,7 +38,10 @@ export default function DashboardLayout() {
       <div className="flex flex-col flex-1 overflow-hidden">
         {/* Header */}
         <header className="h-[56px] bg-white flex-shrink-0 px-4">
-          <Header setLogoutConfirmation={setLogoutConfirmation} />
+          <Header
+            userDetails={userDetails}
+            setLogoutConfirmation={setLogoutConfirmation}
+          />
         </header>
 
         {/* Main Content Area */}
@@ -48,7 +55,7 @@ export default function DashboardLayout() {
         </footer>
 
         {/* Mobile Navigation */}
-        <MobileNavigation />
+        <MobileNavigation userRole={userDetails.userRole} />
       </div>
 
       <LogoutOnInactivity />

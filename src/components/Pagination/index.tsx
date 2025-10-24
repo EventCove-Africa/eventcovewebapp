@@ -69,7 +69,7 @@ const Pagination: React.FC<PaginationProps> = ({
           <button
             key={index}
             onClick={() => handlePageChange(page as number)}
-            className={`px-3 py-2 text-xs ${
+            className={`px-3 py-2 text-xs rounded ${
               currentPage === page
                 ? "text-primary_100 border border-primary_100"
                 : "text-grey_100 border border-grey_800"

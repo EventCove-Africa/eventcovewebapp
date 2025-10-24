@@ -32,7 +32,7 @@ const socialLinks = [
   },
   {
     platform: "Instagram",
-    url: "https://www.instagram.com/eventcove_africa",
+    url: "https://www.instagram.com/eventcove.africa",
     icon: instagram,
     altText: "Instagram",
   },
