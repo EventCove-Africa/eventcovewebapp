@@ -15,14 +15,14 @@ const SearchInput: FC<SearchInputProps> = ({
   className = "",
 }) => {
   return (
-    <div className={`my-2`}>
+    <div className={`my-2 w-full`}>
       <div className="relative">
         <input
           type="text"
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className={`bg-background_100 cursor-text rounded-md px-3 py-2 pl-10 md:w-[255px] w-full placeholder:text-xs placeholder:text-dark_200 outline-none focus:outline-none ${className}`}
+          className={`bg-background_100 cursor-text rounded-md px-3 py-2 pl-10 w-full placeholder:text-xs placeholder:text-dark_200 outline-none focus:outline-none ${className}`}
         />
         <SearchNormal1
           size="16"

@@ -90,7 +90,7 @@ export default function Statistics({ details, loading }: any) {
           eventData.map((item, index) => (
             <article
               key={`event-stat-${index}`}
-              className="bg-white rounded-lg shadow p-4 flex flex-col md:gap-0 gap-4 justify-between h-full"
+              className="bg-white rounded-lg shadow-sm p-4 flex flex-col md:gap-0 gap-4 justify-between h-full"
             >
               <div className="flex justify-between items-center">
                 <h2 className="text-grey_100 text-sm md:text-base font-normal">

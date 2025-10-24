@@ -32,6 +32,7 @@ export const APP_ROUTES = {
   WALLET: "/app/wallet",
   ADD_WALLET: "/app/wallet/update",
   SETTINGS: "/app/settings",
+  STATISTICS: "/app/admin/statistics",
   SETTINGS_PROFILE: "/app/settings/profile",
   SETTINGS_PASSWORD: "/app/settings/password",
   TICKETS_VALIDATION: "/tickets-validation/:eventId",
@@ -104,6 +105,10 @@ export const AddWallet = lazyLoad(
 );
 export const Settings = lazyLoad(
   () => import("../pages/app/settings"),
+  "Settings"
+);
+export const Statistics = lazyLoad(
+  () => import("../pages/admin/statistics"),
   "Settings"
 );
 export const SettingsProfile = lazyLoad(
@@ -315,6 +320,14 @@ export const routeConfig = [
         element: (
           <AnimatedRoute>
             <AddWallet />
+          </AnimatedRoute>
+        ),
+      },
+      {
+        path: APP_ROUTES.STATISTICS,
+        element: (
+          <AnimatedRoute>
+            <Statistics />
           </AnimatedRoute>
         ),
       },

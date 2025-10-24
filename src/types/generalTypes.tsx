@@ -22,6 +22,7 @@ export interface apiUrlsType {
   TICKET_VALIDATION_URL: string;
   EVENT_TICKET_SALES_URL: string;
   PROFILE_URL: string;
+  METRICS_URL: string
 }
 
 export interface ButtonProps {
@@ -113,6 +114,7 @@ export type userDetailsProps = {
   referralCode: string;
   profileCompletionLevel: number | null;
   eventId?: string | null;
+  userRole: string;
 };
 
 export type SignupProps = {
@@ -170,3 +172,16 @@ export interface PasswordCharacterCheck {
   contains_number: boolean;
   unique_character: boolean;
 }
+
+export type transactionsProps = {
+  transactionId: string;
+  userId: string;
+  walletId: string;
+  transactionType: string;
+  transactionReference: string;
+  amount: number;
+  userName: string;
+  transactionStatus: string;
+  transactionDate: string;
+  transactionTime: string;
+};

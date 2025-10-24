@@ -8,9 +8,6 @@ import {
   User,
 } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
-import { useUserProps } from "../../types";
-import { useUser } from "../../context/UserDetailsProvider.tsx";
-
 interface MenuItemProps {
   icon: React.ReactNode;
   label: string;
@@ -28,8 +25,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({ icon, label, onClick }) => {
   );
 };
 
-export default function Header({ setLogoutConfirmation }: any) {
-  const { userDetails } = useUser() as useUserProps;
+export default function Header({ setLogoutConfirmation, userDetails }: any) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 

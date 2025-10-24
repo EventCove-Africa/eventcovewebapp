@@ -22,4 +22,5 @@ export const appUrls: apiUrlsType = {
   TICKET_VALIDATION_URL: "/validate",
   EVENT_TICKET_SALES_URL: "/details",
   PROFILE_URL: "/profile",
+  METRICS_URL: "/event/admin/metrics",
 };

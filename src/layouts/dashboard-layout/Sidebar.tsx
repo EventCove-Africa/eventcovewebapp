@@ -6,9 +6,14 @@ import { ArrowLeft, ArrowRight } from "iconsax-react";
 interface SidebarProps {
   isCollapsed: boolean;
   toggleSidebar: () => void;
+  userRole: string;
 }
 
-export default function Sidebar({ isCollapsed, toggleSidebar }: SidebarProps) {
+export default function Sidebar({
+  isCollapsed,
+  toggleSidebar,
+  userRole,
+}: SidebarProps) {
   return (
     <div className="w-full h-full bg-white flex flex-col">
       {/* Logo Section */}
@@ -26,11 +31,13 @@ export default function Sidebar({ isCollapsed, toggleSidebar }: SidebarProps) {
       {/* Navigation Menu */}
       <nav className="flex-1 py-4">
         <ul className="space-y-4">
-          {sidebarMenuItems.map(({ name, path, icon: Icon }) => (
-            <li key={name} className="group relative">
-              <NavLink
-                to={path}
-                className={({ isActive }) => `
+          {sidebarMenuItems
+            .filter((item) => item.userRole.includes(userRole))
+            .map(({ name, path, icon: Icon }) => (
+              <li key={name} className="group relative">
+                <NavLink
+                  to={path}
+                  className={({ isActive }) => `
                   w-full flex items-center gap-2 py-2 text-left
                   transition-colors duration-200
                   ${
@@ -39,31 +46,31 @@ export default function Sidebar({ isCollapsed, toggleSidebar }: SidebarProps) {
                       : "text-grey_100 hover:border-l-2 hover:text-primary_100 hover:bg-primary_200 hover:border-primary_100"
                   }
                 `}
-              >
-                {({ isActive }) => (
-                  <div className="relative flex gap-3 items-center">
-                    <Icon
-                      size="20"
-                      className={`transition-colors duration-200 ml-3 ${
-                        isActive
-                          ? "text-primary_100"
-                          : "text-grey_100 hover:text-primary_100"
-                      }`}
-                    />
-                    {/* Tooltip */}
-                    {isCollapsed && (
-                      <div className="absolute whitespace-nowrap left-[2.5rem] top-1/2 -translate-y-1/2 bg-dark_200 text-white text-xs py-1 px-2 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 pointer-events-none">
-                        {name}
-                      </div>
-                    )}
-                    {!isCollapsed && (
-                      <span className="text-sm font-medium">{name}</span>
-                    )}
-                  </div>
-                )}
-              </NavLink>
-            </li>
-          ))}
+                >
+                  {({ isActive }) => (
+                    <div className="relative flex gap-3 items-center">
+                      <Icon
+                        size="20"
+                        className={`transition-colors duration-200 ml-3 ${
+                          isActive
+                            ? "text-primary_100"
+                            : "text-grey_100 hover:text-primary_100"
+                        }`}
+                      />
+                      {/* Tooltip */}
+                      {isCollapsed && (
+                        <div className="absolute whitespace-nowrap left-[2.5rem] top-1/2 -translate-y-1/2 bg-dark_200 text-white text-xs py-1 px-2 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 pointer-events-none">
+                          {name}
+                        </div>
+                      )}
+                      {!isCollapsed && (
+                        <span className="text-sm font-medium">{name}</span>
+                      )}
+                    </div>
+                  )}
+                </NavLink>
+              </li>
+            ))}
         </ul>
       </nav>
     </div>
