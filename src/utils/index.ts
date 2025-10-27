@@ -47,10 +47,8 @@ export function formatToNairaShortenFigure(amount: number): string {
     return `₦${(amount / 1_000_000_000).toFixed(1).replace(/\.0$/, "")}B`;
   } else if (amount >= 1_000_000) {
     return `₦${(amount / 1_000_000).toFixed(1).replace(/\.0$/, "")}M`;
-  } else if (amount >= 1_00_000) {
-    // Fix applied here
-    return `₦${(amount / 1_00_000).toFixed(1).replace(/\.0$/, "")}k`;
   }
+  // Only shorten from 1,000,000 and above — below that show full amount with commas & 2 decimals
   return `₦${amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 }
 
