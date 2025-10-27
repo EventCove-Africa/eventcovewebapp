@@ -103,7 +103,9 @@ const RevenueChart: React.FC<Props> = ({
     >
       <div className="flex items-start justify-between">
         <div>
-          <div className="text-sm text-gray-500">Total Revenue</div>
+          <div className="text-sm text-gray-500">
+            Total Revenue (For Eventcove)
+          </div>
           <div className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mt-1">
             {formatCurrency(totalRevenue)}
           </div>

@@ -309,7 +309,6 @@ export default function EventDetails() {
               type="button"
               backgroundColor="bg-primary_300"
               textColor="text-primary_100"
-              className="border border-dark_100"
               onClick={() =>
                 navigate(`/app/events/edit/${allEventDetails?.eventId}`)
               }
