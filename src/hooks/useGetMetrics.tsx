@@ -22,11 +22,12 @@ type metricProps = {
 const useGetMetricsStats = () => {
   const [stats, setStats] = useState<metricProps>();
   const [loading, setLoading] = useState(false);
+  const currentYear: number = new Date().getFullYear();
 
   const handleGetMetrics = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get(appUrls.METRICS_URL + `?graphYear=2025`);
+      const res = await api.get(appUrls.METRICS_URL + `?graphYear=${currentYear}`);
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
         const result = res.data?.data ?? null;
@@ -38,7 +39,7 @@ const useGetMetricsStats = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [currentYear]);
 
   return { stats, loading, handleGetMetrics };
 };
