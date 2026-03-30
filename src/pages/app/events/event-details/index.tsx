@@ -243,7 +243,7 @@ export default function EventDetails() {
                     Share the login link with your team members for tickets
                     validations!
                   </h3>
-                  <div className="w-full h-auto rounded-lg bg-primary_300 p-3 flex justify-between items-center border border-dotted border-grey_100 text-primary_100 mt-2 font-normal text-sm flex-wrap">
+                  <div className="w-full h-auto rounded-lg bg-primary_300 p-3 flex flex-col justify-between lg:items-end border border-dotted border-grey_100 text-primary_100 mt-2 font-normal text-sm flex-wrap">
                     <div className="flex-1 break-all">
                       {eventTeamMembersUrl}
                     </div>

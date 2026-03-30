@@ -56,7 +56,7 @@ export default function AddTickets() {
 
   const _handleCreateTicketForEvent = async (
     payload: AddTicketProps,
-    actions: FormikHelpers<any>
+    actions: FormikHelpers<any>,
   ) => {
     try {
       const res = await api.post(appUrls.TICKET_URL, payload);
@@ -94,6 +94,7 @@ export default function AddTickets() {
             all_values: [],
             ticket_details: false,
             transferTransactionFeeToBuyer: true,
+            showCapacityToUsers: false,
           }}
           enableReinitialize
           onSubmit={(values, actions) => {
@@ -107,7 +108,7 @@ export default function AddTickets() {
             const { startDate, endDate, startTime, endTime }: any =
               convertDateTimeRangeForEventCreation(
                 sales_start_date_time,
-                sales_end_date_time
+                sales_end_date_time,
               );
             let requiredFields = ["name", "classification", "category"];
             if (values?.category.toLocaleLowerCase() === "paid") {
@@ -123,6 +124,7 @@ export default function AddTickets() {
               startTime,
               endTime,
               capacity: rest?.capacity,
+              showCapacityToUsers: rest?.showCapacityToUsers,
               colour: rest?.colour,
               groupTicketLimit: rest?.groupTicketLimit,
               purchaseLimit: rest?.purchaseLimit,
@@ -157,7 +159,7 @@ export default function AddTickets() {
                   endTime: formatedEndTime,
                 }: any = convertDateTimeRangeForEventCreation(
                   formated_sales_start_date_time,
-                  formated_sales_end_date_time
+                  formated_sales_end_date_time,
                 );
                 const formatedPrice = parseNumber(ticket.price);
                 ticketTypes.push({
@@ -200,6 +202,7 @@ export default function AddTickets() {
                 name: values?.name,
                 price: values?.price,
                 capacity: values?.capacity,
+                showCapacityToUsers: values?.showCapacityToUsers,
                 colour: values?.colour,
                 purchaseLimit: values?.purchaseLimit || 0,
                 classification: values?.classification,
@@ -214,7 +217,7 @@ export default function AddTickets() {
                 const nextId =
                   values.all_values.length > 0
                     ? Math.max(
-                        ...values.all_values.map((item: any) => item.id ?? 0)
+                        ...values.all_values.map((item: any) => item.id ?? 0),
                       ) + 1
                     : 1;
 
@@ -228,11 +231,11 @@ export default function AddTickets() {
                   setFieldValue(
                     key,
                     ["sales_end_date_time", "sales_start_date_time"].includes(
-                      key
+                      key,
                     )
                       ? null
-                      : ""
-                  )
+                      : "",
+                  ),
                 );
               }
 
@@ -248,7 +251,7 @@ export default function AddTickets() {
 
             const removeItemFromAllValues = (idToRemove: number) => {
               const updatedValues = values.all_values.filter(
-                (item: any) => item.id !== idToRemove
+                (item: any) => item.id !== idToRemove,
               );
               setFieldValue("all_values", updatedValues);
             };
@@ -316,12 +319,12 @@ export default function AddTickets() {
                           if (event?.value.toLowerCase() === "free") {
                             setFieldValue(
                               "transferTransactionFeeToBuyer",
-                              false
+                              false,
                             );
                           } else {
                             setFieldValue(
                               "transferTransactionFeeToBuyer",
-                              true
+                              true,
                             );
                           }
                           setFieldValue("category", event?.value);
@@ -344,7 +347,7 @@ export default function AddTickets() {
                             handleChange={(e: any) =>
                               setFieldValue(
                                 "price",
-                                handleNumberInput(e.target.value)
+                                handleNumberInput(e.target.value),
                               )
                             }
                             type="text"
@@ -365,7 +368,7 @@ export default function AddTickets() {
                             onChange={(checked) =>
                               setFieldValue(
                                 "transferTransactionFeeToBuyer",
-                                checked
+                                checked,
                               )
                             }
                           />
@@ -373,7 +376,7 @@ export default function AddTickets() {
                             className={`text-xs text-dark_200 leading-5 flex gap-1 items-center my-1`}
                           >
                             NB: Please note, if the toggle button is switched
-                            Off the event organizer bears the cost of the
+                            Off, the event organizer bears the cost of the
                             charges
                           </span>
                         </div>
@@ -382,7 +385,7 @@ export default function AddTickets() {
                         onClick={() =>
                           setFieldValue(
                             "ticket_details",
-                            !values.ticket_details
+                            !values.ticket_details,
                           )
                         }
                         className="w-full p-3 bg-pink_100 flex justify-between items-center rounded-md cursor-pointer"
@@ -418,7 +421,7 @@ export default function AddTickets() {
                               handleChange={(e: any) =>
                                 setFieldValue(
                                   "capacity",
-                                  handleNumberInput(e.target.value)
+                                  handleNumberInput(e.target.value),
                                 )
                               }
                               type="text"
@@ -426,6 +429,16 @@ export default function AddTickets() {
                               value={values.capacity}
                               errors={errors?.capacity}
                               touched={touched?.capacity}
+                            />
+                          </div>
+                          <div className="w-full flex gap-2 items-start">
+                            <ToggleSwitch
+                              labelName="Show seat counts to user"
+                              name="showCapacityToUsers"
+                              checked={values?.showCapacityToUsers}
+                              onChange={(checked) =>
+                                setFieldValue("showCapacityToUsers", checked)
+                              }
                             />
                           </div>
                           <div className="mb-2">
@@ -594,7 +607,7 @@ export default function AddTickets() {
                                       {value}
                                     </h3>
                                   </div>
-                                )
+                                ),
                             )}
                           </div>
                         );

@@ -210,6 +210,7 @@ export default function AddEvents() {
           eventPrivacy: allEventDetails?.eventPrivacy || "",
           eventDescription: allEventDetails?.eventDescription || "",
           phoneNumber: allEventDetails?.phoneNumber || "",
+          instagramHandle: allEventDetails?.instagramHandle || "",
         }}
         enableReinitialize
         onSubmit={async (values, actions) => {
@@ -488,6 +489,18 @@ export default function AddEvents() {
                     value={values.eventDescription}
                     errors={errors?.eventDescription}
                     touched={touched?.eventDescription}
+                  />
+                </div>
+                <div className="mb-2">
+                  <TextInputField
+                    labelName="Instagram Handle (optional)"
+                    name="instagramHandle"
+                    handleChange={handleChange}
+                    type="text"
+                    placeholder=""
+                    value={values.instagramHandle}
+                    errors={errors?.instagramHandle}
+                    touched={touched?.instagramHandle}
                   />
                 </div>
                 <div className="mb-2">
