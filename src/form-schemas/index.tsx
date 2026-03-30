@@ -327,6 +327,7 @@ export const addEventSchema = Yup.object().shape({
     ),
   eventPrivacy: Yup.string().required("Event privacy is required"),
   eventDescription: Yup.string().required("Event description is required"),
+  instagramHandle: Yup.string(),
   phoneNumber: Yup.string()
     .matches(/^\d+$/, "Phone number must contain only digits") // Ensures only digits
     .min(11, "Phone number must be at least 11 digits") // Adjust as needed

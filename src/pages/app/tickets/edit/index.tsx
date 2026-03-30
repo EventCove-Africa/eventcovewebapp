@@ -73,6 +73,7 @@ export default function EditTicket() {
               state?.purchaseLimit !== "N/A" ? state?.purchaseLimit : "",
             perks: state?.perks !== "N/A" ? state?.perks : "",
             transferTransactionFeeToBuyer: state?.transferTransactionFeeToBuyer,
+            showCapacityToUsers: state?.showCapacityToUsers,
             sales_end_date_time,
             sales_start_date_time,
             ticket_details: false,
@@ -268,6 +269,16 @@ export default function EditTicket() {
                           touched={touched?.capacity}
                         />
                       </div>
+                      <div className="w-full flex gap-2 items-start">
+                            <ToggleSwitch
+                              labelName="Show seat counts to user"
+                              name="showCapacityToUsers"
+                              checked={values?.showCapacityToUsers}
+                              onChange={(checked) =>
+                                setFieldValue("showCapacityToUsers", checked)
+                              }
+                            />
+                          </div>
                       <div className="mb-2">
                         <TextInputField
                           labelName="Colour (optional)"
