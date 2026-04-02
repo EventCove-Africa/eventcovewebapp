@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
+import { formatToNairaShortenFigure } from "../../../utils";
 import event2 from "../../../assets/icons/events2.svg";
 import ticket_sold from "../../../assets/icons/ticket-sold.svg";
 import payment from "../../../assets/icons/payment.svg";
-import { formatToNairaShortenFigure } from "../../../utils";
+import guest from "../../../assets/icons/guest.svg";
 import SkeletonLoader from "../../../components/EventCard/components/SkeletonLoader";
 
 export default function StatsCards({
@@ -43,6 +44,12 @@ export default function StatsCards({
       key: "totalSalesValue",
       value: formatToNairaShortenFigure(0),
       icon: payment,
+    },
+    {
+      title: "Total number of event organizers",
+      key: "totalNumberOfEventOrganizers",
+      value: 0,
+      icon: guest,
     },
   ]);
 

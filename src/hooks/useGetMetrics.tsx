@@ -12,6 +12,7 @@ type metricProps = {
   totalPaidTicketsSold: number;
   totalFreeTicketsSold: number;
   totalEventCoveProfit: number;
+  totalNumberOfEventOrganizers: number;
   totalSalesValue: number;
   revenueData: {
     month: string;

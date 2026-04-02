@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -9,7 +8,6 @@ import {
   TimerStart,
   Verify,
 } from "iconsax-react";
-// import ProgressBar from "@ramonak/react-progress-bar";
 import empty_state from "../../assets/images/empty_state.svg";
 import {
   arrayToFormattedDate,
@@ -21,7 +19,29 @@ import {
 import SkeletonLoader from "./components/SkeletonLoader";
 import useEventHook from "../../hooks/useEventHook";
 
-export default function EventCard({ eventType }: any) {
+interface EventCardProps {
+  eventType: string;
+}
+
+type EventCard = {
+  eventId: string;
+  eventName: string;
+  eventImageUrl: string;
+  eventDate: string;
+  eventTime: string;
+  eventLocation: string;
+  eventDescription: string;
+  eventType: string;
+  status: string;
+  location: string;
+  startTime: string;
+  eventCategory: string;
+  startDate: [number, number, number];
+  deleted: boolean;
+  published: boolean;
+};
+
+export default function EventCard({ eventType }: EventCardProps) {
   const navigate = useNavigate();
   const {
     loadingEvents,
@@ -88,10 +108,11 @@ export default function EventCard({ eventType }: any) {
         {loadingEvents && <SkeletonLoader />}
         {!loadingEvents && (
           <>
-            {allEventsData.map((event: any, index: number) => (
+            {allEventsData.map((event: EventCard, index: number) => (
               <article
+                onClick={() => navigate(`/app/events/${event?.eventId}`)}
                 key={`upcoming-event-${index}`}
-                className="bg-white w-auto min-h-[392px] h-auto shadow rounded-lg p-3 flex justify-between flex-col"
+                className="bg-white w-auto min-h-[392px] h-auto shadow rounded-lg p-3 flex justify-between flex-col cursor-pointer"
               >
                 <div className="w-full relative">
                   <div className="w-full h-[200px] sm:h-[300px] md:h-[200px] lg:h-[200px] xl:h-[200px]">
@@ -133,7 +154,7 @@ export default function EventCard({ eventType }: any) {
                 <div className="flex md:flex-row flex-col gap-3 lg:items-center items-start mt-2">
                   <div className="p-3 rounded text-primary_100 font-normal text-xs flex items-center gap-1 bg-pink_100">
                     <Calendar2 size="16" color="#A30162" />{" "}
-                    {arrayToFormattedDate(event.startDate)}
+                    {arrayToFormattedDate(event?.startDate)}
                   </div>
                   <div className="p-3 rounded text-green_200 bg-green_300 font-normal text-xs flex items-center gap-1 ">
                     <InfoCircle size="16" color="#4CAF50" />{" "}
@@ -141,25 +162,6 @@ export default function EventCard({ eventType }: any) {
                   </div>
                 </div>
 
-                {/* {event?.soldTicket && (
-                  <div className="w-full flex flex-col gap-1">
-                    <p className="text-grey_100 font-normal text-xs">
-                      Sold Tickets
-                    </p>
-                    <ProgressBar
-                      animateOnRender
-                      completed={50}
-                      height="10px"
-                      barContainerClassName="bg-yellow_100"
-                      labelClassName="text-xs text-white font-bold"
-                      bgColor="#FF9500"
-                      borderRadius="50px"
-                    />
-                    <p className="text-grey_100 font-normal text-xs">
-                      {event.ticketsSold}
-                    </p>
-                  </div>
-                )} */}
                 <div className="w-full flex justify-between items-center mt-2">
                   <div
                     className={`flex items-center gap-1 ${
