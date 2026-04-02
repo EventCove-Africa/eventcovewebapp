@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 import { appUrls } from "./urls";
 import { _handleClearCookiesAndSession } from "../utils";
@@ -18,8 +17,8 @@ const apiResource = () => {
   });
 
   api.interceptors.request.use(
-    (config: AxiosRequestConfig) => {
-      const internalConfig = config as any;
+    (config) => {
+      const internalConfig = { ...config };
       internalConfig.headers = internalConfig.headers ?? {};
       const access_token = Cookies.get("access_token");
       const token_type = Cookies.get("token_type");

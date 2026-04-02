@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { formatToNairaShortenFigure } from "../../../../utils";
 import SkeletonLoader from "../../../../components/EventCard/components/SkeletonLoader";
@@ -11,7 +10,22 @@ import { useUserProps } from "../../../../types";
 import { useUser } from "../../../../context/UserDetailsProvider.tsx";
 import CopyToClipboard from "../../../../components/CopyToClipboard";
 
-export default function Statistics({ details, loading }: any) {
+interface StatisticsDetails {
+  totalSales?: number;
+  totalEvents?: number;
+  totalAttendees?: number;
+  totalTicketsCount?: number;
+  totalTicketsPurchase?: number;
+  totalReferralCount?: number;
+  [key: string]: number | undefined;
+}
+
+interface StatisticsProps {
+  details: StatisticsDetails;
+  loading: boolean;
+}
+
+export default function Statistics({ details, loading }: StatisticsProps) {
   const { userDetails } = useUser() as useUserProps;
   const [eventData, setEventData] = useState([
     {
@@ -23,26 +37,26 @@ export default function Statistics({ details, loading }: any) {
     {
       title: "Total Number of Events",
       key: "totalEvents",
-      value: 0,
+      value: "0",
       icon: event2,
     },
-    { title: "Total Guests", key: "totalAttendees", value: 0, icon: guest },
+    { title: "Total Guests", key: "totalAttendees", value: "0", icon: guest },
     {
       title: "Total Tickets",
       key: "totalTicketsCount",
-      value: 0,
+      value: "0",
       icon: payment,
     },
     {
       title: "Total Tickets Purchased",
       key: "totalTicketsPurchase",
-      value: 0,
+      value: "0",
       icon: ticket2,
     },
     {
       title: "Total Referral Count",
       key: "totalReferralCount",
-      value: 0,
+      value: "0",
       icon: event2,
     },
   ]);
@@ -76,11 +90,11 @@ export default function Statistics({ details, loading }: any) {
         ...item,
         value:
           item.key === "totalSales"
-            ? formatToNairaShortenFigure?.(details?.[item?.key] || 0)
-            : details?.[item?.key],
+            ? formatToNairaShortenFigure(details?.[item.key] ?? 0)
+            : String(details?.[item.key] ?? "0"),
       }))
     );
-  }, [details]); // Runs when details updates
+  }, [details]);
 
   return (
     <>
