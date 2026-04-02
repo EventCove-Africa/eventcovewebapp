@@ -9,7 +9,7 @@ export default function Events() {
   const navigate = useNavigate();
   // Extract query parameter for eventType
   const getParam = useQueryParams();
-  const eventType = getParam("eventType");
+  const eventType = getParam("eventType") as string;
 
   const events = [
     { label: "All", type: "all" },

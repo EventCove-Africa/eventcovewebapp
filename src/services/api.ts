@@ -49,26 +49,6 @@ const apiResource = () => {
           _handleClearCookiesAndSession();
           return;
         }
-        // Access Token was expired
-        // if (error.response.status === 400 && !originalConfig._retry) {
-        //   originalConfig._retry = true;
-        //   const token = sessionStorage.getItem("token");
-        //   try {
-        //     const rs = await api.post([
-        //       `${appUrls.REFRESHTOKEN_URL}?token=${token}`,
-        //     ]);
-        //     const { access_token } = rs.data;
-        //      Cookies.set("token", access_token, {
-        //        expires: 7, // Expires in 7 days
-        //        secure: true, // Only send over HTTPS
-        //        sameSite: "strict", // Protection against CSRF
-        //        domain: 'yourdomain.com', // Specify domain if needed
-        //      });
-        //     return api(originalConfig);
-        //   } catch (_error) {
-        //     return Promise.reject(_error);
-        //   }
-        // }
       } else {
         return new Promise((_, reject) => {
           reject(error?.response);
