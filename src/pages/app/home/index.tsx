@@ -1,12 +1,12 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "iconsax-react";
-import Button from "../../../components/FormComponents/Button";
-import EventCard from "../../../components/EventCard";
-import { useEffect } from "react";
-import useGetOrganizerStats from "../../../hooks/useGetOrganizerStats";
-import Statistics from "./components/Statistics";
 import { useUserProps } from "../../../types";
 import { useUser } from "../../../context/UserDetailsProvider.tsx";
+import Button from "../../../components/FormComponents/Button";
+import EventCard from "../../../components/EventCard";
+import useGetOrganizerStats from "../../../hooks/useGetOrganizerStats";
+import Statistics from "./components/Statistics";
 
 function CircularProgress({
   value = 0,
@@ -143,7 +143,7 @@ export default function Home() {
 
       {/* Statistics Section */}
       <section className="lg:h-[236.92px] h-auto w-full flex lg:flex-row flex-col md:gap-3 gap-3 my-8">
-        <Statistics details={stats} loading={loading} />
+        <Statistics details={stats ?? {}} loading={loading} />
       </section>
 
       {/* Upcoming Events Section */}
