@@ -40,7 +40,7 @@ export const sidebarMenuItems = [
   },
   {
     name: "Statistics",
-    path: "/app/admin/statistics",
+    path: "/admin/statistics",
     icon: ChartSquare,
     userRole: ["SUPER_ADMIN"],
   },

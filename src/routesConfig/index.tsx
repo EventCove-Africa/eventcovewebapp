@@ -20,6 +20,7 @@ export const APP_ROUTES = {
   FORGET_PW: "/auth/forget-password",
   RESET_PW: "/auth/reset-password",
   APP: "/app",
+  ADMIN: "/admin",
   HOME: "/app/home",
   EVENTS: "/app/events",
   ADD_EVENTS: "/app/events/add",
@@ -32,7 +33,7 @@ export const APP_ROUTES = {
   WALLET: "/app/wallet",
   ADD_WALLET: "/app/wallet/update",
   SETTINGS: "/app/settings",
-  STATISTICS: "/app/admin/statistics",
+  STATISTICS: "/admin/statistics",
   SETTINGS_PROFILE: "/app/settings/profile",
   SETTINGS_PASSWORD: "/app/settings/password",
   TICKETS_VALIDATION: "/tickets-validation/:eventId",
@@ -43,7 +44,7 @@ export const APP_ROUTES = {
 // Enhanced lazy loading with displayName
 const lazyLoad = <T extends React.ComponentType<any>>(
   loader: () => Promise<{ default: T }>,
-  name?: string
+  name?: string,
 ) => {
   const Component = lazy(loader);
   if (name) (Component as any).displayName = name;
@@ -53,11 +54,11 @@ const lazyLoad = <T extends React.ComponentType<any>>(
 // Layouts
 export const AuthLayout = lazyLoad(
   () => import("../layouts/auth-layout"),
-  "AuthLayout"
+  "AuthLayout",
 );
 export const DashboardLayout = lazyLoad(
   () => import("../layouts/dashboard-layout"),
-  "DashboardLayout"
+  "DashboardLayout",
 );
 
 // Auth Pages
@@ -65,73 +66,73 @@ export const Login = lazyLoad(() => import("../pages/auth/login"), "Login");
 export const SignUp = lazyLoad(() => import("../pages/auth/signup"), "SignUp");
 export const ForgetPassword = lazyLoad(
   () => import("../pages/auth/forget-password"),
-  "ForgetPassword"
+  "ForgetPassword",
 );
 export const ResetPassword = lazyLoad(
   () => import("../pages/auth/reset-password"),
-  "ResetPassword"
+  "ResetPassword",
 );
 // App Pages
 export const Home = lazyLoad(() => import("../pages/app/home"), "Home");
 export const Events = lazyLoad(() => import("../pages/app/events"), "Events");
 export const AddEvents = lazyLoad(
   () => import("../pages/app/events/add"),
-  "AddEvents"
+  "AddEvents",
 );
 export const EventDetails = lazyLoad(
   () => import("../pages/app/events/event-details"),
-  "EventDetails"
+  "EventDetails",
 );
 export const ViewAttendees = lazyLoad(
   () => import("../pages/app/events/event-details/ViewAttendees"),
-  "ViewAttendees"
+  "ViewAttendees",
 );
 export const Tickets = lazyLoad(
   () => import("../pages/app/tickets"),
-  "Tickets"
+  "Tickets",
 );
 export const AddTickets = lazyLoad(
   () => import("../pages/app/tickets/add"),
-  "AddTickets"
+  "AddTickets",
 );
 export const EditTicket = lazyLoad(
   () => import("../pages/app/tickets/edit"),
-  "EditTicket"
+  "EditTicket",
 );
 export const Wallet = lazyLoad(() => import("../pages/app/wallet"), "Wallet");
 export const AddWallet = lazyLoad(
   () => import("../pages/app/wallet/add"),
-  "AddWallet"
+  "AddWallet",
 );
 export const Settings = lazyLoad(
   () => import("../pages/app/settings"),
-  "Settings"
+  "Settings",
 );
 export const Statistics = lazyLoad(
   () => import("../pages/admin/statistics"),
-  "Settings"
+  "Settings",
 );
 export const SettingsProfile = lazyLoad(
   () => import("../pages/app/settings/components/SettingsProfile.tsx"),
-  "SettingsProfile"
+  "SettingsProfile",
 );
 export const SettingsPassword = lazyLoad(
   () => import("../pages/app/settings/components/SettingsPassword.tsx"),
-  "SettingsPassword"
+  "SettingsPassword",
 );
 
 // Other Pages
 export const NotFound = lazyLoad(
   () => import("../pages/not-found"),
-  "NotFound"
+  "NotFound",
 );
 export const Forbidden = lazyLoad(
   () => import("../pages/forbidden"),
-  "Forbidden"
+  "Forbidden",
 );
 export const TicketsValidation = lazyLoad(
   () => import("../pages/tickets-validation"),
-  "TicketsValidation"
+  "TicketsValidation",
 );
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -140,6 +141,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     useUser() as useUserProps;
   const access_token = Cookies.get("access_token");
   const location = useLocation();
+  
   useEffect(() => {
     let mounted = true;
     if (access_token && mounted) {
@@ -324,14 +326,6 @@ export const routeConfig = [
         ),
       },
       {
-        path: APP_ROUTES.STATISTICS,
-        element: (
-          <AnimatedRoute>
-            <Statistics />
-          </AnimatedRoute>
-        ),
-      },
-      {
         path: APP_ROUTES.SETTINGS,
         element: <Settings />,
         children: [
@@ -356,6 +350,24 @@ export const routeConfig = [
             ),
           },
         ],
+      },
+    ],
+  },
+  {
+    path: APP_ROUTES.ADMIN,
+    element: (
+      <ProtectedRoute>
+        <DashboardLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: APP_ROUTES.STATISTICS,
+        element: (
+          <AnimatedRoute>
+            <Statistics />
+          </AnimatedRoute>
+        ),
       },
     ],
   },
