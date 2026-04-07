@@ -68,20 +68,21 @@ export default function Tickets() {
   const [isLoading, setIsLoading] = useState(false);
   const { isOpenModal, handleOpenClose } = useOpenCloseModals();
   const [isEventPublished, setIsEventPublished] = useState<boolean | null>(
-    null
+    null,
   );
   const [isTicketSold, setIsTicketSold] = useState<boolean | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<any>("");
 
   const renderActions = (_row: TicketProp) => {
-    const handleEditAction = () => {
-      const isPaid = _row?.category.toLowerCase() === "paid";
-      const ticketId = _row?.ticketTypeId;
-      const canEdit = !isPaid || !isEventPublished || !isTicketSold;
-      if (canEdit) {
-        return navigate(`/app/tickets/edit/${ticketId}`, {
-          state: _row,
-        });
+    const isPaid = _row?.category.toLowerCase() !== "paid";
+    const ticketId = _row?.ticketTypeId;
+    const canDelete = isPaid || !isEventPublished || !isTicketSold;
+    const handleEditAction = () =>
+      navigate(`/app/tickets/edit/${ticketId}`, { state: _row });
+
+    const handleDeleteAction = () => {
+      if (canDelete) {
+        return handleOpenClose("infoModal");
       }
       return handleOpenClose("infoModal");
     };
@@ -94,6 +95,14 @@ export default function Tickets() {
         >
           Edit
         </button>
+        {canDelete && (
+          <button
+            onClick={handleDeleteAction}
+            className="text-primary_100 px-2 py-1 rounded-md cursor-pointer"
+          >
+            Delete
+          </button>
+        )}
       </div>
     );
   };
@@ -102,7 +111,7 @@ export default function Tickets() {
     setIsLoading(true);
     try {
       const { status, data } = await api.get(
-        appUrls.TICKET_URL + `/all/${event_id}`
+        appUrls.TICKET_URL + `/all/${event_id}`,
       );
       const results = data?.data;
       if ([200, 201].includes(status)) {
@@ -112,10 +121,10 @@ export default function Tickets() {
           const salesStartTime = element?.salesStartTime;
           const salesEndTime = element?.salesEndTime;
           const formattedsalesStartDate = formatDateArrayToString(
-            element?.salesStartDate
+            element?.salesStartDate,
           );
           const formattedsalesEndDate = formatDateArrayToString(
-            element?.salesEndDate
+            element?.salesEndDate,
           );
           const startDate = element?.salesStartDate;
           const endDate = element?.salesEndDate;
@@ -159,7 +168,7 @@ export default function Tickets() {
   const handleGetEvents = async () => {
     try {
       const { status, data } = await api.get(
-        appUrls.EVENT_URL + `?organizerId=${userDetails?.id}`
+        appUrls.EVENT_URL + `?organizerId=${userDetails?.id}`,
       );
       const results = data?.data;
       if ([200, 201].includes(status)) {
