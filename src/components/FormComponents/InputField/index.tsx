@@ -107,6 +107,7 @@ export default function TextInputField({
           onBlur={onBlur}
           checked={checked}
           value={value ?? ""}
+          disabled={readOnly}
           style={style}
           readOnly={readOnly}
           onKeyPress={onKeyPress}

@@ -190,17 +190,13 @@ export default function EditTicket() {
                       <TextInputField
                         labelName="Price"
                         name="price"
-                        handleChange={(e: any) =>
-                          setFieldValue(
-                            "price",
-                            handleNumberInput(e.target.value)
-                          )
-                        }
                         type="text"
                         placeholder=""
                         value={values.price}
                         errors={errors?.price}
                         touched={touched?.price}
+                        readOnly
+                        tooltipContent="This value is automatically set and cannot be modified."
                       />
                     </div>
                   )}
