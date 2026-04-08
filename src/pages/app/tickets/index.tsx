@@ -19,6 +19,8 @@ import { useOpenCloseModals } from "../../../hooks/useOpenCloseModal";
 import useQueryParams from "../../../hooks/useQueryParams";
 import { useUser } from "../../../context/UserDetailsProvider.tsx";
 import { useUserProps } from "../../../types/generalTypes.tsx";
+import Button from "../../../components/FormComponents/Button";
+import close_cancel from "../../../assets/icons/close-circle.svg";
 
 type TicketProp = {
   name: string;
@@ -33,6 +35,7 @@ type TicketProp = {
   salesEndDate: string;
   perks: string;
   deleted: boolean;
+  soldTicket: boolean;
   saleStartEndDate: string;
   groupTicketLimit: string;
   purchaseLimit: string;
@@ -64,25 +67,30 @@ export default function Tickets() {
     },
   ];
   const [ticketData, setTicketData] = useState<TicketProp[]>([]);
+  const [ticketDetails, setTicketDetails] = useState<TicketProp>();
   const [allEventsData, setAllEventsData] = useState<any>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState({
+    deleteTicket: false,
+    getTickets: false,
+  });
   const { isOpenModal, handleOpenClose } = useOpenCloseModals();
   const [isEventPublished, setIsEventPublished] = useState<boolean | null>(
     null,
   );
-  const [isTicketSold, setIsTicketSold] = useState<boolean | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<any>("");
 
   const renderActions = (_row: TicketProp) => {
-    const isPaid = _row?.category.toLowerCase() !== "paid";
-    const ticketId = _row?.ticketTypeId;
-    const canDelete = isPaid || !isEventPublished || !isTicketSold;
+    const ticketTypeId = _row?.ticketTypeId;
+    const soldTicket = _row?.soldTicket;
+    const canDelete = !isEventPublished || !soldTicket;
+
     const handleEditAction = () =>
-      navigate(`/app/tickets/edit/${ticketId}`, { state: _row });
+      navigate(`/app/tickets/edit/${ticketTypeId}`, { state: _row });
 
     const handleDeleteAction = () => {
       if (canDelete) {
-        return handleOpenClose("infoModal");
+        setTicketDetails({ ..._row });
+        return handleOpenClose("deleteModal");
       }
       return handleOpenClose("infoModal");
     };
@@ -107,8 +115,28 @@ export default function Tickets() {
     );
   };
 
+  const onDelete = () => {
+    setIsLoading((prev) => ({ ...prev, deleteTicket: true }));
+    api
+      .delete(appUrls.TICKET_URL + `/delete/${ticketDetails?.ticketTypeId}`)
+      .then((response) => {
+        if (response.status === 200) {
+          const message = response?.data?.data;
+          toast.success(message);
+          handleOpenClose("deleteModal");
+          handleGetEventTickets();
+        }
+      })
+      .catch((error) => {
+        toast.error(_handleThrowErrorMessage(error?.data?.message));
+      })
+      .finally(() => {
+        setIsLoading((prev) => ({ ...prev, deleteTicket: false }));
+      });
+  };
+
   const handleGetEventTickets = async () => {
-    setIsLoading(true);
+    setIsLoading((prev) => ({ ...prev, getTickets: true }));
     try {
       const { status, data } = await api.get(
         appUrls.TICKET_URL + `/all/${event_id}`,
@@ -153,6 +181,7 @@ export default function Tickets() {
             groupTicketLimit: element?.groupTicketLimit || "N/A",
             transferTransactionFeeToBuyer:
               element?.transferTransactionFeeToBuyer,
+            soldTicket: element?.soldTicket,
           });
         }
         setTicketData(() => [...record]);
@@ -161,7 +190,7 @@ export default function Tickets() {
       toast.error(_handleThrowErrorMessage(error?.data?.message));
       setTicketData([]);
     } finally {
-      setIsLoading(false);
+      setIsLoading((prev) => ({ ...prev, getTickets: false }));
     }
   };
 
@@ -178,19 +207,16 @@ export default function Tickets() {
           const eventId = element?.eventId;
           const published = element?.published;
           const eventName = element?.eventName;
-          const soldTicket = element?.soldTicket;
           record.push({
             label: eventName,
             value: {
               eventId,
               published,
-              soldTicket,
             },
           });
           if (event_id && event_id === eventId) {
             setIsEventPublished(published);
             setSelectedEvent(eventName);
-            setIsTicketSold(soldTicket);
           }
         }
         setAllEventsData(() => [...record]);
@@ -240,7 +266,6 @@ export default function Tickets() {
           onChange={(event) => {
             setSelectedEvent(event?.label);
             setIsEventPublished(event?.value?.published);
-            setIsTicketSold(event?.value?.soldTicket);
             navigate(`/app/tickets?event_id=${event?.value?.eventId}`);
           }}
           className="md:w-[300px] w-full"
@@ -250,7 +275,7 @@ export default function Tickets() {
         />
       </div>
       <TableComponent
-        isLoading={isLoading}
+        isLoading={isLoading.getTickets}
         showPagination={false}
         columns={columns}
         data={ticketData}
@@ -260,6 +285,46 @@ export default function Tickets() {
           handleOpenClose={() => handleOpenClose("infoModal")}
           text="Please contact our support team on support@eventcove.africa"
         />
+      </ModalPopup>
+
+      <ModalPopup
+        isOpen={isOpenModal("deleteModal")}
+        closeModal={handleOpenClose}
+      >
+        <div className="w-full max-w-md bg-white rounded-lg p-4 shadow-lg">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold">Confirm deletion</h2>
+            <img
+              onClick={() => handleOpenClose("deleteModal")}
+              src={close_cancel}
+              alt="close_cancel"
+              className="cursor-pointer"
+            />
+          </div>
+          <p className="text-dark_200 text-sm mb-6">
+            {`Are you sure you want to delete the ticket (${ticketDetails?.name})?`}
+          </p>
+          <div className="flex justify-end gap-4">
+            <div className="w-full flex gap-2">
+              <Button
+                title="Cancel"
+                className="w-full text-center rounded-2xl border border-primary"
+                backgroundColor="bg-none"
+                textColor="text-primary"
+                type="button"
+                onClick={() => handleOpenClose("deleteModal")}
+              />
+              <Button
+                title="Delete"
+                className="w-full text-center rounded-2xl"
+                backgroundColor="bg-primary_100"
+                type="button"
+                isLoading={isLoading.deleteTicket}
+                onClick={onDelete}
+              />
+            </div>
+          </div>
+        </div>
       </ModalPopup>
     </div>
   );
