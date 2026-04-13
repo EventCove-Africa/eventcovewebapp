@@ -287,7 +287,7 @@ export default function AddEvents() {
                       className="h-[52px] w-full outline-none px-4"
                       onChange={(e) => {
                         setFieldValue("eventImageUrl", e.target.files?.[0]);
-                        setIsBannerChanged(!isBannerChanged);
+                        setIsBannerChanged(true);
                       }}
                     />
                     {values?.eventImageUrl ? (
