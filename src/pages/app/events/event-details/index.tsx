@@ -56,7 +56,7 @@ export default function EventDetails() {
     try {
       const { status, data } = await api.post(
         appUrls.EVENT_URL + `/${pusblishUnpublish}`,
-        payload
+        payload,
       );
       const message = data?.data;
       if ([200, 201].includes(status)) {
@@ -80,7 +80,7 @@ export default function EventDetails() {
     }));
     try {
       const { status, data } = await api.get(
-        appUrls.EXPORT_URL + `/${id}?mediaType=${mediaType}`
+        appUrls.EXPORT_URL + `/${id}?mediaType=${mediaType}`,
       );
       const message = data?.data;
       if ([200, 201].includes(status)) {
@@ -103,7 +103,7 @@ export default function EventDetails() {
     }));
     try {
       const { status, data } = await api.post(
-        appUrls.EVENT_URL + `/delete/${id}`
+        appUrls.EVENT_URL + `/delete/${id}`,
       );
       const message = data?.data;
       if ([200, 201].includes(status)) {
@@ -275,13 +275,14 @@ export default function EventDetails() {
         </div>
       </div>
       {!loadingEventDetails?.event && (
-        <div className="flex gap-2 items-center mt-4">
+        <div className="w-full flex md:flex-row flex-col gap-2 md:items-center items-start mt-4">
           {isReadyForPublish && (
             <Button
               title={`Publish Event`}
               type="button"
               isLoading={loadingEventDetails?.publish}
               onClick={() => handlePublishEvent()}
+              className="w-full md:w-fit"
             />
           )}
           {isEventPublised && NOT_COMPLETED && (
@@ -290,6 +291,7 @@ export default function EventDetails() {
               type="button"
               isLoading={loadingEventDetails?.publish}
               onClick={() => handlePublishEvent()}
+              className="w-full md:w-fit"
             />
           )}
           {NOT_COMPLETED && (
@@ -301,6 +303,7 @@ export default function EventDetails() {
                   state: allEventDetails?.eventId,
                 })
               }
+              className="w-full md:w-fit"
             />
           )}
           {["upcoming"].includes(allEventDetails?.status) && (
@@ -312,6 +315,7 @@ export default function EventDetails() {
               onClick={() =>
                 navigate(`/app/events/edit/${allEventDetails?.eventId}`)
               }
+              className="w-full md:w-fit"
             />
           )}
         </div>
