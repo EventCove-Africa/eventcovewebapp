@@ -12,7 +12,6 @@ import logo from "../../assets/icons/logo.svg";
 import QRscan from "./components/QRscan";
 import TicketIdEntry from "./components/TicketIdEntry";
 import ModalPopup from "../../components/ModalPopup";
-import SignupSuccess from "../components/SignupSuccess";
 import useOpenCloseModal from "../../hooks/useOpenCloseModal";
 import { MenuItem } from "../../layouts/dashboard-layout/Header";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -24,6 +23,7 @@ import { _handleThrowErrorMessage } from "../../utils/index.ts";
 import { api } from "../../services/api.ts";
 import { appUrls } from "../../services/urls/index.ts";
 import { FormikHelpers } from "formik";
+import TicketValidationSuccess from "./components/TicketValidationSuccess.tsx";
 
 type TicketValidationProps = {
   eventReference: string;
@@ -39,6 +39,7 @@ export default function TicketsValidation() {
   const buttonRef = useRef<HTMLButtonElement | null>(null); // For the button
   const { isOpenModal, handleOpenClose } = useOpenCloseModal();
   const { logout, userDetails } = useUser() as useUserProps;
+  const [attendeeDetails, setAttendeeDetails] = useState<any>(null);
   // Extract query parameter for eventType
   const getParam = useQueryParams();
   const validationType = getParam("validation-type");
@@ -93,6 +94,8 @@ export default function TicketsValidation() {
       const res = await api.post(appUrls.TICKET_VALIDATION_URL, payload);
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
+         const result = res?.data?.data;
+        setAttendeeDetails(result);
         handleOpenClose();
         actions.resetForm();
       }
@@ -213,6 +216,7 @@ export default function TicketsValidation() {
               eventReference={eventId}
               email={user_email}
               handleOpenClose={handleOpenClose}
+              setAttendeeDetails={setAttendeeDetails}
             />
           )}
           {validationType === "ticket_id_entry" && (
@@ -225,11 +229,11 @@ export default function TicketsValidation() {
         </div>
       </div>
       <ModalPopup isOpen={isOpenModal}>
-        <SignupSuccess
-          text="Ticket validation successful 🚀"
+        <TicketValidationSuccess
           handleOpenClose={handleOpenClose}
-          handleFunction={handleOpenClose}
           buttonText="Proceed"
+          attendeeDetails={attendeeDetails}
+          setAttendeeDetails={setAttendeeDetails}
         />
       </ModalPopup>
     </div>

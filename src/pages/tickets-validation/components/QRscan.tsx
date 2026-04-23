@@ -10,6 +10,7 @@ export default function QRscan({
   handleOpenClose,
   eventReference,
   email,
+  setAttendeeDetails,
 }: any) {
   const [isValidating, setIsValidating] = useState(false);
 
@@ -24,6 +25,8 @@ export default function QRscan({
       const res = await api.post(appUrls.TICKET_VALIDATION_URL, payload);
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
+        const result = res?.data?.data;
+        setAttendeeDetails(result);
         handleOpenClose();
       }
     } catch (error: any) {
