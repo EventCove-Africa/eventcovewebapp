@@ -27,6 +27,7 @@ import { appUrls } from "../../../../services/urls";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useImageFile from "../../../../hooks/useImageFile";
+import ToggleSwitch from "../../../../components/ToggleSwitch";
 
 type AddEventProps = {
   eventName: string;
@@ -69,13 +70,13 @@ export default function AddEvents() {
   const start_date_time = event_id
     ? formatDateTimeToStringDATE(
         allEventDetails?.startDate,
-        allEventDetails?.startTime
+        allEventDetails?.startTime,
       )
     : null;
   const end_date_time = event_id
     ? formatDateTimeToStringDATE(
         allEventDetails?.endDate,
-        allEventDetails?.endTime
+        allEventDetails?.endTime,
       )
     : null;
   const imageSrc = useImageFile(allEventDetails?.eventImageUrl);
@@ -91,7 +92,7 @@ export default function AddEvents() {
   const _handleCreateEvent = async (
     data: AddEventProps,
     teamMemberPayload: any,
-    actions: FormikHelpers<any>
+    actions: FormikHelpers<any>,
   ) => {
     setIsCreating(true);
     let eventImageUrl;
@@ -145,7 +146,7 @@ export default function AddEvents() {
 
   const _handleAddTeamMembers = async (
     payload: AddTeamMembersProps,
-    actions: FormikHelpers<any>
+    actions: FormikHelpers<any>,
   ) => {
     try {
       const res = await api.post(appUrls.EVENT_URL + "/add/member", payload);
@@ -205,6 +206,7 @@ export default function AddEvents() {
           email_list: [],
           eventVenueType: allEventDetails?.eventVenueType || "",
           location: allEventDetails?.location || "",
+          displayAddressToUsers: allEventDetails?.displayAddressToUsers ?? true,
           start_date_time,
           end_date_time,
           eventPrivacy: allEventDetails?.eventPrivacy || "",
@@ -219,7 +221,7 @@ export default function AddEvents() {
           const { startDate, endDate, startTime, endTime }: any =
             convertDateTimeRangeForEventCreation(
               start_date_time,
-              end_date_time
+              end_date_time,
             );
           const data = {
             ...rest,
@@ -247,7 +249,7 @@ export default function AddEvents() {
         }) => {
           const removeItemFromAllValues = (idToRemove: number) => {
             const updatedValues = values.email_list.filter(
-              (item: any) => item.id !== idToRemove
+              (item: any) => item.id !== idToRemove,
             );
             setFieldValue("email_list", updatedValues);
           };
@@ -257,7 +259,7 @@ export default function AddEvents() {
             const nextId =
               values.email_list.length > 0
                 ? Math.max(
-                    ...values.email_list.map((item: any) => item.id ?? 0)
+                    ...values.email_list.map((item: any) => item.id ?? 0),
                   ) + 1
                 : 1;
             setFieldValue("email_list", [
@@ -295,7 +297,7 @@ export default function AddEvents() {
                         <img
                           alt="upload"
                           src={window.URL.createObjectURL(
-                            values?.eventImageUrl
+                            values?.eventImageUrl,
                           )}
                           className="w-full h-full object-cover"
                         />
@@ -398,6 +400,20 @@ export default function AddEvents() {
                     touched={touched?.location}
                   />
                 </div>
+                <div className="w-full flex gap-2 items-start">
+                  <ToggleSwitch
+                    labelName="Display address to users"
+                    name="displayAddressToUsers"
+                    checked={values?.displayAddressToUsers}
+                    onChange={(checked) =>
+                      setFieldValue("displayAddressToUsers", checked)
+                    }
+                  />
+                </div>
+                <span className="text-xs text-dark_200 leading-5 mb-3 block">
+                  When turned off, the event location is hidden and shared only
+                  after ticket purchase.
+                </span>
                 <label
                   htmlFor="slug"
                   className={`text-xs text-dark_200 leading-5 flex items-center`}
@@ -422,8 +438,8 @@ export default function AddEvents() {
                     {typeof errors.slug === "string"
                       ? errors.slug
                       : Array.isArray(errors.slug)
-                      ? errors.slug.join(", ")
-                      : ""}
+                        ? errors.slug.join(", ")
+                        : ""}
                   </div>
                 ) : null}
                 <div className="w-full flex gap-3 mt-3 md:flex-row flex-col">
@@ -541,7 +557,7 @@ export default function AddEvents() {
                       errors={errors?.email}
                       touched={touched?.email}
                       onKeyPress={(
-                        e: React.KeyboardEvent<HTMLInputElement>
+                        e: React.KeyboardEvent<HTMLInputElement>,
                       ) => {
                         if (e?.code.toLowerCase() === "enter") {
                           e.preventDefault(); // Prevent form submission

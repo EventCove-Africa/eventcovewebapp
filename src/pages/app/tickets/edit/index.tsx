@@ -38,7 +38,7 @@ export default function EditTicket() {
 
   const _handleEditTicketForEvent = async (
     payload: any,
-    actions: FormikHelpers<any>
+    actions: FormikHelpers<any>,
   ) => {
     try {
       const res = await api.post(appUrls.TICKET_URL + "/edit/single", payload);
@@ -93,7 +93,7 @@ export default function EditTicket() {
               endTime: salesEndTime,
             }: any = convertDateTimeRangeForEventCreation(
               sales_start_date_time,
-              sales_end_date_time
+              sales_end_date_time,
             );
             const payload = {
               ticketTypeId: ticketId,
@@ -210,7 +210,7 @@ export default function EditTicket() {
                         onChange={(checked) =>
                           setFieldValue(
                             "transferTransactionFeeToBuyer",
-                            checked
+                            checked,
                           )
                         }
                       />
@@ -255,7 +255,7 @@ export default function EditTicket() {
                           handleChange={(e: any) =>
                             setFieldValue(
                               "capacity",
-                              handleNumberInput(e.target.value)
+                              handleNumberInput(e.target.value),
                             )
                           }
                           type="text"
@@ -266,15 +266,15 @@ export default function EditTicket() {
                         />
                       </div>
                       <div className="w-full flex gap-2 items-start">
-                            <ToggleSwitch
-                              labelName="Show seat counts to user"
-                              name="showCapacityToUsers"
-                              checked={values?.showCapacityToUsers}
-                              onChange={(checked) =>
-                                setFieldValue("showCapacityToUsers", checked)
-                              }
-                            />
-                          </div>
+                        <ToggleSwitch
+                          labelName="Show seat counts to user"
+                          name="showCapacityToUsers"
+                          checked={values?.showCapacityToUsers}
+                          onChange={(checked) =>
+                            setFieldValue("showCapacityToUsers", checked)
+                          }
+                        />
+                      </div>
                       <div className="mb-2">
                         <TextInputField
                           labelName="Colour (optional)"
