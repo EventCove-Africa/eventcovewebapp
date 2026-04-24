@@ -21,7 +21,7 @@ createRoot(document.getElementById("root")!).render(
       </GoogleOAuthProvider>
       <Toaster
         toastOptions={{
-          duration: 4000,
+          duration: 6000,
           className: "z-50 text-xs",
         }}
       />
