@@ -108,7 +108,7 @@ export default function TicketsValidation() {
 
   return (
     <div className="flex flex-col flex-1 gap-3">
-      <header className="bg-white h-[68px] w-full px-6 flex justify-between items-center rounded-md shadow-sm">
+      <header className="bg-white md:h-[68px] h-auto w-full md:px-6 px-3 flex md:flex-row flex-col gap-2 justify-between md:items-center items-start rounded-md shadow-sm">
         <img
           src={logo}
           alt="EventCove Logo"
@@ -116,7 +116,7 @@ export default function TicketsValidation() {
           loading="lazy"
           aria-hidden="true"
         />
-        <div className="flex gap-5 items-center">
+        <div className="flex md:gap-5 gap-2 items-center md:self-center self-end">
           <User
             size="32"
             color="#868B90"
@@ -174,7 +174,7 @@ export default function TicketsValidation() {
             </h4>
           </div>
         )}
-        <div className="flex-1 h-full  flex lg:gap-16 gap-4 lg:flex-row flex-col justify-between gap">
+        <div className="flex-1 h-full flex lg:gap-16 gap-4 lg:flex-row flex-col justify-between">
           <div className="lg:w-3/5 w-full flex flex-col gap-2">
             <h4 className="text-dark_200 md:text-sm text-xs font-normal">
               Select any of the options below ✨

@@ -38,11 +38,8 @@ export default function QRscan({
 
   return (
     <>
-      <div className="lg:w-2/5 w-full bg-white flex flex-col gap-4 items-center justify-center p-8 rounded-xl h-auto">
-        <h4 className="text-dark_200 font-normal text-sm">
-          {isValidating ? "Validating..." : "Scan QR code"}
-        </h4>
-        <QRCodeScanner onScan={handleScan} />
+      <div className="lg:w-2/5 w-full bg-white flex flex-col gap-4 items-center justify-center md:p-6 p-3 rounded-xl h-auto">
+        <QRCodeScanner onScan={handleScan} isValidating={isValidating} />
       </div>
     </>
   );
