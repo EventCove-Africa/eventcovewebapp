@@ -12,7 +12,7 @@ import { api } from "../../../../services/api";
 import { _handleThrowErrorMessage } from "../../../../utils";
 
 const inputOTPStyle = {
-  width: "48px",
+  width: "45px",
   height: "56px",
   border: "1px solid #0000001F",
   outline: "none",
@@ -107,6 +107,7 @@ export default function SettingsResetPin() {
                 containerStyle={{
                   display: "flex",
                   justifyContent: "space-between",
+                   gap: "3px",
                 }}
                 inputType="number"
                 inputStyle={inputOTPStyle}
@@ -134,6 +135,7 @@ export default function SettingsResetPin() {
                 containerStyle={{
                   display: "flex",
                   justifyContent: "space-between",
+                   gap: "3px",
                 }}
                 inputType="number"
                 inputStyle={inputOTPStyle}
