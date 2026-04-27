@@ -28,7 +28,7 @@ export default function AuthLayout() {
         />
       </header>
       {/* Main Content */}
-      <main className="flex-1 overflow-hidden px-6 py-4">
+      <main className="flex-1 overflow-hidden md:px-6 px-2 md:py-4 py-2">
         <div className="flex h-full bg-white p-4 rounded-xl shadow-lg">
           {/* Left Section */}
           <div className="flex-1 py-3 md:px-6 px-0 overflow-auto">
