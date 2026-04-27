@@ -1,20 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik } from "formik";
 import { motion } from "framer-motion";
 import DescriptionBar from "../../../../../components/DescriptionBar";
 import { createPinSchema } from "../../../../../form-schemas";
 import Button from "../../../../../components/FormComponents/Button";
-import {
-  _handleThrowErrorMessage,
-  animationVariants,
-} from "../../../../../utils";
-import toast from "react-hot-toast";
-import { api } from "../../../../../services/api";
-import { appUrls } from "../../../../../services/urls";
+import { animationVariants } from "../../../../../utils";
 import OTPInput from "react-otp-input";
 
 type TransactionPinProps = {
   handleOpenClose: () => void;
+  setPin: React.Dispatch<React.SetStateAction<{ pin: string }>>;
+  setAction: React.Dispatch<React.SetStateAction<any>>;
 };
 export type AddPinProps = {
   pin: string;
@@ -22,7 +18,7 @@ export type AddPinProps = {
 
 const inputOTPStyle = {
   minWidth: "45px",
-  width:"auto",
+  width: "auto",
   height: "56px",
   border: "1px solid #0000001F",
   outline: "none",
@@ -35,26 +31,9 @@ const inputOTPStyle = {
 
 export default function TransactionPin({
   handleOpenClose,
+  setPin,
+  setAction,
 }: TransactionPinProps) {
-  const handleCreatePin = async (
-    payload: AddPinProps,
-    actions: FormikHelpers<any>,
-  ) => {
-    try {
-      const res = await api.post(appUrls.WALLET_URL + "/pin", payload);
-      const status_code = [200, 201].includes(res?.status);
-      if (status_code) {
-        actions.resetForm();
-        handleOpenClose();
-      }
-    } catch (error: any) {
-      const err_message = _handleThrowErrorMessage(error?.data?.message);
-      toast.error(err_message);
-    } finally {
-      actions.setSubmitting(false);
-    }
-  };
-
   return (
     <motion.div
       transition={{ duration: 0.4 }}
@@ -77,7 +56,10 @@ export default function TransactionPin({
               const payload = {
                 pin: values?.pin,
               };
-              handleCreatePin(payload, actions);
+              setPin({ ...payload });
+              setAction(actions);
+              actions.setSubmitting(false);
+              handleOpenClose();
             }}
           >
             {({

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import BvnNinEntry from "./components/BvnNinEntry";
@@ -6,8 +7,11 @@ import ModalPopup from "../../../../components/ModalPopup";
 import OTPVerify from "../../../../components/OtpVerify";
 import useOpenCloseModal from "../../../../hooks/useOpenCloseModal";
 import { useLocation, useNavigate } from "react-router-dom";
-import { isObjectEmpty } from "../../../../utils";
+import { _handleThrowErrorMessage, isObjectEmpty } from "../../../../utils";
 import AddBankDetails from "./components/AddBankDetails";
+import { appUrls } from "../../../../services/urls";
+import { api } from "../../../../services/api";
+import toast from "react-hot-toast";
 
 export default function AddWallet() {
   const navigate = useNavigate();
@@ -16,6 +20,29 @@ export default function AddWallet() {
   const [curStep, setCurStep] = useState<
     "bvn_nin" | "transaction_pin" | "bankVerified"
   >("bankVerified");
+  const [pin, setPin] = useState<{ pin: string }>({
+    pin: "",
+  });
+  const [action, setAction] = useState<any>();
+
+  const handleCreatePin = async () => {
+    action.setSubmitting(true);
+    handleOpenClose();
+    try {
+      const res = await api.post(appUrls.WALLET_URL + "/pin", pin);
+      const status_code = [200, 201].includes(res?.status);
+      if (status_code) {
+        action.resetForm();
+        toast.success("PIN created successfully");
+        navigate("/app/wallet");
+      }
+    } catch (error: any) {
+      const err_message = _handleThrowErrorMessage(error?.data?.message);
+      toast.error(err_message);
+    } finally {
+      action.setSubmitting(false);
+    }
+  };
 
   const handleCheckIfNinBvnPINIsSet = () => {
     if (!state) return;
@@ -33,7 +60,7 @@ export default function AddWallet() {
   };
 
   const handleChangeStep = (
-    nextPath: "bvn_nin" | "transaction_pin" | "bankVerified"
+    nextPath: "bvn_nin" | "transaction_pin" | "bankVerified",
   ) => {
     setCurStep(nextPath);
   };
@@ -41,11 +68,7 @@ export default function AddWallet() {
   const renderCurrentStep = () => {
     switch (curStep) {
       case "bankVerified":
-        return (
-          <AddBankDetails
-            handleChangeStep={handleChangeStep}
-          />
-        );
+        return <AddBankDetails handleChangeStep={handleChangeStep} />;
       case "bvn_nin":
         return (
           <BvnNinEntry
@@ -54,7 +77,13 @@ export default function AddWallet() {
           />
         );
       case "transaction_pin":
-        return <TransactionPin handleOpenClose={handleOpenClose} />;
+        return (
+          <TransactionPin
+            handleOpenClose={handleOpenClose}
+            setAction={setAction}
+            setPin={setPin}
+          />
+        );
       default:
         return null;
     }
@@ -80,7 +109,7 @@ export default function AddWallet() {
         <OTPVerify
           transactionType="create-pin"
           handleOpenClose={handleOpenClose}
-          nextPath="/app/wallet"
+          handleNextFunction={handleCreatePin}
           allowResendOTPOnRender={true}
           showCancelButton={false}
         />
