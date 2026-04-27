@@ -36,6 +36,7 @@ export const APP_ROUTES = {
   STATISTICS: "/admin/statistics",
   SETTINGS_PROFILE: "/app/settings/profile",
   SETTINGS_PASSWORD: "/app/settings/password",
+  SETTINGS_RESET_PIN: "/app/settings/reset-transaction-pin",
   TICKETS_VALIDATION: "/tickets-validation/:eventId",
   NOT_FOUND: "*",
   UNAUTHORIZED: "/unauthorized",
@@ -119,6 +120,11 @@ export const SettingsProfile = lazyLoad(
 export const SettingsPassword = lazyLoad(
   () => import("../pages/app/settings/components/SettingsPassword.tsx"),
   "SettingsPassword",
+);
+
+export const SettingsResetPin = lazyLoad(
+  () => import("../pages/app/settings/components/SettingsResetPin.tsx"),
+  "SettingsResetPin",
 );
 
 // Other Pages
@@ -346,6 +352,14 @@ export const routeConfig = [
             element: (
               <AnimatedRoute>
                 <SettingsPassword />
+              </AnimatedRoute>
+            ),
+          },
+          {
+            path: APP_ROUTES.SETTINGS_RESET_PIN,
+            element: (
+              <AnimatedRoute>
+                <SettingsResetPin />
               </AnimatedRoute>
             ),
           },

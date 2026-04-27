@@ -71,7 +71,7 @@ export default function PasswordInputField({
       {errors && touched && (
         <div
           id={errorId}
-          className="text-xs font-medium text-red-500 mt-1"
+          className="text-[10px] font-medium text-red-500 mt-1"
           role="alert"
         >
           {errors}
