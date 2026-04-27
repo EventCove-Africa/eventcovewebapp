@@ -25,7 +25,7 @@ export default function Wallet() {
     useFetchWalletDetails();
   const toggleAmountVisibility = () => setIsAmountVisible(!isAmountVisible);
 
-  const handleCheckIfNinBvnPINIsSet = () => {
+  const handleCheckIfNinBvnPINIsSet = (): boolean | undefined => {
     const { nin, bvn, pinAdded, bankVerified } = walletDetails;
     if (!walletDetails) return;
     if (!nin || !bvn || !pinAdded || !bankVerified) return false;
