@@ -22,9 +22,9 @@ export default function TransactionHistory({
   userDetails,
 }: TransactionHistoryProps) {
   const [transactions, setTransactions] = useState<transactionsProps[]>([]);
-  const [transactionStatus, setTransactionStatus] = useState("");
-  const [activeType, setActiveType] = useState("all");
-  const [isLoading, setIsLoading] = useState(false);
+  const [transactionStatus, setTransactionStatus] = useState<string>("");
+  const [activeType, setActiveType] = useState<string>("all");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
 

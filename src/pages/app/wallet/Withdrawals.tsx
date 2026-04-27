@@ -18,11 +18,11 @@ export default function Withdrawals({
   refetch,
 }: any) {
   const validationSchema = withdrawalsSchema(walletDetails.balance);
-  const [isResending, setIsResending] = useState(false);
+  const [isResending, setIsResending] = useState<boolean>(false);
 
   const handleUpdateInitiatePayout = async (
     payload: any,
-    actions: FormikHelpers<any>
+    actions: FormikHelpers<any>,
   ) => {
     try {
       const res = await api.post(appUrls.WALLET_URL + "/payout", payload);
@@ -173,7 +173,7 @@ export default function Withdrawals({
                 errors={errors?.transaction_otp}
                 touched={touched?.transaction_otp}
               />
-              <h2 className="md:text-sm text-xs font-semibold mt-2 text-dark_300">
+              <h2 className="text-xs font-semibold mt-2 text-dark_300">
                 Note: Please{" "}
                 <span
                   onClick={handleResendOTP}

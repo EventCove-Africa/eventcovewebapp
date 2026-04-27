@@ -116,7 +116,7 @@ export default function TextInputField({
           {...safeProps}
         />
         {errors && touched ? (
-          <div className="text-xs text-red font-medium text-red-500" role="alert">
+          <div className="text-[10px] text-red font-medium text-red-500" role="alert">
             {errors}
           </div>
         ) : null}

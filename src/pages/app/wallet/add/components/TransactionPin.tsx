@@ -16,13 +16,14 @@ import { appUrls } from "../../../../../services/urls";
 type TransactionPinProps = {
   handleOpenClose: () => void;
 };
-type AddPinProps = {
+export type AddPinProps = {
   pin: string;
 };
 
 export default function TransactionPin({
   handleOpenClose,
 }: TransactionPinProps) {
+
   const handleCreatePin = async (
     payload: AddPinProps,
     actions: FormikHelpers<any>
