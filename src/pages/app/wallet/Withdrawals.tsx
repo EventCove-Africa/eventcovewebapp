@@ -5,11 +5,23 @@ import toast from "react-hot-toast";
 import close_cancel from "../../../assets/icons/close-circle.svg";
 import TextInputField from "../../../components/FormComponents/InputField";
 import Button from "../../../components/FormComponents/Button";
-import PasswordInputField from "../../../components/FormComponents/PasswordField";
 import { _handleThrowErrorMessage, handleNumberInput } from "../../../utils";
 import { api } from "../../../services/api";
 import { withdrawalsSchema } from "../../../form-schemas";
 import { appUrls } from "../../../services/urls";
+import OTPInput from "react-otp-input";
+
+const inputOTPStyle = {
+  width: "40px",
+  height: "36px",
+  border: "1px solid #0000001F",
+  outline: "none",
+  borderRadius: "2px",
+  color: "#0A0A0A",
+  lineHeight: "44px",
+  fontSize: "16px",
+  fontWeight: "400",
+};
 
 export default function Withdrawals({
   handleOpenClose,
@@ -151,28 +163,60 @@ export default function Withdrawals({
             </div>
 
             <div className="mb-1">
-              <PasswordInputField
-                labelName="Transaction PIN"
-                name="transaction_pin"
-                type="tel"
-                handleChange={handleChange}
-                placeholder="******"
-                value={values.transaction_pin}
-                errors={errors?.transaction_pin}
-                touched={touched?.transaction_pin}
+              <label
+                htmlFor="PIN"
+                className="text-xs leading-4 text-dark_200 font-normal"
+              >
+                Transaction PIN
+              </label>
+              <OTPInput
+                value={values?.transaction_pin}
+                onChange={(value: string) =>
+                  setFieldValue("transaction_pin", value)
+                }
+                numInputs={6}
+                renderInput={(props) => <input {...props} />}
+                containerStyle={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: "2px",
+                }}
+                inputType="number"
+                inputStyle={inputOTPStyle}
               />
+              {errors.transaction_pin && touched.transaction_pin ? (
+                <div className="text-[10px] mt-1 text-red-500">
+                  {errors.transaction_pin}
+                </div>
+              ) : null}
             </div>
             <div className="mb-1">
-              <PasswordInputField
-                labelName="OTP"
-                name="transaction_otp"
-                type="tel"
-                handleChange={handleChange}
-                placeholder="******"
-                value={values.transaction_otp}
-                errors={errors?.transaction_otp}
-                touched={touched?.transaction_otp}
+              <label
+                htmlFor="OTP"
+                className="text-xs leading-4 text-dark_200 font-normal"
+              >
+                OTP
+              </label>
+              <OTPInput
+                value={values?.transaction_otp}
+                onChange={(value: string) =>
+                  setFieldValue("transaction_otp", value)
+                }
+                numInputs={6}
+                renderInput={(props) => <input {...props} />}
+                containerStyle={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: "2px",
+                }}
+                inputType="number"
+                inputStyle={inputOTPStyle}
               />
+              {errors.transaction_otp && touched.transaction_otp ? (
+                <div className="text-[10px] mt-1 text-red-500">
+                  {errors.transaction_otp}
+                </div>
+              ) : null}
               <h2 className="text-xs font-semibold mt-2 text-dark_300">
                 Note: Please{" "}
                 <span

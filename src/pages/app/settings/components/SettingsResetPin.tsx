@@ -5,13 +5,13 @@ import * as Yup from "yup";
 import OTPInput from "react-otp-input";
 import ModalPopup from "../../../../components/ModalPopup";
 import OTPVerify from "../../../../components/OtpVerify";
+import toast from "react-hot-toast";
 import Button from "../../../../components/FormComponents/Button";
 import { appUrls } from "../../../../services/urls";
 import { api } from "../../../../services/api";
 import { _handleThrowErrorMessage } from "../../../../utils";
-import toast from "react-hot-toast";
 
-const inputStyle = {
+const inputOTPStyle = {
   width: "48px",
   height: "56px",
   border: "1px solid #0000001F",
@@ -109,7 +109,7 @@ export default function SettingsResetPin() {
                   justifyContent: "space-between",
                 }}
                 inputType="number"
-                inputStyle={inputStyle}
+                inputStyle={inputOTPStyle}
               />
               {errors.pin && touched.pin ? (
                 <div className="text-[10px] mt-1 text-red-500">
@@ -136,7 +136,7 @@ export default function SettingsResetPin() {
                   justifyContent: "space-between",
                 }}
                 inputType="number"
-                inputStyle={inputStyle}
+                inputStyle={inputOTPStyle}
               />
               {errors.confirm_pin && touched.confirm_pin ? (
                 <div className="text-[10px] mt-1 text-red-500">
