@@ -32,7 +32,7 @@ export default function OTPVerify({
   const hasRun = useRef(false);
   const { userDetails } = useUser() as useUserProps;
   const [isResending, setIsResending] = useState(false);
-  
+
   const otpSchema = Yup.object().shape({
     otp: Yup.string()
       .required("OTP is Required")
@@ -63,14 +63,18 @@ export default function OTPVerify({
 
   const handleVerifyOTP = async (
     payload: VerifyOTPProps,
-    actions: FormikHelpers<VerifyOTPProps>
+    actions: FormikHelpers<VerifyOTPProps>,
   ) => {
     try {
       const res = await api.post(appUrls.OTP_URL + "/verify", payload);
       const status_code = [200, 201].includes(res?.status);
       if (status_code) {
         const { access_token, token_type } = res?.data?.data ?? null;
-        if (!["create-pin", "initiate-payout", 'reset-pin'].includes(transactionType)) {
+        if (
+          !["create-pin", "initiate-payout", "reset-pin"].includes(
+            transactionType,
+          )
+        ) {
           if (access_token) {
             setAuthCookies({ access_token, token_type });
           }
