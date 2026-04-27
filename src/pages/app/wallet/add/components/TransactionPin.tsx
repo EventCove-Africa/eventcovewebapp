@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import DescriptionBar from "../../../../../components/DescriptionBar";
 import { createPinSchema } from "../../../../../form-schemas";
 import Button from "../../../../../components/FormComponents/Button";
-import PasswordInputField from "../../../../../components/FormComponents/PasswordField";
 import {
   _handleThrowErrorMessage,
   animationVariants,
@@ -12,6 +11,7 @@ import {
 import toast from "react-hot-toast";
 import { api } from "../../../../../services/api";
 import { appUrls } from "../../../../../services/urls";
+import OTPInput from "react-otp-input";
 
 type TransactionPinProps = {
   handleOpenClose: () => void;
@@ -20,13 +20,25 @@ export type AddPinProps = {
   pin: string;
 };
 
+const inputOTPStyle = {
+  minWidth: "45px",
+  width:"auto",
+  height: "56px",
+  border: "1px solid #0000001F",
+  outline: "none",
+  borderRadius: "2px",
+  color: "#0A0A0A",
+  lineHeight: "44px",
+  fontSize: "16px",
+  fontWeight: "400",
+};
+
 export default function TransactionPin({
   handleOpenClose,
 }: TransactionPinProps) {
-
   const handleCreatePin = async (
     payload: AddPinProps,
-    actions: FormikHelpers<any>
+    actions: FormikHelpers<any>,
   ) => {
     try {
       const res = await api.post(appUrls.WALLET_URL + "/pin", payload);
@@ -70,41 +82,71 @@ export default function TransactionPin({
           >
             {({
               handleSubmit,
-              handleChange,
               values,
               touched,
               errors,
               isSubmitting,
+              setFieldValue,
             }) => (
               <Form onSubmit={handleSubmit} className="">
                 <div className="mb-1">
-                  <PasswordInputField
-                    labelName="Enter PIN"
-                    name="pin"
-                    type="tel"
-                    handleChange={handleChange}
-                    placeholder="******"
-                    value={values.pin}
-                    errors={errors?.pin}
-                    touched={touched?.pin}
+                  <label
+                    htmlFor="PIN"
+                    className="text-xs leading-4 text-dark_200 font-normal"
+                  >
+                    Enter PIN
+                  </label>
+                  <OTPInput
+                    value={values?.pin}
+                    onChange={(value: string) => setFieldValue("pin", value)}
+                    numInputs={6}
+                    renderInput={(props) => <input {...props} />}
+                    containerStyle={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      gap: "3px",
+                    }}
+                    inputType="number"
+                    inputStyle={inputOTPStyle}
                   />
+                  {errors.pin && touched.pin ? (
+                    <div className="text-[10px] mt-1 text-red-500">
+                      {errors.pin}
+                    </div>
+                  ) : null}
                 </div>
                 <div className="mb-1">
-                  <PasswordInputField
-                    labelName="Confirm PIN"
-                    name="confirm_pin"
-                    type="tel"
-                    handleChange={handleChange}
-                    placeholder="******"
-                    value={values.confirm_pin}
-                    errors={errors?.confirm_pin}
-                    touched={touched?.confirm_pin}
+                  <label
+                    htmlFor="confirm_PIN"
+                    className="text-xs leading-4 text-dark_200 font-normal"
+                  >
+                    Confirm PIN
+                  </label>
+                  <OTPInput
+                    value={values?.confirm_pin}
+                    onChange={(value: string) =>
+                      setFieldValue("confirm_pin", value)
+                    }
+                    numInputs={6}
+                    renderInput={(props) => <input {...props} />}
+                    containerStyle={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      gap: "3px",
+                    }}
+                    inputType="number"
+                    inputStyle={inputOTPStyle}
                   />
+                  {errors.confirm_pin && touched.confirm_pin ? (
+                    <div className="text-[10px] mt-1 text-red-500">
+                      {errors.confirm_pin}
+                    </div>
+                  ) : null}
                 </div>
                 <div className="">
                   <Button
                     title="Next"
-                    className="px-8 h-[40px] text-center my-6 border border-dark_200"
+                    className="px-8 h-[40px] text-center my-3 border border-dark_200"
                     type="submit"
                     isLoading={isSubmitting}
                   />
