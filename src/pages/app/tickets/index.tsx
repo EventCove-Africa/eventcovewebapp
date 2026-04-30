@@ -44,6 +44,7 @@ type TicketProp = {
   colour: string;
   capacity: string;
   transferTransactionFeeToBuyer: boolean;
+  showCapacityToUsers: boolean;
   actions: any;
 };
 
@@ -181,6 +182,7 @@ export default function Tickets() {
             groupTicketLimit: element?.groupTicketLimit || "N/A",
             transferTransactionFeeToBuyer:
               element?.transferTransactionFeeToBuyer,
+            showCapacityToUsers: element?.showCapacityToUsers,
             soldTicket: element?.soldTicket,
           });
         }
