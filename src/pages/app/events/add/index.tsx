@@ -207,6 +207,7 @@ export default function AddEvents() {
           eventVenueType: allEventDetails?.eventVenueType || "",
           location: allEventDetails?.location || "",
           displayAddressToUsers: allEventDetails?.displayAddressToUsers ?? true,
+          assign_seat: allEventDetails?.assign_seat ?? false,
           start_date_time,
           end_date_time,
           eventPrivacy: allEventDetails?.eventPrivacy || "",
