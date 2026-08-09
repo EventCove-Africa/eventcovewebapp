@@ -2,10 +2,9 @@
 import { useState, useCallback } from "react";
 import { api } from "../services/api";
 import { _handleThrowErrorMessage } from "../utils";
-import toast from "react-hot-toast";
 import { appUrls } from "../services/urls";
-import { useUser } from "../context/UserDetailsProvider.tsx";
-import { eventSalesStatsProps, useUserProps } from "../types/generalTypes.tsx";
+import { eventSalesStatsProps } from "../types/generalTypes.tsx";
+import toast from "react-hot-toast";
 
 type ticketDetailsProps = {
   ticketType: string;
@@ -23,7 +22,6 @@ type ticketTypesProps = {
 };
 
 const useEventHook = () => {
-  const { userDetails } = useUser() as useUserProps;
   const [categories, setCategories] = useState<any>();
   const [allEventsData, setAllEventsData] = useState<any[]>([]);
   const [eventTeamMembers, setEventTeamMembers] = useState<any>([]);
@@ -71,39 +69,17 @@ const useEventHook = () => {
     }
   }, []);
 
-  // const handleGetFilteredEvents = useCallback(
-  //   async (eventType?: string | undefined | null) => {
-  //     setLoadingEvents(true);
-  //     const event_Type = eventType !== "all" ? `&status=${eventType}` : "";
-  //     try {
-  //       const { status, data } = await api.get(
-  //         appUrls.EVENT_URL +
-  //           `/all?page=${curPage}&size=10&organizerId=${userDetails?.id}${event_Type}`
-  //       );
-  //       const results = data?.data;
-  //       if ([200, 201].includes(status)) {
-  //         setAllEventsData(results?.events || []);
-  //         setTotalPages(results?.totalPages);
-  //       }
-  //     } catch (error: any) {
-  //       toast.error(_handleThrowErrorMessage(error?.data?.message));
-  //     } finally {
-  //       setLoadingEvents(false);
-  //     }
-  //   },
-  //   [userDetails?.id, curPage]
-  // );
-
-  // In useEventHook.ts - Update handleGetFilteredEvents
-
   const handleGetFilteredEvents = useCallback(
-    async (eventType?: string | undefined | null) => {
+    async (
+      organizerId: string | undefined | null,
+      eventType?: string | undefined | null,
+    ) => {
       setLoadingEvents(true);
       const event_Type = eventType !== "all" ? `&status=${eventType}` : "";
       try {
         const { status, data } = await api.get(
           appUrls.EVENT_URL +
-            `/all?page=${curPage}&size=9&organizerId=${userDetails?.id}${event_Type}`
+            `/all?page=${curPage}&size=9&organizerId=${organizerId}${event_Type}`,
         );
         const results = data?.data;
         if ([200, 201].includes(status)) {
@@ -120,7 +96,7 @@ const useEventHook = () => {
         setLoadingEvents(false);
       }
     },
-    [userDetails?.id, curPage]
+    [curPage],
   );
 
   const handleGetEventDetails = async (event_id: string | undefined) => {
@@ -130,7 +106,7 @@ const useEventHook = () => {
     }));
     try {
       const { status, data } = await api.get(
-        appUrls.EVENT_URL + `/${event_id}`
+        appUrls.EVENT_URL + `/${event_id}`,
       );
       const results = data?.data;
       if ([200, 201].includes(status)) {
@@ -153,7 +129,7 @@ const useEventHook = () => {
     }));
     try {
       const { status, data } = await api.get(
-        appUrls.EVENT_URL + `/fetch/members/${event_id}`
+        appUrls.EVENT_URL + `/fetch/members/${event_id}`,
       );
       const results = data?.data?.eventTeamMembers;
       const eventUrl = data?.data?.eventUrl;
@@ -172,7 +148,7 @@ const useEventHook = () => {
   };
 
   const handleGetEventTicketSalesStats = async (
-    event_id: string | undefined
+    event_id: string | undefined,
   ) => {
     setLoadingEventDetails((prev) => ({
       ...prev,
@@ -180,7 +156,8 @@ const useEventHook = () => {
     }));
     try {
       const { status, data } = await api.get(
-        appUrls.EVENT_TICKET_SALES_URL + `/${event_id}?page=${curPage - 1}&size=10`
+        appUrls.EVENT_TICKET_SALES_URL +
+          `/${event_id}?page=${curPage - 1}&size=10`,
       );
       const result = data?.data;
       if ([200, 201].includes(status)) {
@@ -213,7 +190,7 @@ const useEventHook = () => {
   };
 
   const handleGetEventTicketTypeDetails = async (
-    event_id: string | undefined
+    event_id: string | undefined,
   ) => {
     setLoadingEventDetails((prev) => ({
       ...prev,
@@ -221,7 +198,7 @@ const useEventHook = () => {
     }));
     try {
       const { status, data } = await api.get(
-        appUrls.TICKET_TYPE_URL + `/${event_id}`
+        appUrls.TICKET_TYPE_URL + `/${event_id}`,
       );
       const result = data?.data;
       if ([200, 201].includes(status)) {

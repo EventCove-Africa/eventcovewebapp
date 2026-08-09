@@ -1,12 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../../../components/FormComponents/Button";
 import EventCard from "../../../components/EventCard";
 import useQueryParams from "../../../hooks/useQueryParams";
-import { useEffect } from "react";
+import { useUser } from "../../../context/UserDetailsProvider.tsx";
+import { useUserProps } from "../../../types/generalTypes.tsx";
 
 export default function Events() {
   const navigate = useNavigate();
+  const { userDetails } = useUser() as useUserProps;
+  const organizerId = userDetails?.id;
   // Extract query parameter for eventType
   const getParam = useQueryParams();
   const eventType = getParam("eventType") as string;
@@ -63,7 +67,11 @@ export default function Events() {
           </h3>
         ))}
       </nav>
-      <EventCard eventType={eventType} />
+      <EventCard
+        eventType={eventType}
+        organizerId={organizerId}
+        allowViewEventDetails={true}
+      />
     </div>
   );
 }

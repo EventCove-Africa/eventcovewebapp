@@ -78,7 +78,7 @@ export default function Tickets() {
   const [isEventPublished, setIsEventPublished] = useState<boolean | null>(
     null,
   );
-  const [selectedEvent, setSelectedEvent] = useState<any>("");
+  const [selectedEvent, setSelectedEvent] = useState<string>("");
 
   const renderActions = (_row: TicketProp) => {
     const ticketTypeId = _row?.ticketTypeId;
@@ -266,7 +266,7 @@ export default function Tickets() {
           label=" Select an event:"
           name="event"
           onChange={(event) => {
-            setSelectedEvent(event?.label);
+            setSelectedEvent(event?.label as string);
             setIsEventPublished(event?.value?.published);
             navigate(`/app/tickets?event_id=${event?.value?.eventId}`);
           }}

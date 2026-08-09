@@ -34,6 +34,8 @@ export const APP_ROUTES = {
   ADD_WALLET: "/app/wallet/update",
   SETTINGS: "/app/settings",
   STATISTICS: "/admin/statistics",
+  VIEW_ALL_EVENT_ORGANIZERS: '/admin/statistics/view-all-event-organizers',
+  VIEW_EVENT_ORGANIZER_DETAILS: '/admin/statistics/view-all-event-organizers/:organizerId',
   SETTINGS_PROFILE: "/app/settings/profile",
   SETTINGS_PASSWORD: "/app/settings/password",
   SETTINGS_RESET_PIN: "/app/settings/reset-transaction-pin",
@@ -112,6 +114,14 @@ export const Settings = lazyLoad(
 export const Statistics = lazyLoad(
   () => import("../pages/admin/statistics"),
   "Settings",
+);
+export const ViewEventOrganizers = lazyLoad(
+  () => import("../pages/admin/event-organizers"),
+  "VIEW_ALL_EVENT_ORGANIZERS",
+);
+export const ViewEventOrganizerDetails = lazyLoad(
+  () => import("../pages/admin/event-organizers/OrganizerDetails"),
+  "VIEW_ALL_EVENT_ORGANIZERS",
 );
 export const SettingsProfile = lazyLoad(
   () => import("../pages/app/settings/components/SettingsProfile.tsx"),
@@ -380,6 +390,22 @@ export const routeConfig = [
         element: (
           <AnimatedRoute>
             <Statistics />
+          </AnimatedRoute>
+        ),
+      },
+      {
+        path: APP_ROUTES.VIEW_ALL_EVENT_ORGANIZERS,
+        element: (
+          <AnimatedRoute>
+            <ViewEventOrganizers />
+          </AnimatedRoute>
+        ),
+      },
+      {
+        path: APP_ROUTES.VIEW_EVENT_ORGANIZER_DETAILS,
+        element: (
+          <AnimatedRoute>
+            <ViewEventOrganizerDetails />
           </AnimatedRoute>
         ),
       },

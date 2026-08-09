@@ -120,7 +120,7 @@ export default function Login() {
             {!values?.eventId && (
               <h4
                 onClick={() => navigate("/auth/forget-password")}
-                className="text-xs font-normal text-secondary_300 cursor-pointer hover:underline"
+                className="text-xs font-normal text-primary_100 cursor-pointer hover:underline"
               >
                 Forget Password
               </h4>
@@ -148,7 +148,7 @@ export default function Login() {
                 Don’t have an account?{" "}
                 <span
                   onClick={() => navigate("/auth/signup")}
-                  className="text-secondary_300 cursor-pointer font-bold hover:underline"
+                  className="text-primary_100 cursor-pointer font-bold hover:underline"
                 >
                   Create one
                 </span>

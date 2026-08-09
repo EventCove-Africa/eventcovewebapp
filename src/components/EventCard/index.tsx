@@ -21,6 +21,8 @@ import useEventHook from "../../hooks/useEventHook";
 
 interface EventCardProps {
   eventType: string;
+  organizerId: string | null | undefined;
+  allowViewEventDetails?: boolean;
 }
 
 type EventCard = {
@@ -41,7 +43,11 @@ type EventCard = {
   published: boolean;
 };
 
-export default function EventCard({ eventType }: EventCardProps) {
+export default function EventCard({
+  eventType,
+  organizerId,
+  allowViewEventDetails,
+}: EventCardProps) {
   const navigate = useNavigate();
   const {
     loadingEvents,
@@ -57,27 +63,12 @@ export default function EventCard({ eventType }: EventCardProps) {
     setCurPage(1);
   }, [eventType]);
 
-  // useEffect(() => {
-  //   let mounted = false;
-  //   (async () => {
-  //     mounted = true;
-  //     if (mounted) {
-  //       handleGetFilteredEvents(eventType);
-  //     }
-  //   })();
-  //   return () => {
-  //     mounted = false;
-  //   };
-  // }, [handleGetFilteredEvents, eventType]);
-
-  // Fetch data when curPage or eventType changes
-
   useEffect(() => {
     let mounted = false;
     (async () => {
       mounted = true;
       if (mounted && eventType) {
-        handleGetFilteredEvents(eventType);
+        handleGetFilteredEvents(organizerId, eventType);
       }
     })();
     return () => {
@@ -110,7 +101,10 @@ export default function EventCard({ eventType }: EventCardProps) {
           <>
             {allEventsData.map((event: EventCard, index: number) => (
               <article
-                onClick={() => navigate(`/app/events/${event?.eventId}`)}
+                onClick={() =>
+                  allowViewEventDetails &&
+                  navigate(`/app/events/${event?.eventId}`)
+                }
                 key={`upcoming-event-${index}`}
                 className="bg-white w-auto min-h-[392px] h-auto shadow rounded-lg p-3 flex justify-between flex-col cursor-pointer"
               >
@@ -119,11 +113,11 @@ export default function EventCard({ eventType }: EventCardProps) {
                     <img
                       src={event?.eventImageUrl}
                       alt={`${event.eventName} banner`}
-                      className="rounded-xl object-cover w-full h-[200px] sm:h-[300px] md:h-[200px] lg:h-[200px] xl:h-[200px]"
+                      className="rounded-xl object-contain w-full h-[200px] sm:h-[300px] md:h-[200px] lg:h-[200px] xl:h-[200px]"
                     />
                   </div>
 
-                  <div className="absolute top-3 right-3 flex flex-col gap-2">
+                  <div className="absolute top-3 ri`ght-3 flex flex-col gap-2">
                     <div
                       className={`px-3 py-2 ${
                         eventTypeStyles[
@@ -175,13 +169,15 @@ export default function EventCard({ eventType }: EventCardProps) {
                     )}
                     {event?.published ? "Published" : "Not Published"}
                   </div>
-                  <div
-                    role="button"
-                    onClick={() => navigate(`/app/events/${event?.eventId}`)}
-                    className="flex cursor-pointer items-center gap-1 text-xs font-normal text-primary_100"
-                  >
-                    View details
-                  </div>
+                  {allowViewEventDetails && (
+                    <div
+                      role="button"
+                      onClick={() => navigate(`/app/events/${event?.eventId}`)}
+                      className="flex cursor-pointer items-center gap-1 text-xs font-normal text-primary_100"
+                    >
+                      View details
+                    </div>
+                  )}
                 </div>
               </article>
             ))}

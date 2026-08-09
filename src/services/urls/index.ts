@@ -23,4 +23,5 @@ export const appUrls: apiUrlsType = {
   EVENT_TICKET_SALES_URL: "/details",
   PROFILE_URL: "/profile",
   METRICS_URL: "/event/admin/metrics",
+  GET_ALL_ORGANIZERS: `${USER_PATH}/all/organizers`,
 };
