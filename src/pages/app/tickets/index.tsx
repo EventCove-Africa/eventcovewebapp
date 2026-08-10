@@ -22,7 +22,7 @@ import { useUserProps } from "../../../types/generalTypes.tsx";
 import Button from "../../../components/FormComponents/Button";
 import close_cancel from "../../../assets/icons/close-circle.svg";
 
-type TicketProp = {
+export type TicketProp = {
   name: string;
   price: string;
   salesStartTime: string;
