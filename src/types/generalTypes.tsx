@@ -23,6 +23,7 @@ export interface apiUrlsType {
   EVENT_TICKET_SALES_URL: string;
   PROFILE_URL: string;
   METRICS_URL: string
+  GET_ALL_ORGANIZERS: string
 }
 
 export interface ButtonProps {

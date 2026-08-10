@@ -54,14 +54,14 @@ export default function PasswordInputField({
           {showPassword ? (
             <Eye
               size="32"
-              color="#767779"
+              color="#0E0416"
               className="h-5 w-5 text-grey_100 cursor-pointer"
               onClick={togglePasswordVisibility}
             />
           ) : (
             <EyeSlash
               size="32"
-              color="#767779"
+              color="#0E0416"
               className="h-5 w-5 text-grey_100 cursor-pointer"
               onClick={togglePasswordVisibility}
             />

@@ -1,17 +1,34 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
-import { Briefcase, Crown1, Money4, Teacher, Ticket } from "iconsax-react";
-import { formatNumberWithCommas, formatToNairaShortenFigure } from "../../../../../utils";
+import { useNavigate } from "react-router-dom";
+import {
+  Briefcase,
+  Crown1,
+  Edit,
+  Money4,
+  Teacher,
+  Ticket,
+} from "iconsax-react";
+import {
+  formatDateArrayToString,
+  formatNumberWithCommas,
+  formatToNaira,
+  formatToNairaShortenFigure,
+} from "../../../../../utils";
 import useEventHook from "../../../../../hooks/useEventHook";
 import SkeletonLoader from "../../../../../components/EventCard/components/SkeletonLoader";
 
 type RenderTicketsStatForEventsProps = {
   eventId: string | undefined;
+  isEventPublised: boolean;
 };
 
 export default function RenderTicketsStatForEvents({
   eventId,
+  isEventPublised,
 }: RenderTicketsStatForEventsProps) {
+  const navigate = useNavigate();
   const {
     loadingEventDetails,
     handleGetEventTicketSalesStats,
@@ -19,6 +36,47 @@ export default function RenderTicketsStatForEvents({
     ticketTypes,
     eventSalesStats,
   } = useEventHook();
+
+  const handleEditAction = (ticketType: any) => {
+    const salesStartTime = ticketType?.salesStartTime;
+    const salesEndTime = ticketType?.salesEndTime;
+    const formattedsalesStartDate = formatDateArrayToString(
+      ticketType?.salesStartDate,
+    );
+    const formattedsalesEndDate = formatDateArrayToString(
+      ticketType?.salesEndDate,
+    );
+    const startDate = ticketType?.salesStartDate;
+    const endDate = ticketType?.salesEndDate;
+    const _row = {
+      name: ticketType?.ticketType,
+      price: formatToNaira(ticketType?.price),
+      salesEndDate: formattedsalesEndDate,
+      salesStartDate: formattedsalesStartDate,
+      saleStartEndDate: `${formattedsalesStartDate} - ${formattedsalesEndDate}`,
+      salesEndTime,
+      salesStartTime,
+      salesStartEndTime: `${salesStartTime} - ${salesEndTime}`,
+      startDate,
+      endDate,
+      ticketTypeId: ticketType?.ticketTypeId,
+      eventId: ticketType?.eventId,
+      category: ticketType?.category,
+
+      classification: ticketType?.classification,
+      colour: ticketType?.colour || "N/A",
+      capacity: ticketType?.capacity || "N/A",
+      perks: ticketType?.perks || "N/A",
+      reservedSeats: ticketType?.reservedSeats || "N/A",
+      confirmedSeats: ticketType?.confirmedSeats || "N/A",
+      purchaseLimit: ticketType?.purchaseLimit || "N/A",
+      groupTicketLimit: ticketType?.groupTicketLimit || "N/A",
+      transferTransactionFeeToBuyer: ticketType?.transferTransactionFeeToBuyer,
+      showCapacityToUsers: ticketType?.showCapacityToUsers,
+      soldTicket: ticketType?.soldTicket,
+    };
+    navigate(`/app/tickets/edit/${ticketType?.ticketTypeId}`, { state: _row });
+  };
 
   useEffect(() => {
     let mounted = false;
@@ -43,37 +101,54 @@ export default function RenderTicketsStatForEvents({
   return (
     <div className="bg-white w-full rounded-xl h-fit p-3">
       <h3 className="text-sm font-normal text-dark_200">Tickets</h3>
-      <div className="grid md:grid-cols-3 grid-cols-1 gap-3 mt-4">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-3 mt-4">
         {loadingEventDetails?.ticketType && (
           <SkeletonLoader count={3} className="h-[100px]" />
         )}
         {!loadingEventDetails?.ticketType && (
           <>
-            {ticketTypes?.ticketDetails?.map((types, index) => (
-              <div
-                key={index}
-                className="bg-grey_500 rounded-md p-2 flex flex-col justify-between"
-              >
-                <div className="flex gap-2 items-center">
-                  {icons?.[index % icons?.length]}{" "}
-                  {/* Cycles through the icons */}
-                  <div className="flex flex-col gap-1">
-                    <h3 className="text-grey_100 text-xs font-normal">
-                      {types?.ticketType}
-                    </h3>
-                    <h5 className="text-dark_200 font-normal md:text-base text-sm">
-                      {formatToNairaShortenFigure(types?.price || 0)}
-                    </h5>
+            {ticketTypes?.ticketDetails?.map((types: any, index: number) => {
+              const isTicketSold = types.soldTicket;
+              return (
+                <div
+                  key={index}
+                  className="bg-grey_500 rounded-md p-2 flex gap-6 flex-col justify-between"
+                >
+                  <div className="flex gap-2 items-center">
+                    {icons?.[index % icons?.length]}{" "}
+                    {/* Cycles through the icons */}
+                    <div className="flex flex-col gap-1">
+                      <h3 className="text-grey_100 text-xs font-normal">
+                        {types?.ticketType}
+                      </h3>
+                      <h5 className="text-dark_200 font-normal md:text-base text-sm">
+                        {formatToNairaShortenFigure(types?.price || 0)}
+                      </h5>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center gap-2">
+                    {!isTicketSold && !isEventPublised && (
+                      <h3
+                        onClick={() => handleEditAction(types)}
+                        className="text-primary_100 text-[12px] font-normal cursor-pointer flex items-center gap-1"
+                      >
+                        <Edit
+                          size="12"
+                          className="text-[#A30162] cursor-pointer"
+                        />{" "}
+                        EDIT
+                      </h3>
+                    )}
+                    <div className="items-end font-medium text-sm text-grey_100">
+                      {formatNumberWithCommas(types?.soldCount.toString())} /
+                      <span className="font-medium text-sm text-dark_200">
+                        {formatNumberWithCommas(types?.capacity.toString())}
+                      </span>
+                    </div>
                   </div>
                 </div>
-                <div className="self-end font-medium md:text-base text-sm text-grey_100">
-                  {formatNumberWithCommas(types?.soldCount.toString())} / 
-                  <span className="font-medium md:text-base text-sm text-dark_200">
-                    {formatNumberWithCommas(types?.capacity.toString())}
-                  </span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </>
         )}
       </div>
@@ -91,7 +166,9 @@ export default function RenderTicketsStatForEvents({
                 <Money4 size="24" color="#4CAF50" />
               </div>
               <h3 className="text-dark_400 font-bold md:text-2xl text-xl">
-                {formatToNairaShortenFigure(eventSalesStats?.totalTicketSales || 0)}
+                {formatToNairaShortenFigure(
+                  eventSalesStats?.totalTicketSales || 0,
+                )}
               </h3>
             </div>
             <div className="w-full bg-grey_500 p-3">

@@ -84,6 +84,8 @@ export default function Home() {
   const { fetchStatistics, stats, loading } = useGetOrganizerStats();
   const { userDetails } = useUser() as useUserProps;
 
+  const organizerId = userDetails?.id;
+
   useEffect(() => {
     let mounted = false;
     (async () => {
@@ -159,7 +161,11 @@ export default function Home() {
             <ArrowRight size="20" color="#E26E00" />
           </span>
         </div>
-        <EventCard eventType="upcoming" />
+        <EventCard
+          eventType="upcoming"
+          organizerId={organizerId}
+          allowViewEventDetails={true}
+        />
       </section>
     </div>
   );

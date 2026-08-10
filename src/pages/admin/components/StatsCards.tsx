@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { formatToNairaShortenFigure } from "../../../utils";
 import event2 from "../../../assets/icons/events2.svg";
 import ticket_sold from "../../../assets/icons/ticket-sold.svg";
@@ -14,6 +15,7 @@ export default function StatsCards({
   details: any;
   loading: boolean;
 }) {
+  const navigate = useNavigate();
   const [metricsData, setMetricData] = useState([
     {
       title: "Total Number of Events Completed",
@@ -60,7 +62,7 @@ export default function StatsCards({
         value: ["totalSalesValue"].includes(item.key)
           ? formatToNairaShortenFigure?.(details?.[item?.key] || 0)
           : details?.[item?.key],
-      }))
+      })),
     );
   }, [details]); // Runs when details updates
 
@@ -91,6 +93,11 @@ export default function StatsCards({
                 <span className="text-dark_400 text-lg md:text-xl font-bold md:mt-4 mt-2">
                   {item.value || 0}
                 </span>
+                {item.key === "totalNumberOfEventOrganizers" && (
+                  <span onClick={() => navigate('/admin/statistics/view-all-event-organizers')} className="text-xs self-end text-dark_400 cursor-pointer">
+                    View organizers
+                  </span>
+                )}
               </div>
             </article>
           ))}
