@@ -24,6 +24,7 @@ export interface apiUrlsType {
   PROFILE_URL: string;
   METRICS_URL: string
   GET_ALL_ORGANIZERS: string
+  GET_EVENTCOVE_EVENT_PROFIT: string
 }
 
 export interface ButtonProps {

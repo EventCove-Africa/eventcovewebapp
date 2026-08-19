@@ -9,7 +9,7 @@ export default function DescriptionBar({ text }: DescriptionBarProps) {
   const navigate = useNavigate();
   return (
     <>
-      <h3 className="text-dark_200 md:text-base text-sm font-normal flex gap-1 md:items-center items-start mb-2">
+      <h3 className="text-dark_200 md:text-base text-sm font-normal flex gap-1 items-center mb-2">
         <ArrowLeft
           className="cursor-pointer"
           size="24"

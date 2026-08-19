@@ -21,12 +21,10 @@ import SkeletonLoader from "../../../../../components/EventCard/components/Skele
 
 type RenderTicketsStatForEventsProps = {
   eventId: string | undefined;
-  isEventPublised: boolean;
 };
 
 export default function RenderTicketsStatForEvents({
   eventId,
-  isEventPublised,
 }: RenderTicketsStatForEventsProps) {
   const navigate = useNavigate();
   const {
@@ -108,7 +106,6 @@ export default function RenderTicketsStatForEvents({
         {!loadingEventDetails?.ticketType && (
           <>
             {ticketTypes?.ticketDetails?.map((types: any, index: number) => {
-              const isTicketSold = types.soldTicket;
               return (
                 <div
                   key={index}
@@ -127,18 +124,16 @@ export default function RenderTicketsStatForEvents({
                     </div>
                   </div>
                   <div className="flex justify-between items-center gap-2">
-                    {!isTicketSold && !isEventPublised && (
-                      <h3
-                        onClick={() => handleEditAction(types)}
-                        className="text-primary_100 text-[12px] font-normal cursor-pointer flex items-center gap-1"
-                      >
-                        <Edit
-                          size="12"
-                          className="text-[#A30162] cursor-pointer"
-                        />{" "}
-                        EDIT
-                      </h3>
-                    )}
+                    <h3
+                      onClick={() => handleEditAction(types)}
+                      className="text-primary_100 text-[12px] font-normal cursor-pointer flex items-center gap-1"
+                    >
+                      <Edit
+                        size="12"
+                        className="text-[#A30162] cursor-pointer"
+                      />{" "}
+                      EDIT
+                    </h3>
                     <div className="items-end font-medium text-sm text-grey_100">
                       {formatNumberWithCommas(types?.soldCount.toString())} /
                       <span className="font-medium text-sm text-dark_200">

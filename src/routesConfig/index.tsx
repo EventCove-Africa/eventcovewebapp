@@ -36,6 +36,7 @@ export const APP_ROUTES = {
   STATISTICS: "/admin/statistics",
   VIEW_ALL_EVENT_ORGANIZERS: '/admin/statistics/view-all-event-organizers',
   VIEW_EVENT_ORGANIZER_DETAILS: '/admin/statistics/view-all-event-organizers/:organizerId',
+  VIEW_EVENTCOVE_ORGANIZER_EARNINGS: '/admin/statistics/view-all-event-organizers/:organizerId/earnings/:eventId',
   SETTINGS_PROFILE: "/app/settings/profile",
   SETTINGS_PASSWORD: "/app/settings/password",
   SETTINGS_RESET_PIN: "/app/settings/reset-transaction-pin",
@@ -123,6 +124,11 @@ export const ViewEventOrganizerDetails = lazyLoad(
   () => import("../pages/admin/event-organizers/OrganizerDetails"),
   "VIEW_ALL_EVENT_ORGANIZERS",
 );
+export const ViewEventCoveOrganizerEarnings = lazyLoad(
+  () => import("../pages/admin/event-organizers/Earnings"),
+  "VIEW_EVENTCOVE_ORGANIZER_EARNINGS",
+);
+
 export const SettingsProfile = lazyLoad(
   () => import("../pages/app/settings/components/SettingsProfile.tsx"),
   "SettingsProfile",
@@ -406,6 +412,14 @@ export const routeConfig = [
         element: (
           <AnimatedRoute>
             <ViewEventOrganizerDetails />
+          </AnimatedRoute>
+        ),
+      },
+      {
+        path: APP_ROUTES.VIEW_EVENTCOVE_ORGANIZER_EARNINGS,
+        element: (
+          <AnimatedRoute>
+            <ViewEventCoveOrganizerEarnings />
           </AnimatedRoute>
         ),
       },

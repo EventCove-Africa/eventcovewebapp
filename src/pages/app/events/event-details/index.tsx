@@ -217,7 +217,7 @@ export default function EventDetails() {
           />
         </div>
         <div className="flex flex-col gap-3 w-full">
-          <RenderTicketsStatForEvents eventId={id} isEventPublised={isEventPublised} />
+          <RenderTicketsStatForEvents eventId={id} />
           {id &&
             !loadingEventDetails?.event &&
             !isArrayEmpty(eventTeamMembers) && (
