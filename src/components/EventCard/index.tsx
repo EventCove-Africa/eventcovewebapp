@@ -21,6 +21,7 @@ import useEventHook from "../../hooks/useEventHook";
 
 interface EventCardProps {
   eventType: string;
+  role?: "admin" | "user";
   organizerId: string | null | undefined;
   allowViewEventDetails?: boolean;
 }
@@ -47,6 +48,7 @@ export default function EventCard({
   eventType,
   organizerId,
   allowViewEventDetails,
+  role,
 }: EventCardProps) {
   const navigate = useNavigate();
   const {
@@ -176,6 +178,15 @@ export default function EventCard({
                       className="flex cursor-pointer items-center gap-1 text-xs font-normal text-primary_100"
                     >
                       View details
+                    </div>
+                  )}
+                  {role === 'admin' && (
+                    <div
+                      role="button"
+                      onClick={() => navigate(`/admin/statistics/view-all-event-organizers/${organizerId}/earnings/${event?.eventId}`)}
+                      className="flex cursor-pointer items-center gap-1 text-xs font-normal text-secondary_300"
+                    >
+                      View earnings
                     </div>
                   )}
                 </div>

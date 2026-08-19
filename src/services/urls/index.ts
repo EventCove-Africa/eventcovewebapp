@@ -1,6 +1,7 @@
 import { apiUrlsType } from "../../types";
 
 const USER_PATH = "/user";
+const ADMIN_PATH = "/event/admin";
 
 export const appUrls: apiUrlsType = {
   LOGIN_URL: "/auth",
@@ -22,6 +23,7 @@ export const appUrls: apiUrlsType = {
   TICKET_VALIDATION_URL: "/validate",
   EVENT_TICKET_SALES_URL: "/details",
   PROFILE_URL: "/profile",
-  METRICS_URL: "/event/admin/metrics",
+  METRICS_URL: `${ADMIN_PATH}/metrics`,
   GET_ALL_ORGANIZERS: `${USER_PATH}/all/organizers`,
+  GET_EVENTCOVE_EVENT_PROFIT: `${ADMIN_PATH}/profit`,
 };
