@@ -211,6 +211,7 @@ export default function AddEvents() {
           start_date_time,
           end_date_time,
           eventPrivacy: allEventDetails?.eventPrivacy || "",
+          callBackUrl: allEventDetails?.callBackUrl || "",
           eventDescription: allEventDetails?.eventDescription || "",
           phoneNumber: allEventDetails?.phoneNumber || "",
           instagramHandle: allEventDetails?.instagramHandle || "",
@@ -506,6 +507,18 @@ export default function AddEvents() {
                     value={values.eventDescription}
                     errors={errors?.eventDescription}
                     touched={touched?.eventDescription}
+                  />
+                </div>
+                <div className="mb-2">
+                  <TextInputField
+                    labelName="Post-purchase attendee form (Optional)"
+                    name="callBackUrl"
+                    handleChange={handleChange}
+                    type="text"
+                    placeholder=""
+                    value={values.callBackUrl}
+                    errors={errors?.callBackUrl}
+                    touched={touched?.callBackUrl}
                   />
                 </div>
                 <div className="mb-2">
