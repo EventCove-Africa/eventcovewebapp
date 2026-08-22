@@ -18,12 +18,25 @@ export default function RenderEventDetails({
   return (
     <>
       <div className="w-full relative">
-        <img
-          src={allEventDetails?.eventImageUrl}
-          alt={`${allEventDetails.eventName} banner`}
-          className={`rounded-xl object-fit w-full ${classNameImageBannerLoader}`}
-          style={{ width: "100%" }}
-        />
+        <div className="relative w-full overflow-hidden rounded-xl">
+          {/* Blurred background */}
+          <div
+            className="absolute inset-0 scale-110 bg-cover bg-center blur-md"
+            style={{
+              backgroundImage: `url(${allEventDetails?.eventImageUrl})`,
+            }}
+          />
+
+          {/* Optional overlay */}
+          <div className="absolute inset-0 bg-black/10" />
+
+          {/* Main image */}
+          <img
+            src={allEventDetails?.eventImageUrl}
+            alt={`${allEventDetails.eventName} banner`}
+            className={`relative z-10 w-full rounded-xl object-contain ${classNameImageBannerLoader}`}
+          />
+        </div>
         <div className="absolute top-3 right-3 flex flex-col gap-2">
           <div
             className={`px-3 py-2 ${
@@ -121,7 +134,7 @@ export default function RenderEventDetails({
               Share the event link with others!
             </h3>
             {["private"]?.includes(
-              allEventDetails?.eventPrivacy?.toLowerCase()
+              allEventDetails?.eventPrivacy?.toLowerCase(),
             ) && (
               <div className="self-end font-semibold gap-2 md:text-sm text-xs">
                 Passcode:{" "}
@@ -130,7 +143,9 @@ export default function RenderEventDetails({
             )}
           </div>
           <div className="w-full h-auto rounded-lg bg-primary_300 p-3 flex justify-between items-center border border-dotted border-grey_100 text-primary_100 mt-2 font-normal text-sm flex-wrap">
-            <div className="flex-1 break-all">{allEventDetails?.customUrl || allEventDetails?.eventUrl}</div>
+            <div className="flex-1 break-all">
+              {allEventDetails?.customUrl || allEventDetails?.eventUrl}
+            </div>
             <CopyToClipboard
               text={allEventDetails?.customUrl || allEventDetails?.eventUrl}
               size="20"
