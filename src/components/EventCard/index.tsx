@@ -111,11 +111,23 @@ export default function EventCard({
                 className="bg-white w-auto min-h-[392px] h-auto shadow rounded-lg p-3 flex justify-between flex-col cursor-pointer"
               >
                 <div className="w-full relative">
-                  <div className="w-full h-[200px] sm:h-[300px] md:h-[200px] lg:h-[200px] xl:h-[200px]">
+                  <div className="relative w-full h-[200px] sm:h-[300px] md:h-[200px] lg:h-[200px] xl:h-[200px] overflow-hidden rounded-xl">
+                    {/* Blurred background */}
+                    <div
+                      className="absolute inset-0 scale-110 bg-cover bg-center blur-2xl"
+                      style={{
+                        backgroundImage: `url(${event?.eventImageUrl})`,
+                      }}
+                    />
+
+                    {/* Optional overlay */}
+                    <div className="absolute inset-0 bg-black/10" />
+
+                    {/* Main image */}
                     <img
                       src={event?.eventImageUrl}
                       alt={`${event.eventName} banner`}
-                      className="rounded-xl object-contain w-full h-[200px] sm:h-[300px] md:h-[200px] lg:h-[200px] xl:h-[200px]"
+                      className="relative z-10 w-full h-full rounded-xl object-contain"
                     />
                   </div>
 
@@ -180,10 +192,14 @@ export default function EventCard({
                       View details
                     </div>
                   )}
-                  {role === 'admin' && (
+                  {role === "admin" && (
                     <div
                       role="button"
-                      onClick={() => navigate(`/admin/statistics/view-all-event-organizers/${organizerId}/earnings/${event?.eventId}`)}
+                      onClick={() =>
+                        navigate(
+                          `/admin/statistics/view-all-event-organizers/${organizerId}/earnings/${event?.eventId}`,
+                        )
+                      }
                       className="flex cursor-pointer items-center gap-1 text-xs font-normal text-secondary_300"
                     >
                       View earnings
