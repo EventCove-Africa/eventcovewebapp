@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import TableComponent from "../../../../../components/TableComponent";
 import useEventHook from "../../../../../hooks/useEventHook";
 import DescriptionBar from "../../../../../components/DescriptionBar";
+import Pagination from "../../../../../components/Pagination";
 
 type AttendeesProps = {
   email: string;
@@ -64,11 +65,14 @@ export default function ViewAttendees() {
         isLoading={loadingEventDetails?.sales}
         columns={columns}
         data={attendeesData}
-        currentPage={curPage}
-        totalPages={totalPages}
-        showPagination={true}
-        setPage={(number) => setCurPage(number)}
       />
+      <div className="w-full flex justify-center mt-2">
+        <Pagination
+          totalPages={totalPages}
+          currentPage={curPage}
+          onPageChange={(page: number) => setCurPage(page)}
+        />
+      </div>
     </div>
   );
 }
