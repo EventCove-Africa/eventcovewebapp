@@ -38,7 +38,6 @@ export default function EventDetails() {
   const isReadyForPublish = allEventDetails?.hasTicketType && !isEventPublised;
   const event_status = allEventDetails?.status;
   const NOT_COMPLETED = event_status !== "completed";
-  console.log(event_status);
   const isShowDeleteButton =
     !isObjectEmpty(allEventDetails) &&
     !allEventDetails?.soldTicket &&

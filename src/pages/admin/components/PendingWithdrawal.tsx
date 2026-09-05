@@ -189,7 +189,8 @@ export default function PendingWithdrawal() {
         <div className="w-full flex justify-center items-center mt-3">
           <Pagination
             totalPages={totalPages}
-            onPageChange={(pageNumber: number) => setPage(pageNumber)}
+            currentPage={page}
+            onPageChange={(page: number) => setPage(page)}
           />
         </div>
       )}

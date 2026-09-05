@@ -52,25 +52,22 @@ export default function ViewAttendees() {
     { Header: "Phone number", accessor: "phoneNumber" },
     { Header: "Date-Time", accessor: "date" },
     { Header: "Time", accessor: "time" },
-    // {
-    //   Header: "Actions",
-    //   accessor: "actions",
-    //   Cell: ({ row }: any) => renderActions(row.original), // Return JSX here
-    // },
   ];
-  
+
   return (
     <div className="w-full h-full">
       <div className="w-full flex md:flex-row flex-col gap-3 mg:items-center justify-between">
         <DescriptionBar text="Here’s the list of Attendess 🌟" />
       </div>
+    
       <TableComponent
         isLoading={loadingEventDetails?.sales}
         columns={columns}
         data={attendeesData}
-        setPage={(number) => setCurPage(number)}
+        currentPage={curPage}
         totalPages={totalPages}
         showPagination={true}
+        setPage={(number) => setCurPage(number)}
       />
     </div>
   );

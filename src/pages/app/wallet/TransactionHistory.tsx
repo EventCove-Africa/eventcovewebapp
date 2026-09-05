@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 import { CardReceive, CardSend } from "iconsax-react";
@@ -40,12 +39,12 @@ export default function TransactionHistory({
       activeType === "all"
         ? ""
         : activeType === "credit"
-        ? "&transactionType=Credit"
-        : "&transactionType=Debit";
+          ? "&transactionType=Credit"
+          : "&transactionType=Debit";
     try {
       const { status, data } = await api.get(
         appUrls.WALLET_URL +
-          `/filter/transactions?organizerId=${userDetails?.id}&page=${page - 1}&size=${8}${transactionType}${transactionStatus}`
+          `/filter/transactions?organizerId=${userDetails?.id}&page=${page - 1}&size=${8}${transactionType}${transactionStatus}`,
       );
       const result = data?.data;
       if ([200, 201].includes(status)) {
@@ -61,7 +60,9 @@ export default function TransactionHistory({
       } else if (typeof error === "object" && error !== null) {
         const errObj = error as Record<string, unknown>;
         const response = errObj.response as Record<string, unknown> | undefined;
-        const data = (response?.data ?? errObj.data) as Record<string, unknown> | undefined;
+        const data = (response?.data ?? errObj.data) as
+          | Record<string, unknown>
+          | undefined;
         if (data && typeof data.message === "string") {
           errMsg = data.message;
         }
@@ -102,7 +103,10 @@ export default function TransactionHistory({
       <div className="mt-3 bg-grey_500 flex justify-between text-center w-full">
         {links.map(({ name, key }) => (
           <button
-            onClick={() => setActiveType(key)}
+            onClick={() => {
+              setActiveType(key);
+              setPage(1);
+            }}
             key={key}
             className={`border-b ${
               key === activeType
@@ -152,7 +156,7 @@ export default function TransactionHistory({
                     {formatToNairaShortenFigure(amount)}
                   </h4>
                 </div>
-              )
+              ),
             )}
           </>
         )}
@@ -169,6 +173,7 @@ export default function TransactionHistory({
         <div className="w-full flex justify-center items-center mt-3">
           <Pagination
             totalPages={totalPages}
+            currentPage={page}
             onPageChange={(page: number) => setPage(page)}
           />
         </div>
