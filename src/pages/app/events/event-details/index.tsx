@@ -19,7 +19,7 @@ import RenderTicketsStatForEvents from "./components/RenderTicketsStatForEvents"
 import useEventHook from "../../../../hooks/useEventHook";
 import CopyToClipboard from "../../../../components/CopyToClipboard";
 import ExportButton from "../../../../components/FormComponents/ExportButton";
-import GuestRegistrationLink from "../components/GuestRegistrationLink"
+import GuestRegistrationLink from "../components/GuestRegistrationLink";
 
 export default function EventDetails() {
   const navigate = useNavigate();
@@ -36,7 +36,9 @@ export default function EventDetails() {
   } = useEventHook();
   const isEventPublised = allEventDetails?.published;
   const isReadyForPublish = allEventDetails?.hasTicketType && !isEventPublised;
-  const NOT_COMPLETED = allEventDetails?.status !== "completed";
+  const event_status = allEventDetails?.status;
+  const NOT_COMPLETED = event_status !== "completed";
+  console.log(event_status);
   const isShowDeleteButton =
     !isObjectEmpty(allEventDetails) &&
     !allEventDetails?.soldTicket &&
@@ -273,9 +275,11 @@ export default function EventDetails() {
                 </div>
               </>
             )}
-         <div className="w-full">
-            <GuestRegistrationLink eventId={allEventDetails.eventId} />
-          </div>
+          {!loadingEventDetails?.event && !["completed", 'deleted'].includes(event_status) && (
+            <div className="w-full">
+              <GuestRegistrationLink eventId={allEventDetails.eventId} />
+            </div>
+          )}
         </div>
       </div>
 
@@ -311,7 +315,7 @@ export default function EventDetails() {
               className="w-full md:w-fit"
             />
           )}
-          {["upcoming"].includes(allEventDetails?.status) && (
+          {["upcoming"].includes(event_status) && (
             <Button
               title="Edit Event"
               type="button"
