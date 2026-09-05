@@ -5,6 +5,8 @@ import { QRCodeScanner } from "../../../components/QRCodeScanner";
 import { api } from "../../../services/api";
 import { appUrls } from "../../../services/urls";
 import { _handleThrowErrorMessage } from "../../../utils";
+import { Camera } from "iconsax-react";
+import CustomSelect from "../../../components/FormComponents/SelectInputField";
 
 export default function QRscan({
   handleOpenClose,
@@ -13,12 +15,14 @@ export default function QRscan({
   setAttendeeDetails,
 }: any) {
   const [isValidating, setIsValidating] = useState(false);
+  const [validationCategory, setValidationCategory] = useState<string>();
 
   const handleScan = async (data: string) => {
     setIsValidating(true);
     const payload = {
       eventReference,
       ticketNumber: data,
+      validationCategory,
       email,
     };
     try {
@@ -39,6 +43,24 @@ export default function QRscan({
   return (
     <>
       <div className="lg:w-2/5 w-full bg-white flex flex-col gap-4 items-center justify-center md:p-6 p-3 rounded-xl h-auto">
+        <div className="flex flex-col-reverse items-center justify-between">
+          <h2 className="text-lg font-semibold">Scan QR</h2>
+          <Camera size="32" />
+        </div>
+        <div className="w-full">
+          <CustomSelect
+            label="Select Ticket Category"
+            name="validationCategory"
+            onChange={(event) => {
+              setValidationCategory(event?.value as string);
+            }}
+            options={[
+              { label: "TicketBuyer", value: "TicketBuyer" },
+              { label: "Guest", value: "Guest" },
+            ]}
+            value={validationCategory}
+          />
+        </div>
         <QRCodeScanner onScan={handleScan} isValidating={isValidating} />
       </div>
     </>

@@ -25,6 +25,7 @@ export interface apiUrlsType {
   METRICS_URL: string
   GET_ALL_ORGANIZERS: string
   GET_EVENTCOVE_EVENT_PROFIT: string
+  GENERATE_GUEST_LINK_URL: string
 }
 
 export interface ButtonProps {

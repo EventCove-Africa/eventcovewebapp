@@ -3,6 +3,7 @@ import { Form, Formik } from "formik";
 import Button from "../../../components/FormComponents/Button";
 import TextInputField from "../../../components/FormComponents/InputField";
 import { ticketValidationSchema } from "../../../form-schemas";
+import CustomSelect from "../../../components/FormComponents/SelectInputField";
 
 export default function TicketIdEntry({
   eventReference,
@@ -14,14 +15,16 @@ export default function TicketIdEntry({
       <Formik
         initialValues={{
           ticketNumber: "",
+          validationCategory: "",
         }}
         validationSchema={ticketValidationSchema}
         enableReinitialize
         onSubmit={(values, actions) => {
-          const { ticketNumber } = values;
+          const { ticketNumber, validationCategory } = values;
           const payload = {
             eventReference,
             ticketNumber,
+            validationCategory,
             email,
           };
           handleValidateTickets(payload, actions);
@@ -34,6 +37,7 @@ export default function TicketIdEntry({
           touched,
           errors,
           isSubmitting,
+          setFieldValue,
         }) => (
           <Form onSubmit={handleSubmit} className="w-full mt-1">
             <div className="mb-3">
@@ -48,6 +52,21 @@ export default function TicketIdEntry({
                 touched={touched?.ticketNumber}
               />
             </div>
+            <CustomSelect
+              label="Select Ticket Category"
+              name="validationCategory"
+              onChange={(event) => {
+                setFieldValue("validationCategory", event?.value);
+              }}
+              options={[
+                { label: "TicketBuyer", value: "TicketBuyer" },
+                { label: "Guest", value: "Guest" },
+              ]}
+              errors={errors?.validationCategory}
+              touched={touched?.validationCategory}
+              defaultValue={values?.validationCategory}
+              value={values?.validationCategory}
+            />
             <div>
               <Button
                 title="Proceed"

@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 import { Column } from "react-table";
-import TableComponent from "../../../../../components/TableComponent";
 import { useParams } from "react-router-dom";
+
+import TableComponent from "../../../../../components/TableComponent";
 import useEventHook from "../../../../../hooks/useEventHook";
 import DescriptionBar from "../../../../../components/DescriptionBar";
 
@@ -57,6 +58,7 @@ export default function ViewAttendees() {
     //   Cell: ({ row }: any) => renderActions(row.original), // Return JSX here
     // },
   ];
+  
   return (
     <div className="w-full h-full">
       <div className="w-full flex md:flex-row flex-col gap-3 mg:items-center justify-between">

@@ -4,7 +4,7 @@ import {
   Html5QrcodeSupportedFormats,
   Html5QrcodeFullConfig,
 } from "html5-qrcode";
-import { StopCircle, Camera } from "iconsax-react";
+import { StopCircle } from "iconsax-react";
 
 interface QRCodeScannerProps {
   onScan: (data: string) => void;
@@ -93,11 +93,6 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
 
   return (
     <div className="w-full max-w-sm mx-auto">
-      <div className="flex flex-col-reverse items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold">Scan QR</h2>
-        <Camera size="32" />
-      </div>
-
       <select
         value={selectedCamera || ""}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
@@ -111,15 +106,12 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
           </option>
         ))}
       </select>
-
       <div className="relative rounded-2xl overflow-hidden shadow-lg border bg-black">
         <div id={scannerContainerId} className="aspect-square" />
-
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="w-48 h-48 border-2 border-white rounded-xl" />
         </div>
       </div>
-
       <div className="mt-6 flex flex-col items-center gap-3">
         {!isScanning ? (
           <button
@@ -137,7 +129,6 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
             <StopCircle size="20" /> Stop
           </button>
         )}
-
         <p className="text-xs text-gray-500 text-center">
           Align QR code within the frame
         </p>
