@@ -4,7 +4,7 @@ import React from "react";
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
+  onPageChange?: (page: number) => void;
   maxVisiblePages?: number;
 }
 
@@ -17,7 +17,7 @@ const Pagination: React.FC<PaginationProps> = ({
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;
 
-    onPageChange(page);
+    onPageChange?.(page);
   };
 
   const getPageNumbers = (): (number | string)[] => {

@@ -8,6 +8,7 @@ import { api } from "../../../services/api";
 import DescriptionBar from "../../../components/DescriptionBar";
 import TableComponent from "../../../components/TableComponent";
 import toast from "react-hot-toast";
+import Pagination from "../../../components/Pagination";
 
 type AttendeesProps = {
   email: string;
@@ -95,10 +96,16 @@ export default function EventOrganizers() {
         isLoading={loading}
         columns={columns}
         data={organizers}
-        setPage={(number) => setCurPage(number)}
+        setPage={(number: any) => setCurPage(number)}
         totalPages={totalPages}
-        showPagination={true}
       />
+      <div className="w-full flex justify-center mt-2">
+        <Pagination
+          totalPages={totalPages}
+          currentPage={curPage}
+          onPageChange={(page: number) => setCurPage(page)}
+        />
+      </div>
     </div>
   );
 }

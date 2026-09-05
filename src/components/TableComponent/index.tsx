@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  useTable,
-  Column,
-} from "react-table";
-import Pagination from "../Pagination";
+import { useTable, Column } from "react-table";
 import empty_state from "../../assets/images/empty_state.svg";
 import { isArrayEmpty } from "../../utils";
 import SkeletonLoader from "../EventCard/components/SkeletonLoader";
@@ -21,11 +17,7 @@ type TableProps<T extends object> = {
 const TableComponent = <T extends object>({
   columns,
   data,
-  showPagination = true,
   isLoading,
-  totalPages = 1,
-  currentPage = 1,
-  setPage,
 }: TableProps<T>) => {
   type PropsWithKey<T> = T & { key?: React.Key };
 
@@ -63,10 +55,9 @@ const TableComponent = <T extends object>({
                   {...(hgRest as React.HTMLAttributes<HTMLTableRowElement>)}
                 >
                   {headerGroup.headers.map((column) => {
-                    const colProps =
-                      column.getHeaderProps() as PropsWithKey<
-                        React.ThHTMLAttributes<HTMLTableHeaderCellElement>
-                      >;
+                    const colProps = column.getHeaderProps() as PropsWithKey<
+                      React.ThHTMLAttributes<HTMLTableHeaderCellElement>
+                    >;
 
                     const { key: colKey, ...colRest } = colProps || {};
 
@@ -115,10 +106,9 @@ const TableComponent = <T extends object>({
                         className="hover:bg-gray-100 bg-white my-4 whitespace-nowrap"
                       >
                         {row.cells.map((cell) => {
-                          const cellProps =
-                            cell.getCellProps() as PropsWithKey<
-                              React.TdHTMLAttributes<HTMLTableDataCellElement>
-                            >;
+                          const cellProps = cell.getCellProps() as PropsWithKey<
+                            React.TdHTMLAttributes<HTMLTableDataCellElement>
+                          >;
 
                           const { key: cellKey, ...cellRest } = cellProps || {};
 
@@ -141,10 +131,7 @@ const TableComponent = <T extends object>({
         </table>
 
         {isLoading && (
-          <SkeletonLoader
-            count={3}
-            className="py-2 px-4 h-auto my-2"
-          />
+          <SkeletonLoader count={3} className="py-2 px-4 h-auto my-2" />
         )}
       </div>
 
@@ -157,16 +144,6 @@ const TableComponent = <T extends object>({
           />
         )}
       </div>
-
-      {!isLoading && showPagination && (
-        <div className="w-full flex justify-center items-center mt-8">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setPage ?? (() => {})}
-          />
-        </div>
-      )}
     </>
   );
 };

@@ -278,7 +278,6 @@ export default function Tickets() {
       </div>
       <TableComponent
         isLoading={isLoading.getTickets}
-        showPagination={false}
         columns={columns}
         data={ticketData}
       />
