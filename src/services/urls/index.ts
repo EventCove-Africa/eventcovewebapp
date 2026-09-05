@@ -26,4 +26,5 @@ export const appUrls: apiUrlsType = {
   METRICS_URL: `${ADMIN_PATH}/metrics`,
   GET_ALL_ORGANIZERS: `${USER_PATH}/all/organizers`,
   GET_EVENTCOVE_EVENT_PROFIT: `${ADMIN_PATH}/profit`,
+  GENERATE_GUEST_LINK_URL: '/event/generate/guest',
 };

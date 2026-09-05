@@ -19,6 +19,7 @@ import RenderTicketsStatForEvents from "./components/RenderTicketsStatForEvents"
 import useEventHook from "../../../../hooks/useEventHook";
 import CopyToClipboard from "../../../../components/CopyToClipboard";
 import ExportButton from "../../../../components/FormComponents/ExportButton";
+import GuestRegistrationLink from "../components/GuestRegistrationLink"
 
 export default function EventDetails() {
   const navigate = useNavigate();
@@ -223,7 +224,7 @@ export default function EventDetails() {
             !isArrayEmpty(eventTeamMembers) && (
               <>
                 <h4 className="text-dark_200 font-bold md:text-base text-sm">
-                  Existing Team members{" "}
+                  Team members for the event{" "}
                 </h4>
                 <div className="flex gap-3 items-center flex-wrap">
                   {eventTeamMembers?.map((d: any, id: number) => {
@@ -272,8 +273,12 @@ export default function EventDetails() {
                 </div>
               </>
             )}
+         <div className="w-full">
+            <GuestRegistrationLink eventId={allEventDetails.eventId} />
+          </div>
         </div>
       </div>
+
       {!loadingEventDetails?.event && (
         <div className="w-full flex md:flex-row flex-col gap-2 md:items-center items-start mt-4">
           {isReadyForPublish && (

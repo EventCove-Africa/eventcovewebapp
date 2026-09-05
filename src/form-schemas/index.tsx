@@ -370,4 +370,5 @@ export const withdrawalsSchema = (maxValue: number) =>
 
 export const ticketValidationSchema = Yup.object().shape({
   ticketNumber: Yup.mixed().required("Ticket Id is required"),
+  validationCategory: Yup.mixed(),
 });

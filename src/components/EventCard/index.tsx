@@ -10,7 +10,7 @@ import {
 } from "iconsax-react";
 import empty_state from "../../assets/images/empty_state.svg";
 import {
-  arrayToFormattedDate,
+  arrayToFormattedDateWithYear,
   eventTypeStyles,
   formatTimeToshowAmPm,
   isArrayEmpty,
@@ -162,7 +162,7 @@ export default function EventCard({
                 <div className="flex md:flex-row flex-col gap-3 lg:items-center items-start mt-2">
                   <div className="p-3 rounded text-primary_100 font-normal text-xs flex items-center gap-1 bg-pink_100">
                     <Calendar2 size="16" color="#A30162" />{" "}
-                    {arrayToFormattedDate(event?.startDate)}
+                    {arrayToFormattedDateWithYear(event?.startDate)}
                   </div>
                   <div className="p-3 rounded text-green_200 bg-green_300 font-normal text-xs flex items-center gap-1 ">
                     <InfoCircle size="16" color="#4CAF50" />{" "}
