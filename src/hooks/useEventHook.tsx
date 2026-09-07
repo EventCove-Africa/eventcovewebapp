@@ -149,6 +149,7 @@ const useEventHook = () => {
 
   const handleGetEventTicketSalesStats = async (
     event_id: string | undefined,
+    email: string = '',
   ) => {
     setLoadingEventDetails((prev) => ({
       ...prev,
@@ -157,7 +158,7 @@ const useEventHook = () => {
     try {
       const { status, data } = await api.get(
         appUrls.EVENT_TICKET_SALES_URL +
-          `/${event_id}?page=${curPage - 1}&size=10`,
+          `/${event_id}?page=${curPage - 1}&size=10${email}`,
       );
       const result = data?.data;
       if ([200, 201].includes(status)) {
