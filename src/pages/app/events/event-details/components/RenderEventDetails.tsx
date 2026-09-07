@@ -37,9 +37,9 @@ export default function RenderEventDetails({
             className={`relative z-10 w-full rounded-xl object-contain ${classNameImageBannerLoader}`}
           />
         </div>
-        <div className="absolute top-3 right-3 flex flex-col gap-2">
+        <div className="absolute top-1 right-1 flex flex-col gap-2">
           <div
-            className={`px-3 py-2 ${
+            className={`px-3 py-2 z-40 ${
               eventTypeStyles[
                 allEventDetails?.deleted
                   ? "deleted"

@@ -131,9 +131,9 @@ export default function EventCard({
                     />
                   </div>
 
-                  <div className="absolute top-3 ri`ght-3 flex flex-col gap-2">
+                  <div className="absolute top-1 right-1 flex flex-col gap-2">
                     <div
-                      className={`px-3 py-2 ${
+                      className={`px-3 py-2 z-40 ${
                         eventTypeStyles[
                           event?.deleted ? "deleted" : event?.status
                         ]
@@ -141,7 +141,7 @@ export default function EventCard({
                     >
                       {event?.deleted ? "Deleted" : event?.status}
                     </div>
-                    <div className="p-2 bg-white shadow text-dark_100 text-xs font-normal rounded-md flex items-center justify-center gap-1">
+                    <div className="p-2 z-40 bg-white shadow text-dark_100 text-xs font-normal rounded-md flex items-center justify-center gap-1">
                       <TimerStart size="12" color="#000000" />
                       {formatTimeToshowAmPm(event?.startTime)}
                     </div>
