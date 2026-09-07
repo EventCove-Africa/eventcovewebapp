@@ -22,7 +22,7 @@ export default function MobileNavigation({ userRole }: { userRole: string }) {
   if (!isMobile) return null; // Don't render if not on mobile
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 lg:hidden">
+    <nav className="z-50 fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 lg:hidden">
       <ul className="flex justify-between items-center p-2">
         {sidebarMenuItems
           .filter((item) => item.userRole.includes(userRole))
