@@ -9,6 +9,7 @@ import DescriptionBar from "../../../components/DescriptionBar";
 import TableComponent from "../../../components/TableComponent";
 import toast from "react-hot-toast";
 import Pagination from "../../../components/Pagination";
+import SearchInput from "../../../components/FormComponents/SearchInput";
 
 type AttendeesProps = {
   email: string;
@@ -21,10 +22,14 @@ type AttendeesProps = {
 
 export default function EventOrganizers() {
   const navigate = useNavigate();
+
   const [organizers, setOrganizers] = useState<AttendeesProps[]>([]);
   const [curPage, setCurPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
   const columns: Column<AttendeesProps>[] = [
     { Header: "First name", accessor: "firstname" },
     { Header: "Last name", accessor: "lastname" },
@@ -56,42 +61,61 @@ export default function EventOrganizers() {
     );
   };
 
-  const handleGetEventOrganizers = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { status, data } = await api.get(
-        appUrls.GET_ALL_ORGANIZERS + `?page=${curPage}&size=10`,
-      );
-      if ([200, 201].includes(status)) {
-        const results = data?.data;
-        setOrganizers(results?.organizers);
-        setTotalPages(results?.totalPages);
+  const handleGetEventOrganizers = useCallback(
+    async (query: string = "") => {
+      setLoading(true);
+      try {
+        const { status, data } = await api.get(
+          appUrls.GET_ALL_ORGANIZERS + `?page=${curPage - 1}&size=10${query}`,
+        );
+        if ([200, 201].includes(status)) {
+          const results = data?.data;
+          setOrganizers(results?.organizers);
+          setTotalPages(results?.totalPages);
+        }
+      } catch (error: any) {
+        toast.error(_handleThrowErrorMessage(error?.response?.data?.message));
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      toast.error(_handleThrowErrorMessage(error?.response?.data?.message));
-    } finally {
-      setLoading(false);
-    }
-  }, [curPage]);
+    },
+    [curPage],
+  );
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDebouncedSearch(searchInput.trim());
+      setCurPage(1);
+    }, 800);
+    return () => clearTimeout(timeout);
+  }, [searchInput]);
 
   useEffect(() => {
     let mounted = false;
     (async () => {
       mounted = true;
+      const query = debouncedSearch
+        ? `&email=${encodeURIComponent(debouncedSearch)}`
+        : "";
       if (mounted) {
-        handleGetEventOrganizers();
+        handleGetEventOrganizers(query);
       }
     })();
     return () => {
       mounted = false;
     };
-  }, [handleGetEventOrganizers]);
+  }, [handleGetEventOrganizers, debouncedSearch]);
 
   return (
     <div className="w-full h-full">
       <div className="w-full flex md:flex-row flex-col gap-3 mg:items-center justify-between">
         <DescriptionBar text="All Event Organizers 🌟" />
       </div>
+      <SearchInput
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
+        placeholder="Search Organizers by Email"
+      />
       <TableComponent
         isLoading={loading}
         columns={columns}
