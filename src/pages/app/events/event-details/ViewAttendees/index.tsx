@@ -8,6 +8,7 @@ import useEventHook from "../../../../../hooks/useEventHook";
 import DescriptionBar from "../../../../../components/DescriptionBar";
 import Pagination from "../../../../../components/Pagination";
 import SearchInput from "../../../../../components/FormComponents/SearchInput";
+import { Ticket } from "iconsax-react";
 
 type AttendeesProps = {
   email: string;
@@ -36,6 +37,7 @@ export default function ViewAttendees() {
     setCurPage,
     curPage,
     totalPages,
+    eventSalesStats,
   } = useEventHook();
 
   useEffect(() => {
@@ -76,6 +78,17 @@ export default function ViewAttendees() {
       <div className="w-full flex md:flex-row flex-col gap-3 mg:items-center justify-between">
         <DescriptionBar text="Here’s the list of Attendees 🌟" />
       </div>
+
+      <div className="md:w-[350px] h-[100px] w-full bg-grey_500 p-3 my-4 shadow">
+        <div className="flex justify-between">
+          <h4 className="text-grey_100 text-sm font-normal">Total ticket sold</h4>
+          <Ticket size="24" color="#6100FF" />
+        </div>
+        <h3 className="text-dark_400 font-bold md:text-2xl text-xl">
+          {eventSalesStats?.totalTicketSold}
+        </h3>
+      </div>
+
       <SearchInput
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
