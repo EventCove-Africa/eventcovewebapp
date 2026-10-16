@@ -158,7 +158,7 @@ const useEventHook = () => {
     try {
       const { status, data } = await api.get(
         appUrls.EVENT_TICKET_SALES_URL +
-          `/${event_id}?page=${curPage - 1}&size=10${email}`,
+          `/${event_id}?page=${curPage - 1}&size=50${email}`,
       );
       const result = data?.data;
       if ([200, 201].includes(status)) {
