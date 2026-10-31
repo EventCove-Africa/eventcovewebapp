@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Column } from "react-table";
 import { _handleThrowErrorMessage } from "../../../utils";
 import { appUrls } from "../../../services/urls";
@@ -22,13 +22,17 @@ type AttendeesProps = {
 
 export default function EventOrganizers() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // URL is the single source of truth
+  const curPage = Math.max(1, Number(searchParams.get("page")) || 1);
+
+  const query = searchParams.get("email") || "";
 
   const [organizers, setOrganizers] = useState<AttendeesProps[]>([]);
-  const [curPage, setCurPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
-  const [searchInput, setSearchInput] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [searchInput, setSearchInput] = useState(query);
 
   const columns: Column<AttendeesProps>[] = [
     { Header: "First name", accessor: "firstname" },
@@ -37,16 +41,14 @@ export default function EventOrganizers() {
     {
       Header: "Actions",
       accessor: "actions",
-      Cell: ({ row }: any) => renderActions(row.original), // Return JSX here
+      Cell: ({ row }: any) => renderActions(row.original),
     },
   ];
 
-  const renderActions = (_row: AttendeesProps) => {
-    const organizerId = _row?.id;
-
+  const renderActions = (row: AttendeesProps) => {
     const handleViewAction = () =>
-      navigate(`/admin/statistics/view-all-event-organizers/${organizerId}`, {
-        state: _row,
+      navigate(`/admin/statistics/view-all-event-organizers/${row.id}`, {
+        state: row,
       });
 
     return (
@@ -61,73 +63,110 @@ export default function EventOrganizers() {
     );
   };
 
-  const handleGetEventOrganizers = useCallback(
-    async (query: string = "") => {
-      setLoading(true);
-      try {
-        const { status, data } = await api.get(
-          appUrls.GET_ALL_ORGANIZERS + `?page=${curPage - 1}&size=10${query}`,
-        );
-        if ([200, 201].includes(status)) {
-          const results = data?.data;
-          setOrganizers(results?.organizers);
-          setTotalPages(results?.totalPages);
-        }
-      } catch (error: any) {
-        toast.error(_handleThrowErrorMessage(error?.response?.data?.message));
-      } finally {
-        setLoading(false);
+  // Fetch organizers using URL parameters
+  const handleGetEventOrganizers = useCallback(async () => {
+    setLoading(true);
+
+    try {
+      const params = new URLSearchParams();
+
+      params.set("page", String(curPage - 1));
+      params.set("size", "10");
+
+      if (query) {
+        params.set("email", query);
       }
-    },
-    [curPage],
-  );
+
+      const { status, data } = await api.get(
+        `${appUrls.GET_ALL_ORGANIZERS}?${params.toString()}`,
+      );
+
+      if ([200, 201].includes(status)) {
+        const results = data?.data;
+
+        setOrganizers(results?.organizers ?? []);
+        setTotalPages(results?.totalPages ?? 1);
+      }
+    } catch (error: any) {
+      toast.error(_handleThrowErrorMessage(error?.response?.data?.message));
+    } finally {
+      setLoading(false);
+    }
+  }, [curPage, query]);
+
+  // Fetch whenever URL parameters change
+  useEffect(() => {
+    handleGetEventOrganizers();
+  }, [handleGetEventOrganizers]);
+
+  // Debounce search and synchronize it with URL
 
   useEffect(() => {
+    const trimmedSearch = searchInput.trim();
+
+    // Don't reset pagination if search hasn't changed
+    if (trimmedSearch === query) return;
+
     const timeout = setTimeout(() => {
-      setDebouncedSearch(searchInput.trim());
-      setCurPage(1);
-    }, 800);
-    return () => clearTimeout(timeout);
-  }, [searchInput]);
+      setSearchParams(
+        (prev) => {
+          const params = new URLSearchParams(prev);
 
+          if (trimmedSearch) {
+            params.set("email", trimmedSearch);
+          } else {
+            params.delete("email");
+          }
+
+          params.set("page", "1");
+
+          return params;
+        },
+        { replace: true },
+      );
+    }, 800);
+
+    return () => clearTimeout(timeout);
+  }, [searchInput, query, setSearchParams]);
+
+  // Keep input synchronized with browser back/forward navigation
   useEffect(() => {
-    let mounted = false;
-    (async () => {
-      mounted = true;
-      const query = debouncedSearch
-        ? `&email=${encodeURIComponent(debouncedSearch)}`
-        : "";
-      if (mounted) {
-        handleGetEventOrganizers(query);
-      }
-    })();
-    return () => {
-      mounted = false;
-    };
-  }, [handleGetEventOrganizers, debouncedSearch]);
+    setSearchInput(query);
+  }, [query]);
+
+  const handlePageChange = (page: number) => {
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      params.set("page", String(page));
+      return params;
+    });
+  };
 
   return (
     <div className="w-full h-full">
       <div className="w-full flex md:flex-row flex-col gap-3 mg:items-center justify-between">
         <DescriptionBar text="All Event Organizers 🌟" />
       </div>
+
       <SearchInput
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
         placeholder="Search Organizers by Email"
       />
+
       <TableComponent
         isLoading={loading}
         columns={columns}
         data={organizers}
-        setPage={(number: any) => setCurPage(number)}
+        setPage={handlePageChange}
         totalPages={totalPages}
       />
+
       <div className="w-full flex justify-center mt-2">
         <Pagination
           totalPages={totalPages}
           currentPage={curPage}
-          onPageChange={(page: number) => setCurPage(page)}
+          onPageChange={handlePageChange}
         />
       </div>
     </div>
